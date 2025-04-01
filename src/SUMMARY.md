@@ -6,7 +6,7 @@
 
 - [My Approach](overview/my-approach.md)
 - [Tooling](overview/tooling.md)
-- [Folder Structure](overview/folder-structure.md)
+- [Project Structure](overview/project-structure.md)
 - [Bash Scripts](overview/bash-scripts.md)
 
 # Prototype

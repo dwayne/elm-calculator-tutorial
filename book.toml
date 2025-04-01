@@ -6,8 +6,8 @@ language = "en"
 multilingual = false
 
 [output.html.code.hidelines]
-html = "~"
 css = "~"
-js = "~"
-
 elm = "~"
+html = "~"
+js = "~"
+json = "~"
