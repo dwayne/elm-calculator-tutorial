@@ -2,7 +2,9 @@
 
 In this tutorial I'll share with you how I built [freeCodeCamp](https://www.freecodecamp.com/)'s [Build a JavaScript Calculator](https://www.freecodecamp.org/learn/front-end-development-libraries/front-end-development-libraries-projects/build-a-javascript-calculator) front-end project with [Elm](https://elm-lang.org/).
 
-Here's the [source code](https://github.com/dwayne/elm-calculator) for the application we'll be going through and here's a [live demo](https://dwayne.github.io/elm-calculator/) for you to explore how it works.
+Here's a [live demo](https://dwayne.github.io/elm-calculator/) of the Elm web application for you to explore how it works.
+
+And, here's a link to the [source code](https://github.com/dwayne/elm-calculator) for you to follow along.
 
 ## Prerequisites
 
@@ -10,13 +12,17 @@ Here's the [source code](https://github.com/dwayne/elm-calculator) for the appli
 - Basic knowledge of Elm as provided by the [official Elm guide](https://guide.elm-lang.org/).
 - And most importantly of all, a desire to learn and understand how things work.
 
+## Audience
+
+Anyone interested in using Elm to build reliable, maintainable, and delightful web applications.
+
 ## Learning Outcomes
 
-Here's some of what you can expect to learn by reading this tutorial:
+Here's some of what you can expect to learn or, at the very least, expose yourself to by reading this tutorial:
 
 - A repeatable process for building any Elm web application.
 - How to use [Devbox](https://www.jetify.com/devbox).
-- How to structure your folders.
+- How to structure your directories.
 - How to build and deploy any Elm web application using Bash scripts.
 - How to prototype with HTML/CSS.
 - How to structure your HTML/CSS with [BEM](https://getbem.com/).

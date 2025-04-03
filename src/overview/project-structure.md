@@ -4,6 +4,8 @@ A high-level overview of how I structured the project.
 
 ## Directory Layout
 
+**N.B.** _Not all directories and files are shown below._
+
 ```txt
 + .build
 + bin
@@ -21,9 +23,6 @@ devbox.json
 init.sh
 ```
 
-**N.B.** _Not all directories and files are shown._
-
-
 | Directory    | Comment |
 |--------------|---------|
 | .build       | An ephemeral directory to store various build artifacts. |
@@ -37,7 +36,7 @@ init.sh
 | src/Lib      | Reusable Elm modules. It's possible to use them within other projects with zero to minimal modifications. |
 | src/View     | Elm modules that implement the UI. |
 | src/Main.elm | The entry module that loads the web application. |
-| tests        | Unit tests. |
+| tests        | Elm unit tests. |
 | devbox.json  | Devbox JSON configuration. |
 | init.sh      | An initialization script for the development environment that contains helpful Bash functions and aliases. |
 
