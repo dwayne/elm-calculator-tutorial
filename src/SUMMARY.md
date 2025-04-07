@@ -2,19 +2,9 @@
 
 [Introduction](README.md)
 
-# Overview
-
-- [My Approach](overview/my-approach.md)
-- [Tooling](overview/tooling.md)
-- [Project Structure](overview/project-structure.md)
-- [Bash Scripts](overview/bash-scripts.md)
-
 # Prototype
 
-- [Prototyping](prototype/prototyping/README.md)
-  - [HTML](prototype/prototyping/html.md)
-  - [Sass](prototype/prototyping/sass.md)
-  - [BEM](prototype/prototyping/bem.md)
+- [Prototyping](prototype/README.md)
 - [Blocks](prototype/blocks/README.md)
   - [key](prototype/blocks/key.md)
   - [pad](prototype/blocks/pad.md)
@@ -25,10 +15,9 @@
 
 # HTML/CSS to Elm
 
-- [Using HTML/CSS in Elm](html-css-to-elm/using-html-css-in-elm.md)
+- [Using HTML/CSS in Elm](html-css-to-elm/README.md)
 - [Keys](html-css-to-elm/keys.md)
 - [Views](html-css-to-elm/views/README.md)
-  - [View API Design](html-css-to-elm/views/view-api-design.md)
   - [View.Key](html-css-to-elm/views/key.md)
   - [View.Pad](html-css-to-elm/views/pad.md)
   - [View.Display](html-css-to-elm/views/display.md)
@@ -39,7 +28,7 @@
 
 # Application Logic
 
-- [Domain Modeling](application-logic/domain-modeling.md)
+- [Domain Modeling](application-logic/README.md)
 - [Rational Numbers](application-logic/rational-numbers.md)
 - [Evaluating Infix Expressions](application-logic/evaluating-infix-expressions/README.md)
   - [Tokens](application-logic/evaluating-infix-expressions/tokens.md)
@@ -53,7 +42,7 @@
 
 # Putting It All Together
 
-- [UI + Application Logic](putting-it-all-together/ui-and-application-logic.md)
+- [UI + Application Logic](putting-it-all-together/README.md)
 
 ---
 
