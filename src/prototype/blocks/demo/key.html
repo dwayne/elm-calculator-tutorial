@@ -1,0 +1,56 @@
+<style>
+  .box {
+    --width: 80px;
+    --height: 65px;
+
+    width: var(--width);
+    height: var(--height);
+  }
+
+  .box--span-column {
+    width: calc(2 * var(--width) + 1px);
+  }
+
+  .box--span-row {
+    height: calc(2 * var(--height) + 1px);
+  }
+</style>
+<div class="prototype">
+  <h3>Default</h3>
+
+  <h4>Unconstrained</h4>
+
+  <p>
+    <button class="key" type="button">8</button>
+  </p>
+
+  <h4>Constrained</h4>
+
+  <div class="box">
+    <button class="key" type="button">8</button>
+  </div>
+
+  <h3>Primary</h3>
+
+  <div class="box">
+    <button class="key key--primary" type="button">AC</button>
+  </div>
+
+  <h3>Secondary</h3>
+
+  <div class="box">
+    <button class="key key--secondary" type="button">=</button>
+  </div>
+
+  <h3>Span: Columns</h3>
+
+  <div class="box box--span-column">
+    <button class="key key--primary" type="button">AC</button>
+  </div>
+
+  <h3>Span: Rows</h3>
+
+  <div class="box box--span-row">
+    <button class="key key--secondary" type="button">=</button>
+  </div>
+</div>

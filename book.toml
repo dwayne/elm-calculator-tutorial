@@ -5,6 +5,9 @@ src = "src"
 language = "en"
 multilingual = false
 
+[output.html]
+additional-css = ["css/prototype.css"]
+
 [output.html.code.hidelines]
 css = "~"
 elm = "~"

@@ -1,6 +1,6 @@
 # Blocks
 
-Based on the approach I described in "[How Do I Go From Design to Prototype?](../index.html#how-do-i-go-from-design-to-prototype)", the components I came up with and their bottom-up ordering are as follows:
+Based on the approach I described in "[From Design to Prototype](../index.html#from-design-to-prototype)", the components I came up with and their bottom-up ordering are as follows:
 
 1. **Key** - `AC`, `=`, `.`, `+`, `-`, `×`, `÷`, and the digits `0` to `9`.
 2. **Pad** - The key pad that houses the keys.
