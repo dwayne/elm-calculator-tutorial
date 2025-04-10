@@ -1,56 +1,81 @@
-<style>
-  .box {
-    --width: 80px;
-    --height: 65px;
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1" />
 
-    width: var(--width);
-    height: var(--height);
-  }
+    <title>Key</title>
 
-  .box--span-column {
-    width: calc(2 * var(--width) + 1px);
-  }
+    <link rel="stylesheet" href="./index.css" />
+    <style>
+      :root {
+        --width: 80px;
+        --height: 65px;
+      }
 
-  .box--span-row {
-    height: calc(2 * var(--height) + 1px);
-  }
-</style>
-<div class="prototype">
-  <h3>Default</h3>
+      .box {
+        width: var(--width);
+        height: var(--height);
+      }
 
-  <h4>Unconstrained</h4>
+      .box--span-column {
+        width: calc(2 * var(--width) + 1px);
+      }
 
-  <p>
-    <button class="key" type="button">8</button>
-  </p>
+      .box--span-row {
+        height: calc(2 * var(--height) + 1px);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Key</h1>
 
-  <h4>Constrained</h4>
+    <h2>Default</h2>
 
-  <div class="box">
-    <button class="key" type="button">8</button>
-  </div>
+    <h3>Unconstrained</h3>
 
-  <h3>Primary</h3>
+    <p>
+      <button class="key" type="button">8</button>
+    </p>
 
-  <div class="box">
-    <button class="key key--primary" type="button">AC</button>
-  </div>
+    <h3>Constrained</h3>
 
-  <h3>Secondary</h3>
+    <p>
+      <div class="box">
+        <button class="key" type="button">8</button>
+      </div>
+    </p>
 
-  <div class="box">
-    <button class="key key--secondary" type="button">=</button>
-  </div>
+    <h2>Primary</h2>
 
-  <h3>Span: Columns</h3>
+    <p>
+      <div class="box">
+        <button class="key key--primary" type="button">AC</button>
+      </div>
+    </p>
 
-  <div class="box box--span-column">
-    <button class="key key--primary" type="button">AC</button>
-  </div>
+    <h2>Secondary</h2>
 
-  <h3>Span: Rows</h3>
+    <p>
+      <div class="box">
+        <button class="key key--secondary" type="button">=</button>
+      </div>
+    </p>
 
-  <div class="box box--span-row">
-    <button class="key key--secondary" type="button">=</button>
-  </div>
-</div>
+    <h2>Span: Columns</h2>
+
+    <p>
+      <div class="box box--span-column">
+        <button class="key key--primary" type="button">AC</button>
+      </div>
+    </p>
+
+    <h2>Span: Rows</h2>
+
+    <p>
+      <div class="box box--span-row">
+        <button class="key key--secondary" type="button">=</button>
+      </div>
+    </p>
+  </body>
+</html>

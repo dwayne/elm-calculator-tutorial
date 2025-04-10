@@ -89,7 +89,7 @@ The key should take up the full width and height of its parent. This allows the 
 
 ## Demo
 
-{{#include demo/key.html}}
+<iframe src="./demo/key.html" style="width: 100%; height: 930px; border: 2px solid #333;"></iframe>
 
 ## Source Code
 
