@@ -1,5 +1,7 @@
 # key
 
+A key, for e.g. `AC`, `=`, `.`, `+`, `-`, `×`, `÷`, and the digits `0` to `9`.
+
 - [HTML](#html)
 - [Sass](#sass)
 - [Demo](#demo)
@@ -13,13 +15,13 @@
 <button class="key" type="button">8</button>
 ```
 
-Keys are meant to be interacted with and would be given click handlers so the `<button>` element seems appropriate.
+A key can be clicked and would need a click handler so the `<button>` element seems appropriate.
 
 - [How (Not) to Build a Button](https://benmyers.dev/blog/clickable-divs/)
 
-By default, buttons have their `type` attribute set to `submit`. Since these buttons won't be for submitting form data to a server I set their `type` atribute to `button`.
+By default, a `<button>` element has its `type` attribute set to `submit`. Since the `<button>` element backing a key won't be for submitting form data to a server it's recommend to set its `type` attribute to `button`.
 
-- [The Button element: Notes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#notes)
+- [The `<button>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#notes)
 
 ### Primary
 
@@ -93,6 +95,6 @@ The key should take up the full width and height of its parent. This allows the 
 
 ## Source Code
 
-- [https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/key.html](https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/key.html)
-- [https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss)
-- [https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_key.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_key.scss)
+- [prototype/key.html](https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/key.html)
+- [sass/_colors.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss)
+- [sass/blocks/_key.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_key.scss)
