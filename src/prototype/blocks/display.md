@@ -1,6 +1,6 @@
 # display
 
-A two line display where the top line shows the user's input and the bottom line shows the result of evaluating that input.
+A two line **display** where the top line shows the user's input and the bottom line shows the result of evaluating that input.
 
 - [HTML](#html)
 - [Sass](#sass)

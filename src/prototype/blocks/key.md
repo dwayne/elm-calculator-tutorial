@@ -1,6 +1,6 @@
 # key
 
-A key, for e.g. `AC`, `=`, `.`, `+`, `-`, `×`, `÷`, and the digits `0` to `9`.
+A **key**, for e.g. `AC`, `=`, `.`, `+`, `-`, `×`, `÷`, and the digits `0` to `9`.
 
 - [HTML](#html)
 - [Sass](#sass)

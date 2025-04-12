@@ -1,6 +1,6 @@
 # pad
 
-The pad or keypad consists of the set of keys arranged in a grid.
+The **pad** or keypad consists of the set of [key](./key.md)s arranged in a grid.
 
 - [HTML](#html)
 - [Sass](#sass)
