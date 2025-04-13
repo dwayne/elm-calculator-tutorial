@@ -45,12 +45,12 @@ The **calculator** consists of the [display](./display.md) and [pad](./pad.md) a
 
 The width of the display is constrained to be equal to the width of the pad, `pad.$pad-width`, by setting the width of the `.calculator__display` element and not by setting the width of the `.display` block directly. This is because the `.display` block is designed to take on the width of its container. As such, it is up to the container to set the width.
 
-### The `.calculator_pad` Element
+### The `.calculator__pad` Element
 
-I don't explicitly style the `.calculator_pad` element. However, it does serve two purposes:
+I don't explicitly style the `.calculator__pad` element. However, it does serve two purposes:
 
-1. The `.calculator` block uses `display: inline-flex` which means the `.calculator_pad` element becomes a flex item. This is a good thing because it protects the `.pad` block from becoming a flex item itself which could mess with its dimensions.
-2. Naming the wrapping `div`, i.e. `.calculator_pad`, allows me to refer to it by name. So it's good for communication.
+1. The `.calculator` block uses `display: inline-flex` which means the `.calculator__pad` element becomes a flex item. This is a good thing because it protects the `.pad` block from becoming a flex item itself which could mess with its dimensions.
+2. Naming the wrapping `div`, i.e. `.calculator__pad`, allows me to refer to it by name. So it's good for communication.
 
 ## Demo
 
