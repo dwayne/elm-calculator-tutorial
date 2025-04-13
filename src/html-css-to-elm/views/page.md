@@ -1,5 +1,7 @@
 # View.Page
 
+The implementation was based on [the `.page` block](../../prototype/blocks/page.md).
+
 - [View Options](#view-options)
 - [View Function](#view-function)
 - [Source Code](#source-code)
@@ -10,6 +12,6 @@
 
 ## View Function
 
-The implementation is guided by [the `.page` block](../../prototype/blocks/page.md).
+
 
 ## Source Code

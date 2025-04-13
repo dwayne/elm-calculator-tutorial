@@ -1,5 +1,7 @@
 # View.Display
 
+The implementation was based on [the `.display` block](../../prototype/blocks/display.md).
+
 - [View Options](#view-options)
 - [View Function](#view-function)
 - [Source Code](#source-code)
@@ -10,6 +12,6 @@
 
 ## View Function
 
-The implementation is guided by [the `.display` block](../../prototype/blocks/display.md).
+
 
 ## Source Code

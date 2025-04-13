@@ -1,5 +1,7 @@
 # View.Attribution
 
+The implementation was based on [the `.attribution` block](../../prototype/blocks/attribution.md).
+
 - [View Options](#view-options)
 - [View Function](#view-function)
 - [Source Code](#source-code)
@@ -10,6 +12,6 @@
 
 ## View Function
 
-The implementation is guided by [the `.attribution` block](../../prototype/blocks/attribution.md).
+
 
 ## Source Code

@@ -1,5 +1,7 @@
 # View.Key
 
+The implementation was based on [the `.key` block](../../prototype/blocks/key.md).
+
 - [View Options](#view-options)
 - [View Function](#view-function)
 - [Source Code](#source-code)
@@ -189,8 +191,6 @@ toString operator =
 ```
 
 ## View Function
-
-The implementation is guided by [the `.key` block](../../prototype/blocks/key.md).
 
 ```elm
 view : ViewOptions msg -> H.Html msg
