@@ -16,7 +16,6 @@
 # HTML/CSS to Elm
 
 - [Translating](html-css-to-elm/README.md)
-- [Keys](html-css-to-elm/keys.md)
 - [Views](html-css-to-elm/views/README.md)
   - [View.Key](html-css-to-elm/views/key.md)
   - [View.Pad](html-css-to-elm/views/pad.md)
