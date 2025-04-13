@@ -23,7 +23,6 @@
   - [View.Calculator](html-css-to-elm/views/calculator.md)
   - [View.Attribution](html-css-to-elm/views/attribution.md)
   - [View.Page](html-css-to-elm/views/page.md)
-- [Sandbox](html-css-to-elm/sandbox.md)
 
 # Application Logic
 

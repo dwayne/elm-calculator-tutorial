@@ -24,7 +24,6 @@ After completing this tutorial you will have been exposed to:
 - A way to prototype with HTML/CSS.
 - A way to structure your HTML/CSS with [BEM](https://getbem.com/).
 - A way to design an API for your Elm views.
-- A way to test your Elm views in a sandboxed environment.
 - A way to separate your UI and application logic.
 
 Other interesting things I'd cover, because I'm working on a calculator, include:
@@ -63,8 +62,6 @@ The main goal I try to achieve in this phase is to solve most if not all the UI 
 ### HTML/CSS to Elm
 
 At this point in the process most if not all of my UI related problems have been solved and it's time to translate the HTML portion into [`elm/html`](https://package.elm-lang.org/packages/elm/html/latest/). This is typically straightforward to do but there is a little bit of view function API design that tends to occur. However, this is definitely the easiest part of the entire process.
-
-I also build a sandbox to play around with all the components of the UI. Think [Storybook](https://storybook.js.org/) but without all the bells and whistles.
 
 ### Application Logic
 
