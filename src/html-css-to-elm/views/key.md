@@ -9,14 +9,6 @@ The implementation was based on [the `.key` block](../../prototype/blocks/key.md
 ## View Options
 
 ```elm
-module View.Key exposing (Style(..), ViewOptions, view)
-
-import Data.Key as Key exposing (Key)
-import Html as H
-import Html.Attributes as HA
-import Html.Events as HE
-
-
 type alias ViewOptions msg =
     { style : Style
     , key : Key
@@ -41,12 +33,6 @@ This module provides a visual representation of a key but I also needed a logica
 #### `Data.Key`
 
 ```elm
-module Data.Key exposing (Key(..), toString)
-
-import Data.Digit as Digit exposing (Digit)
-import Data.Operator as Operator exposing (Operator)
-
-
 type Key
     = AC
     | Dot
@@ -77,9 +63,6 @@ toString key =
 #### `Data.Digit`
 
 ```elm
-module Data.Digit exposing (Digit(..), toInt, toString)
-
-
 type Digit
     = Zero
     | One
@@ -164,9 +147,6 @@ toString digit =
 #### `Data.Operator`
 
 ```elm
-module Data.Operator exposing (Operator(..), toString)
-
-
 type Operator
     = Add
     | Sub

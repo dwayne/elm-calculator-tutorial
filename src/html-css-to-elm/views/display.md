@@ -9,12 +9,6 @@ The implementation was based on [the `.display` block](../../prototype/blocks/di
 ## View Options
 
 ```elm
-module View.Display exposing (ViewOptions, view)
-
-import Html as H
-import Html.Attributes as HA
-
-
 type alias ViewOptions =
     { line1 : String
     , line2 : String

@@ -9,16 +9,6 @@ The implementation was based on [the `.pad` block](../../prototype/blocks/pad.md
 ## View Options
 
 ```elm
-module View.Pad exposing (view)
-
-import Data.Digit as Digit
-import Data.Key as Key exposing (Key)
-import Data.Operator as Operator
-import Html as H
-import Html.Attributes as HA
-import View.Key as Key
-
-
 view : (Key -> msg) -> H.Html msg
 view onClick =
     -- ...
