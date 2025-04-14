@@ -1,0 +1,347 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>display - How I Built freeCodeCamp&#x27;s Calculator with Elm</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon.svg">
+        <link rel="shortcut icon" href="../../favicon.png">
+        <link rel="stylesheet" href="../../css/variables.css">
+        <link rel="stylesheet" href="../../css/general.css">
+        <link rel="stylesheet" href="../../css/chrome.css">
+        <link rel="stylesheet" href="../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">How I Built freeCodeCamp&#x27;s Calculator with Elm</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="display"><a class="header" href="#display">display</a></h1>
+<p>A two line <strong>display</strong> where the top line shows the user's input and the bottom line shows the result of evaluating that input.</p>
+<ul>
+<li><a href="#html">HTML</a></li>
+<li><a href="#sass">Sass</a></li>
+<li><a href="#demo">Demo</a></li>
+<li><a href="#source-code">Source Code</a></li>
+</ul>
+<h2 id="html"><a class="header" href="#html">HTML</a></h2>
+<h3 id="empty"><a class="header" href="#empty">Empty</a></h3>
+<pre><code class="language-html">&lt;div class="display"&gt;
+  &lt;div class="display__line1"&gt;&lt;/div&gt;
+  &lt;div class="display__line2"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>It's interesting that even though the structure is simple and it seems like nothing could be improved, there is room for improvement. In particular, I recently learned about <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/output">the <code>&lt;output&gt;</code> element</a>. It is a container element into which you can inject the results of a calculation or the outcome of a user action. Thus, both display lines could be changed from <code>&lt;div&gt;</code> to <code>&lt;output&gt;</code> to improve their semantics and accessibility.</p>
+<h3 id="non-empty-short"><a class="header" href="#non-empty-short">Non-empty: Short</a></h3>
+<pre><code class="language-html">&lt;div class="display"&gt;
+  &lt;div class="display__line1"&gt;22÷7=3.(142857)&lt;/div&gt;
+  &lt;div class="display__line2"&gt;3.(142857)&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<h3 id="non-empty-long"><a class="header" href="#non-empty-long">Non-empty: Long</a></h3>
+<pre><code class="language-html">&lt;div class="display"&gt;
+  &lt;div class="display__line1"&gt;1×8111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111&lt;/div&gt;
+  &lt;div class="display__line2"&gt;8111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>While I was playing around with the display I realized that long input text broke it and it forced me to handle that case immediately. This is one of the major benefits of working through UI problems, in a dedicated environment, independently of everything else.</p>
+<ul>
+<li><a href="https://bradfrost.com/blog/post/a-frontend-workshop-environment/">A Frontend Workshop Environment</a></li>
+</ul>
+<h2 id="sass"><a class="header" href="#sass">Sass</a></h2>
+<pre><code class="language-scss">@use "../colors";
+@use "../typography";
+
+.display {
+  padding: 5px 5px 10px 5px;
+
+  font-family: typography.$digital;
+
+  text-align: right;
+  overflow-wrap: break-word;
+
+  background-color: colors.$black;
+}
+
+.display__line1:empty::before,
+.display__line2:empty::before {
+  content: "\00A0";
+}
+
+.display__line1 {
+  padding-bottom: 2px;
+
+  font-size: 1.25rem;
+  line-height: 1;
+
+  color: colors.$orange;
+}
+
+.display__line2 {
+  font-size: 1.875rem;
+  line-height: 1;
+
+  color: colors.$white;
+}
+</code></pre>
+<h3 id="typography"><a class="header" href="#typography">Typography</a></h3>
+<p>I prefer to refer to my font stacks by name, just as I do with colors. A <a href="./key.html#colors">two-tier system</a> can be established here as well.</p>
+<h3 id="the-empty-state"><a class="header" href="#the-empty-state">The Empty State</a></h3>
+<p>When the display lines are empty they collapse on themselves. In order to avoid that from happening I use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:empty">the <code>:empty</code> CSS pseudo-class</a> to select the lines when they have no children and add content, a <a href="https://en.wikipedia.org/wiki/Non-breaking_space">non-breaking space</a>, to them. This ensure that they don't collapse and the height of the lines remain intact.</p>
+<h3 id="long-text"><a class="header" href="#long-text">Long Text</a></h3>
+<p>The following two CSS rules ensure that long text within the lines is handled correctly.</p>
+<pre><code class="language-scss">.display {
+  overflow-wrap: break-word;
+}
+
+.display__line1, .display__line2 {
+  line-height: 1;
+}
+</code></pre>
+<h3 id="writing-sass"><a class="header" href="#writing-sass">Writing Sass</a></h3>
+<p>Sometimes I write my Sass based on the problems a group of rules are intended to solve. For e.g. I might rewrite the Sass above in the following way:</p>
+<pre><code class="language-scss">@use "../colors";
+@use "../typography";
+
+// Block
+
+.display {
+  padding: 5px 5px 10px 5px;
+
+  font-family: typography.$digital;
+
+  text-align: right;
+
+  background-color: colors.$black;
+}
+
+// Elements
+
+.display__line1 {
+  padding-bottom: 2px;
+
+  font-size: 1.25rem;
+
+  color: colors.$orange;
+}
+
+.display__line2 {
+  font-size: 1.875rem;
+
+  color: colors.$white;
+}
+
+// Deal with the empty state
+
+.display__line1:empty::before,
+.display__line2:empty::before {
+  content: "\00A0";
+}
+
+// Deal with long text
+
+.display {
+  overflow-wrap: break-word;
+}
+
+.display__line1, .display__line2 {
+  line-height: 1;
+}
+</code></pre>
+<h2 id="demo"><a class="header" href="#demo">Demo</a></h2>
+<iframe src="./demo/display.html" style="width: 100%; height: 770px; border: 2px solid #333;"></iframe>
+<h2 id="source-code"><a class="header" href="#source-code">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/display.html">prototype/display.html</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_display.scss">sass/blocks/_display.scss</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss">sass/_colors.scss</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_typography.scss">sass/_typography.scss</a></li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../prototype/blocks/pad.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../prototype/blocks/calculator.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../prototype/blocks/pad.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../prototype/blocks/calculator.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr.min.js"></script>
+        <script src="../../mark.min.js"></script>
+        <script src="../../searcher.js"></script>
+
+        <script src="../../clipboard.min.js"></script>
+        <script src="../../highlight.js"></script>
+        <script src="../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

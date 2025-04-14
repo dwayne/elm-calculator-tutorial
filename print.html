@@ -1,0 +1,1418 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>How I Built freeCodeCamp&#x27;s Calculator with Elm</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">How I Built freeCodeCamp&#x27;s Calculator with Elm</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>In this tutorial, I'll share with you how I built <a href="https://www.freecodecamp.com/">freeCodeCamp</a>'s <a href="https://www.freecodecamp.org/learn/front-end-development-libraries/front-end-development-libraries-projects/build-a-javascript-calculator">Build a JavaScript Calculator</a> frontend project with <a href="https://elm-lang.org/">Elm</a>.</p>
+<p>Here's the <a href="https://dwayne.github.io/elm-calculator/">live demo</a> of the Elm web application for you to explore how it works. And, here's the reference to the full <a href="https://github.com/dwayne/elm-calculator/tree/1.0.0">source code</a>.</p>
+<p>My primary goal is to share a process that has worked for me when building my Elm web applications in the hopes that it can work for you as well. This is only one way to go about it but I think it's a useful and undervalued approach that I haven't seen described elsewhere in the Elm community.</p>
+<h2 id="audience"><a class="header" href="#audience">Audience</a></h2>
+<p>Any web developer interested in using Elm to build reliable web applications.</p>
+<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
+<ul>
+<li>A basic knowledge of <a href="https://web.dev/learn/html">HTML</a>, <a href="https://web.dev/learn/css">CSS</a>, and <a href="https://web.dev/learn/javascript">JavaScript</a>.</li>
+<li>And, a basic knowledge of Elm as provided by the <a href="https://guide.elm-lang.org/">official Elm guide</a>.</li>
+</ul>
+<h2 id="exposure"><a class="header" href="#exposure">Exposure</a></h2>
+<p>After completing this tutorial you will have been exposed to:</p>
+<ul>
+<li>A process for building any Elm web application starting from a given design.</li>
+<li>A bottom-up approach for building reliable UIs with HTML/CSS that's easy to maintain and extend.</li>
+<li>A way to prototype with HTML/CSS.</li>
+<li>A way to structure your HTML/CSS with <a href="https://getbem.com/">BEM</a>.</li>
+<li>A way to design an API for your Elm views.</li>
+<li>A way to separate your UI and application logic.</li>
+</ul>
+<p>Other interesting things I'd cover, because I'm working on a calculator, include:</p>
+<ul>
+<li>Building a module for <a href="https://en.wikipedia.org/wiki/Rational_number">rational number</a> arithmetic.</li>
+<li>Displaying rational numbers using decimal notation for both terminating and <a href="https://en.wikipedia.org/wiki/Repeating_decimal">repeating decimals</a>.</li>
+<li>Building a module for a <a href="https://en.wikipedia.org/wiki/Stack_(abstract_data_type)">Stack</a> data structure.</li>
+<li>Evaluating infix expressions using <a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra's shunting yard algorithm</a>.</li>
+<li>Parsing user input using a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">finite-state machine</a>.</li>
+<li>Writing unit tests.</li>
+</ul>
+<h2 id="the-10000-foot-view"><a class="header" href="#the-10000-foot-view">The 10,000 Foot View</a></h2>
+<ul>
+<li><a href="index.html#design">Design</a></li>
+<li><a href="index.html#prototype">Prototype</a></li>
+<li><a href="index.html#htmlcss-to-elm">HTML/CSS to Elm</a></li>
+<li><a href="index.html#application-logic">Application Logic</a></li>
+<li><a href="index.html#web-application--ui--application-logic">Web Application = UI + Application Logic</a></li>
+</ul>
+<h3 id="design"><a class="header" href="#design">Design</a></h3>
+<p>My process starts with knowing what I want to build and how I want it to look. Design is important but it has a separate process that is outside the scope of this tutorial. The design for the calculator was <del>inspired by</del> lifted from this <a href="https://codepen.io/freeCodeCamp/full/wgGVVX">CodePen example</a>. Thanks <a href="https://www.freecodecamp.org/no-stack-dub-sack">Peter Weinberg</a>.</p>
+<h3 id="prototype"><a class="header" href="#prototype">Prototype</a></h3>
+<p>The next step in my process is realizing the design using HTML, CSS, and JavaScript. I call this my prototyping phase. Three key concepts support this phase:</p>
+<ol>
+<li>HTML is for structure and semantics (meaning).</li>
+<li>CSS is for styling and layout.</li>
+<li>JavaScript is for controlling dynamic behaviour and modeling application logic.</li>
+</ol>
+<p>In practice, by keeping these concepts in mind, it helps me to have a clear separation between the user interface (UI) and the application logic. For me, the UI consists of HTML, CSS, and some JavaScript for controlling dynamic behaviour. The application logic is entirely within the purview of JavaScript.</p>
+<p>The main goal I try to achieve in this phase is to solve most if not all the UI related problems that the design surfaces. This phase is the phase to figure out HTML semantics, CSS selector names, accessibility, layout, etc.</p>
+<h3 id="htmlcss-to-elm"><a class="header" href="#htmlcss-to-elm">HTML/CSS to Elm</a></h3>
+<p>At this point in the process most if not all of my UI related problems have been solved and it's time to translate the HTML portion into <a href="https://package.elm-lang.org/packages/elm/html/latest/"><code>elm/html</code></a>. This is typically straightforward to do but there is a little bit of view function API design that tends to occur. However, this is definitely the easiest part of the entire process.</p>
+<h3 id="application-logic"><a class="header" href="#application-logic">Application Logic</a></h3>
+<p>The brains of the application is handled by JavaScript and hence, in our case as Elm developers, by Elm. In this part of the process I build a logical model for the application domain. Elm really shines during this part of the process because functional programming using modules, opaque types, union types, pattern matching, immutable data types, and pure functions supports a delightful approach to <a href="https://thoughtbot.com/blog/data-modeling-resources-in-elm">domain modeling</a>.</p>
+<p>I don't practice test-driven development but I do test and unit testing the tricky parts of my application logic helps me to find and fix bugs.</p>
+<h3 id="web-application--ui--application-logic"><a class="header" href="#web-application--ui--application-logic">Web Application = UI + Application Logic</a></h3>
+<p>Finally, I connect the UI to the application logic and I experience a moment of bliss.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="prototyping"><a class="header" href="#prototyping">Prototyping</a></h1>
+<p>This is the phase where I go from design to prototype.</p>
+<h2 id="from-design-to-prototype"><a class="header" href="#from-design-to-prototype">From Design to Prototype</a></h2>
+<p>I take the given design and I reimagine it as an <a href="https://en.wikipedia.org/wiki/Exploded-view_drawing">exploded-view drawing</a> that I then use to deconstruct it into its components. I build a <a href="https://en.wikipedia.org/wiki/Dependency_graph">dependency graph</a> of all the components such that there is a directed edge from component <code>A</code> to component <code>B</code> whenever <code>A</code> depends on <code>B</code>. A <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological sort</a> of this dependency graph helps me figure out in what order to start working on the components. At this point, I have a choice to take either a bottom-up or top-down approach, and I usually choose the bottom-up approach. For each component, I determine:</p>
+<ol>
+<li>How I'm going to give it meaning and structure with HTML.</li>
+<li>How I'm going to refer to its elements using CSS classes.</li>
+<li>How I'm going to present it, as specified in the design, with CSS rules.</li>
+</ol>
+<h2 id="specifics"><a class="header" href="#specifics">Specifics</a></h2>
+<p>I use:</p>
+<ul>
+<li><a href="https://getbem.com/">BEM</a>'s <a href="https://getbem.com/naming/">naming convention</a> for my CSS classes.</li>
+<li><a href="https://sass-lang.com/dart-sass/">Dart Sass</a> to generate my CSS and I take full advantage of its support for modules via the <a href="https://sass-lang.com/documentation/at-rules/use/"><code>@use</code></a> rule.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="blocks"><a class="header" href="#blocks">Blocks</a></h1>
+<p>Based on the approach I described in "<a href="prototype/blocks/../index.html#from-design-to-prototype">From Design to Prototype</a>", the components I came up with and their bottom-up ordering are as follows:</p>
+<ol>
+<li><strong>Key</strong> - <code>AC</code>, <code>=</code>, <code>.</code>, <code>+</code>, <code>-</code>, <code>×</code>, <code>÷</code>, and the digits <code>0</code> to <code>9</code>.</li>
+<li><strong>Pad</strong> - The keypad that houses the keys.</li>
+<li><strong>Display</strong> - A two line display. One line to show the user's input and another line to show the result of evaluating that input.</li>
+<li><strong>Calculator</strong> - Holds the display and pad.</li>
+<li><strong>Attribution</strong> - A note about the developer of the application.</li>
+<li><strong>Page</strong> - A container to layout the calculator and attribution.</li>
+</ol>
+<p>These components became the blocks of my UI, in accordance with BEM. I worked on each block, one at a time, in bottom-up order until all the blocks were implemented.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="key"><a class="header" href="#key">key</a></h1>
+<p>A <strong>key</strong>, for e.g. <code>AC</code>, <code>=</code>, <code>.</code>, <code>+</code>, <code>-</code>, <code>×</code>, <code>÷</code>, and the digits <code>0</code> to <code>9</code>.</p>
+<ul>
+<li><a href="prototype/blocks/key.html#html">HTML</a></li>
+<li><a href="prototype/blocks/key.html#sass">Sass</a></li>
+<li><a href="prototype/blocks/key.html#demo">Demo</a></li>
+<li><a href="prototype/blocks/key.html#source-code">Source Code</a></li>
+</ul>
+<h2 id="html"><a class="header" href="#html">HTML</a></h2>
+<h3 id="default"><a class="header" href="#default">Default</a></h3>
+<pre><code class="language-html">&lt;button class="key" type="button"&gt;8&lt;/button&gt;
+</code></pre>
+<p>A key can be clicked and would need a click handler so the <code>&lt;button&gt;</code> element seems appropriate.</p>
+<ul>
+<li><a href="https://benmyers.dev/blog/clickable-divs/">How (Not) to Build a Button</a></li>
+</ul>
+<p>By default, a <code>&lt;button&gt;</code> element has its <code>type</code> attribute set to <code>submit</code>. Since the <code>&lt;button&gt;</code> element backing a key won't be for submitting form data to a server it's recommend to set its <code>type</code> attribute to <code>button</code>.</p>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#notes">The <code>&lt;button&gt;</code> element</a></li>
+</ul>
+<h3 id="primary"><a class="header" href="#primary">Primary</a></h3>
+<pre><code class="language-html">&lt;button class="key key--primary" type="button"&gt;AC&lt;/button&gt;
+</code></pre>
+<h3 id="secondary"><a class="header" href="#secondary">Secondary</a></h3>
+<pre><code class="language-html">&lt;button class="key key--secondary" type="button"&gt;=&lt;/button&gt;
+</code></pre>
+<p>Since keys only have a style modifier I chose to keep the naming simple. No modifier signals the default and the <code>key--primary</code> and <code>key--secondary</code> block modifiers signal the primary and secondary styles respectively. An alternative naming system for the style modifier could have been one of the following sets of names:</p>
+<ul>
+<li><code>key--style-default</code>, <code>key--style-primary</code>, <code>key--style-secondary</code>
+<ul>
+<li>I don't like this convention because it gets ambiguous when the property or the value also has a hyphen.</li>
+</ul>
+</li>
+<li><code>key--style--default</code>, <code>key--style--primary</code>, <code>key--style--secondary</code>
+<ul>
+<li>I prefer this convention since it gets rid of the ambiguity. However, for this situation, it's overkill.</li>
+</ul>
+</li>
+</ul>
+<h2 id="sass"><a class="header" href="#sass">Sass</a></h2>
+<pre><code class="language-scss">@use "../colors";
+
+/*button*/.key {
+  border: 0;
+  padding: 0;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  font-size: 1.25rem;
+
+  background-color: colors.$matterhorn;
+  color: colors.$white;
+
+  cursor: pointer;
+}
+
+.key:hover {
+  outline: 1px solid colors.$grey;
+  color: colors.$black;
+}
+
+.key--primary {
+  background-color: colors.$mediumCarmine;
+}
+
+.key--secondary {
+  background-color: colors.$prussianBlue;
+}
+</code></pre>
+<h3 id="colors"><a class="header" href="#colors">Colors</a></h3>
+<p>I prefer to refer to my colors by name. I like the approach outlined by <a href="https://sachagreif.com/">Sacha Grief</a> in <a href="https://web.archive.org/web/20161012085308/http://sachagreif.com:80/sass-color-variables/">SASS &amp; Color Variables</a> but I didn't follow the two-tier system here since I didn't need it. I only used descriptive names. However, if I decide I want to make the application themeable then adding functional names would be quite useful.</p>
+<h3 id="whats-with-the-button-comment"><a class="header" href="#whats-with-the-button-comment">What's with the <code>/*button*/</code> Comment?</a></h3>
+<p>I picked it up from <a href="https://csswizardry.com/">Harry Roberts</a>. In <a href="https://cssguidelin.es/">CSS Guidelines</a>, he shares the idea of using <a href="https://cssguidelin.es/#quasi-qualified-selectors">quasi-qualified selectors</a> to provide information about where a class might be expected or intended to be used. By using quasi-qualified selectors we can still provide that information without actually qualifying the selector and increasing its specificity.</p>
+<h3 id="key-shape"><a class="header" href="#key-shape">Key Shape</a></h3>
+<p>The key should take up the full width and height of its parent. This allows the parent to control the shape of the key. We need this flexibility because of how the <code>AC</code> and <code>=</code> keys are intended to be displayed.</p>
+<h2 id="demo"><a class="header" href="#demo">Demo</a></h2>
+<iframe src="./demo/key.html" style="width: 100%; height: 930px; border: 2px solid #333;"></iframe>
+<h2 id="source-code"><a class="header" href="#source-code">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/key.html">prototype/key.html</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_key.scss">sass/blocks/_key.scss</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss">sass/_colors.scss</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="pad"><a class="header" href="#pad">pad</a></h1>
+<p>The <strong>pad</strong> or keypad consists of the set of <a href="prototype/blocks/./key.html">keys</a> arranged in a grid.</p>
+<ul>
+<li><a href="prototype/blocks/pad.html#html">HTML</a></li>
+<li><a href="prototype/blocks/pad.html#sass">Sass</a></li>
+<li><a href="prototype/blocks/pad.html#demo">Demo</a></li>
+<li><a href="prototype/blocks/pad.html#source-code">Source Code</a></li>
+</ul>
+<h2 id="html-1"><a class="header" href="#html-1">HTML</a></h2>
+<pre><code class="language-html">&lt;div class="pad"&gt;
+  &lt;div class="pad__slot r0 c0 colspan2"&gt;
+    &lt;button class="key key--primary" type="button"&gt;AC&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="pad__slot r0 c2"&gt;
+    &lt;button class="key" type="button"&gt;÷&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="pad__slot r0 c3"&gt;
+    &lt;button class="key" type="button"&gt;×&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div class="pad__slot r1 c0"&gt;
+    &lt;button class="key" type="button"&gt;7&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="pad__slot r1 c1"&gt;
+    &lt;button class="key" type="button"&gt;8&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="pad__slot r1 c2"&gt;
+    &lt;button class="key" type="button"&gt;9&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="pad__slot r1 c3"&gt;
+    &lt;button class="key" type="button"&gt;-&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div class="pad__slot r2 c0"&gt;
+    &lt;button class="key" type="button"&gt;4&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="pad__slot r2 c1"&gt;
+    &lt;button class="key" type="button"&gt;5&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="pad__slot r2 c2"&gt;
+    &lt;button class="key" type="button"&gt;6&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="pad__slot r2 c3"&gt;
+    &lt;button class="key" type="button"&gt;+&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div class="pad__slot r3 c0"&gt;
+    &lt;button class="key" type="button"&gt;1&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="pad__slot r3 c1"&gt;
+    &lt;button class="key" type="button"&gt;2&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="pad__slot r3 c2"&gt;
+    &lt;button class="key" type="button"&gt;3&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="pad__slot r3 c3 rowspan2"&gt;
+    &lt;button class="key key--secondary" type="button"&gt;=&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div class="pad__slot r4 c0 colspan2"&gt;
+    &lt;button class="key" type="button"&gt;0&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="pad__slot r4 c2"&gt;
+    &lt;button class="key" type="button"&gt;.&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>The pad contains slots for the keys. I made the deliberate choice to style the position and size of each slot using utility classes scoped to the slots.</p>
+<ul>
+<li><a href="https://davidtheclark.com/on-utility-classes/">The Role of Utility Classes in Scalable CSS</a></li>
+</ul>
+<h2 id="sass-1"><a class="header" href="#sass-1">Sass</a></h2>
+<pre><code class="language-scss">@use "../colors";
+
+$pad-slot-width: 80px !default;
+$pad-slot-height: 65px !default;
+$pad-slot-spacing-around: 1px !default;
+
+$pad-width: 4 * $pad-slot-width + 5 * $pad-slot-spacing-around;
+$pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
+
+.pad {
+  position: relative;
+
+  width: $pad-width;
+  height: $pad-height;
+
+  background-color: colors.$black;
+}
+
+.pad__slot {
+  position: absolute;
+
+  width: $pad-slot-width;
+  height: $pad-slot-height;
+}
+
+.pad__slot.r0 {
+  top: $pad-slot-spacing-around;
+}
+
+.pad__slot.r1 {
+  top: $pad-slot-height + 2 * $pad-slot-spacing-around;
+}
+
+.pad__slot.r2 {
+  top: 2 * $pad-slot-height + 3 * $pad-slot-spacing-around;
+}
+
+.pad__slot.r3 {
+  top: 3 * $pad-slot-height + 4 * $pad-slot-spacing-around;
+}
+
+.pad__slot.r4 {
+  top: 4 * $pad-slot-height + 5 * $pad-slot-spacing-around;
+}
+
+.pad__slot.c0 {
+  left: $pad-slot-spacing-around;
+}
+
+.pad__slot.c1 {
+  left: $pad-slot-width + 2 * $pad-slot-spacing-around;
+}
+
+.pad__slot.c2 {
+  left: 2 * $pad-slot-width + 3 * $pad-slot-spacing-around;
+}
+
+.pad__slot.c3 {
+  left: 3 * $pad-slot-width + 4 * $pad-slot-spacing-around;
+}
+
+.pad__slot.rowspan2 {
+  height: 2 * $pad-slot-height + $pad-slot-spacing-around;
+}
+
+.pad__slot.colspan2 {
+  width: 2 * $pad-slot-width + $pad-slot-spacing-around;
+}
+</code></pre>
+<p>The width, height, and spacing around the slots can each be overriden when using the pad module. For e.g.</p>
+<pre><code class="language-scss">@use "blocks/pad" with (
+  $pad-slot-width: 75px,
+  $pad-slot-height: 50px,
+  $pad-slot-spacing-around: 2px
+);
+</code></pre>
+<ul>
+<li><a href="https://sass-lang.com/documentation/at-rules/use/#configuration"><code>@use</code>: Configuration</a></li>
+</ul>
+<h2 id="demo-1"><a class="header" href="#demo-1">Demo</a></h2>
+<iframe src="./demo/pad.html" style="width: 100%; height: 430px; border: 2px solid #333;"></iframe>
+<h2 id="source-code-1"><a class="header" href="#source-code-1">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/pad.html">prototype/pad.html</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_pad.scss">sass/blocks/_pad.scss</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss">sass/_colors.scss</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="display"><a class="header" href="#display">display</a></h1>
+<p>A two line <strong>display</strong> where the top line shows the user's input and the bottom line shows the result of evaluating that input.</p>
+<ul>
+<li><a href="prototype/blocks/display.html#html">HTML</a></li>
+<li><a href="prototype/blocks/display.html#sass">Sass</a></li>
+<li><a href="prototype/blocks/display.html#demo">Demo</a></li>
+<li><a href="prototype/blocks/display.html#source-code">Source Code</a></li>
+</ul>
+<h2 id="html-2"><a class="header" href="#html-2">HTML</a></h2>
+<h3 id="empty"><a class="header" href="#empty">Empty</a></h3>
+<pre><code class="language-html">&lt;div class="display"&gt;
+  &lt;div class="display__line1"&gt;&lt;/div&gt;
+  &lt;div class="display__line2"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>It's interesting that even though the structure is simple and it seems like nothing could be improved, there is room for improvement. In particular, I recently learned about <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/output">the <code>&lt;output&gt;</code> element</a>. It is a container element into which you can inject the results of a calculation or the outcome of a user action. Thus, both display lines could be changed from <code>&lt;div&gt;</code> to <code>&lt;output&gt;</code> to improve their semantics and accessibility.</p>
+<h3 id="non-empty-short"><a class="header" href="#non-empty-short">Non-empty: Short</a></h3>
+<pre><code class="language-html">&lt;div class="display"&gt;
+  &lt;div class="display__line1"&gt;22÷7=3.(142857)&lt;/div&gt;
+  &lt;div class="display__line2"&gt;3.(142857)&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<h3 id="non-empty-long"><a class="header" href="#non-empty-long">Non-empty: Long</a></h3>
+<pre><code class="language-html">&lt;div class="display"&gt;
+  &lt;div class="display__line1"&gt;1×8111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111&lt;/div&gt;
+  &lt;div class="display__line2"&gt;8111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>While I was playing around with the display I realized that long input text broke it and it forced me to handle that case immediately. This is one of the major benefits of working through UI problems, in a dedicated environment, independently of everything else.</p>
+<ul>
+<li><a href="https://bradfrost.com/blog/post/a-frontend-workshop-environment/">A Frontend Workshop Environment</a></li>
+</ul>
+<h2 id="sass-2"><a class="header" href="#sass-2">Sass</a></h2>
+<pre><code class="language-scss">@use "../colors";
+@use "../typography";
+
+.display {
+  padding: 5px 5px 10px 5px;
+
+  font-family: typography.$digital;
+
+  text-align: right;
+  overflow-wrap: break-word;
+
+  background-color: colors.$black;
+}
+
+.display__line1:empty::before,
+.display__line2:empty::before {
+  content: "\00A0";
+}
+
+.display__line1 {
+  padding-bottom: 2px;
+
+  font-size: 1.25rem;
+  line-height: 1;
+
+  color: colors.$orange;
+}
+
+.display__line2 {
+  font-size: 1.875rem;
+  line-height: 1;
+
+  color: colors.$white;
+}
+</code></pre>
+<h3 id="typography"><a class="header" href="#typography">Typography</a></h3>
+<p>I prefer to refer to my font stacks by name, just as I do with colors. A <a href="prototype/blocks/./key.html#colors">two-tier system</a> can be established here as well.</p>
+<h3 id="the-empty-state"><a class="header" href="#the-empty-state">The Empty State</a></h3>
+<p>When the display lines are empty they collapse on themselves. In order to avoid that from happening I use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:empty">the <code>:empty</code> CSS pseudo-class</a> to select the lines when they have no children and add content, a <a href="https://en.wikipedia.org/wiki/Non-breaking_space">non-breaking space</a>, to them. This ensure that they don't collapse and the height of the lines remain intact.</p>
+<h3 id="long-text"><a class="header" href="#long-text">Long Text</a></h3>
+<p>The following two CSS rules ensure that long text within the lines is handled correctly.</p>
+<pre><code class="language-scss">.display {
+  overflow-wrap: break-word;
+}
+
+.display__line1, .display__line2 {
+  line-height: 1;
+}
+</code></pre>
+<h3 id="writing-sass"><a class="header" href="#writing-sass">Writing Sass</a></h3>
+<p>Sometimes I write my Sass based on the problems a group of rules are intended to solve. For e.g. I might rewrite the Sass above in the following way:</p>
+<pre><code class="language-scss">@use "../colors";
+@use "../typography";
+
+// Block
+
+.display {
+  padding: 5px 5px 10px 5px;
+
+  font-family: typography.$digital;
+
+  text-align: right;
+
+  background-color: colors.$black;
+}
+
+// Elements
+
+.display__line1 {
+  padding-bottom: 2px;
+
+  font-size: 1.25rem;
+
+  color: colors.$orange;
+}
+
+.display__line2 {
+  font-size: 1.875rem;
+
+  color: colors.$white;
+}
+
+// Deal with the empty state
+
+.display__line1:empty::before,
+.display__line2:empty::before {
+  content: "\00A0";
+}
+
+// Deal with long text
+
+.display {
+  overflow-wrap: break-word;
+}
+
+.display__line1, .display__line2 {
+  line-height: 1;
+}
+</code></pre>
+<h2 id="demo-2"><a class="header" href="#demo-2">Demo</a></h2>
+<iframe src="./demo/display.html" style="width: 100%; height: 770px; border: 2px solid #333;"></iframe>
+<h2 id="source-code-2"><a class="header" href="#source-code-2">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/display.html">prototype/display.html</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_display.scss">sass/blocks/_display.scss</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss">sass/_colors.scss</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_typography.scss">sass/_typography.scss</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="calculator"><a class="header" href="#calculator">calculator</a></h1>
+<p>The <strong>calculator</strong> consists of the <a href="prototype/blocks/./display.html">display</a> and <a href="prototype/blocks/./pad.html">pad</a> arranged in a column.</p>
+<ul>
+<li><a href="prototype/blocks/calculator.html#html">HTML</a></li>
+<li><a href="prototype/blocks/calculator.html#sass">Sass</a></li>
+<li><a href="prototype/blocks/calculator.html#demo">Demo</a></li>
+<li><a href="prototype/blocks/calculator.html#source-code">Source Code</a></li>
+</ul>
+<h2 id="html-3"><a class="header" href="#html-3">HTML</a></h2>
+<pre><code class="language-html">&lt;div class="calculator"&gt;
+  &lt;div class="calculator__display"&gt;
+    &lt;!-- The display goes here. --&gt;
+  &lt;/div&gt;
+  &lt;div class="calculator__pad"&gt;
+    &lt;!-- The pad goes here. --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<h2 id="sass-3"><a class="header" href="#sass-3">Sass</a></h2>
+<pre><code class="language-scss">@use "../colors";
+@use "./pad";
+
+.calculator {
+  display: inline-flex;
+  flex-direction: column;
+
+  border: 2px solid colors.$cornFlowerBlue;
+  padding: 3px;
+
+  background-color: colors.$black;
+}
+
+.calculator__display {
+  width: pad.$pad-width;
+}
+</code></pre>
+<h3 id="who-controls-the-width"><a class="header" href="#who-controls-the-width">Who Controls the Width?</a></h3>
+<p>The width of the display is constrained to be equal to the width of the pad, <code>pad.$pad-width</code>, by setting the width of the <code>.calculator__display</code> element and not by setting the width of the <code>.display</code> block directly. This is because the <code>.display</code> block is designed to take on the width of its container. As such, it is up to the container to set the width.</p>
+<h3 id="the-calculator__pad-element"><a class="header" href="#the-calculator__pad-element">The <code>.calculator__pad</code> Element</a></h3>
+<p>I don't explicitly style the <code>.calculator__pad</code> element. However, it does serve two purposes:</p>
+<ol>
+<li>The <code>.calculator</code> block uses <code>display: inline-flex</code> which means the <code>.calculator__pad</code> element becomes a flex item. This is a good thing because it protects the <code>.pad</code> block from becoming a flex item itself which could mess with its dimensions.</li>
+<li>Naming the wrapping <code>div</code>, i.e. <code>.calculator__pad</code>, allows me to refer to it by name. So it's good for communication.</li>
+</ol>
+<h2 id="demo-3"><a class="header" href="#demo-3">Demo</a></h2>
+<iframe src="./demo/calculator.html" style="width: 100%; height: 1540px; border: 2px solid #333;"></iframe>
+<h2 id="source-code-3"><a class="header" href="#source-code-3">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/calculator.html">prototype/calculator.html</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_calculator.scss">sass/blocks/_calculator.scss</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_pad.scss">sass/blocks/_pad.scss</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss">sass/_colors.scss</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="attribution"><a class="header" href="#attribution">attribution</a></h1>
+<p>The <strong>attribution</strong> contains information about the developer of the web application.</p>
+<ul>
+<li><a href="prototype/blocks/attribution.html#html">HTML</a></li>
+<li><a href="prototype/blocks/attribution.html#sass">Sass</a></li>
+<li><a href="prototype/blocks/attribution.html#demo">Demo</a></li>
+<li><a href="prototype/blocks/attribution.html#source-code">Source Code</a></li>
+</ul>
+<h2 id="html-4"><a class="header" href="#html-4">HTML</a></h2>
+<pre><code class="language-html">&lt;p class="attribution"&gt;Developed by &lt;a class="attribution__link" href="https://github.com/dwayne" target="_blank" title="Dwayne's GitHub profile"&gt;Dwayne Crooks&lt;/a&gt;&lt;/p&gt;
+</code></pre>
+<h2 id="sass-4"><a class="header" href="#sass-4">Sass</a></h2>
+<pre><code class="language-scss">@use "../colors";
+@use "../typography";
+
+/*p*/.attribution {
+  margin: 0;
+
+  font-family: typography.$shareTechMono;
+  text-align: center;
+}
+
+/*a*/.attribution__link {
+  text-decoration: none;
+  color: colors.$prussianBlue;
+}
+</code></pre>
+<ul>
+<li><a href="https://cssguidelin.es/#quasi-qualified-selectors">Quasi-Qualified Selectors</a></li>
+</ul>
+<h2 id="demo-4"><a class="header" href="#demo-4">Demo</a></h2>
+<iframe src="./demo/attribution.html" style="width: 100%; height: 265px; border: 2px solid #333;"></iframe>
+<h2 id="source-code-4"><a class="header" href="#source-code-4">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/attribution.html">prototype/attribution.html</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_attribution.scss">sass/blocks/_attribution.scss</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss">sass/_colors.scss</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_typography.scss">sass/_typography.scss</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="page"><a class="header" href="#page">page</a></h1>
+<p>The <strong>page</strong> composes all the components to form the user interface for the entire web application.</p>
+<ul>
+<li><a href="prototype/blocks/page.html#html">HTML</a></li>
+<li><a href="prototype/blocks/page.html#sass">Sass</a></li>
+<li><a href="prototype/blocks/page.html#demo">Demo</a></li>
+<li><a href="prototype/blocks/page.html#source-code">Source Code</a></li>
+</ul>
+<h2 id="html-5"><a class="header" href="#html-5">HTML</a></h2>
+<pre><code class="language-html">&lt;div class="page"&gt;
+  &lt;div class="page__wrapper"&gt;
+    &lt;div class="page__content"&gt;
+      &lt;main&gt;
+        &lt;!-- The calculator goes here. --&gt;
+      &lt;/main&gt;
+      &lt;footer&gt;
+        &lt;!-- The attribution goes here. --&gt;
+      &lt;/footer&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/main">The <code>&lt;main&gt;</code> element</a> represents the dominant content of the <code>&lt;body&gt;</code> of a document. That's why I made the calculator a child of that element.</p>
+<h2 id="sass-5"><a class="header" href="#sass-5">Sass</a></h2>
+<pre><code class="language-scss">@use "../layouts";
+
+.page {
+  @include layouts.absolute-center(20px);
+}
+
+.page__content {
+  @include layouts.centered-column(15px);
+}
+</code></pre>
+<h3 id="mixins"><a class="header" href="#mixins">Mixins</a></h3>
+<p>The <code>.page</code> block and <code>.page__content</code> element both make use of general layout patterns that I made reusable with <a href="https://sass-lang.com/documentation/at-rules/mixin/">mixins</a>.</p>
+<pre><code class="language-scss">@mixin centered-column($gap) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $gap;
+}
+
+@mixin absolute-center($padding, $height: 100vh) {
+  display: flex;
+  height: $height;
+
+  &amp;__wrapper {
+    padding: $padding;
+
+    //
+    // Ensures the padding is shown when the content overflows its container.
+    //
+    display: inline-block;
+
+    //
+    // Vertically and horizontally center.
+    //
+    margin: auto;
+  }
+}
+</code></pre>
+<p>Here's the CSS that's generated:</p>
+<pre><code class="language-css">.page {
+  display: flex;
+  height: 100vh;
+}
+
+.page__wrapper {
+  padding: 20px;
+  display: inline-block;
+  margin: auto;
+}
+
+.page__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+</code></pre>
+<h2 id="demo-5"><a class="header" href="#demo-5">Demo</a></h2>
+<iframe src="./demo/page.html" style="width: 100%; height: 640px; border: 2px solid #333;"></iframe>
+<h2 id="source-code-5"><a class="header" href="#source-code-5">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/page.html">prototype/page.html</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_page.scss">sass/blocks/_page.scss</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_layouts.scss">sass/_layouts.scss</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="translating"><a class="header" href="#translating">Translating</a></h1>
+<p>This is the phase where I go from prototype to Elm views.</p>
+<h2 id="from-prototype-to-elm-views"><a class="header" href="#from-prototype-to-elm-views">From Prototype to Elm Views</a></h2>
+<p>At this point in the process I am usually highly confident in the reliability of my user interface. I built and manually tested the user interface independent of any JavaScript framework, independent of any application logic, and closely following web development best practices and standards as far as I understand it.</p>
+<p>I now begin introducing Elm into the process and I continue to keep my focus on the user interface.</p>
+<p>The goal of this part of the process is to use <code>elm/html</code> to abstract over the HTML/CSS that I created during the prototyping phase so that I can compose the components, i.e. view functions, in any way I chose.</p>
+<p>The general approach that has been working for me is to map each block to a module that implements the view for that component. For e.g. the <code>.key</code> block would be mapped to the <code>View.Key</code> module which exports a <code>view</code> function. The <code>view</code> function abstracts over the HTML of the <code>.key</code> block. Any modifiers on the blocks and elements become options to the <code>view</code> function that help decide which HTML elements and attributes are used.</p>
+<p>My view functions typically take one of three forms:</p>
+<ul>
+<li><code>view : Html msg</code></li>
+<li><code>view : ViewOptions -&gt; Html msg</code></li>
+<li><code>view : ViewOptions msg -&gt; Html msg</code></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="views"><a class="header" href="#views">Views</a></h1>
+<p>The blocks map to modules as follows:</p>
+<div class="table-wrapper"><table><thead><tr><th>Block</th><th>Module</th></tr></thead><tbody>
+<tr><td><a href="html-css-to-elm/views/../../prototype/blocks/key.html">key</a></td><td><a href="html-css-to-elm/views/./key.html"><code>View.Key</code></a></td></tr>
+<tr><td><a href="html-css-to-elm/views/../../prototype/blocks/pad.html">pad</a></td><td><a href="html-css-to-elm/views/./pad.html"><code>View.Pad</code></a></td></tr>
+<tr><td><a href="html-css-to-elm/views/../../prototype/blocks/display.html">display</a></td><td><a href="html-css-to-elm/views/./display.html"><code>View.Display</code></a></td></tr>
+<tr><td><a href="html-css-to-elm/views/../../prototype/blocks/calculator.html">calculator</a></td><td><a href="html-css-to-elm/views/./calculator.html"><code>View.Calculator</code></a></td></tr>
+<tr><td><a href="html-css-to-elm/views/../../prototype/blocks/attribution.html">attribution</a></td><td><a href="html-css-to-elm/views/./attribution.html"><code>View.Attribution</code></a></td></tr>
+<tr><td><a href="html-css-to-elm/views/../../prototype/blocks/page.html">page</a></td><td><a href="html-css-to-elm/views/./page.html"><code>View.Page</code></a></td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="viewkey"><a class="header" href="#viewkey">View.Key</a></h1>
+<p>The implementation was based on <a href="html-css-to-elm/views/../../prototype/blocks/key.html">the <code>.key</code> block</a>.</p>
+<ul>
+<li><a href="html-css-to-elm/views/key.html#view-options">View Options</a></li>
+<li><a href="html-css-to-elm/views/key.html#view-function">View Function</a></li>
+<li><a href="html-css-to-elm/views/key.html#source-code">Source Code</a></li>
+</ul>
+<h2 id="view-options"><a class="header" href="#view-options">View Options</a></h2>
+<pre><code class="language-elm">type alias ViewOptions msg =
+    { style : Style
+    , key : Key
+    , onClick : Key -&gt; msg
+    }
+
+
+type Style
+    = Default
+    | Primary
+    | Secondary
+</code></pre>
+<h3 id="the-style-block-modifiers"><a class="header" href="#the-style-block-modifiers">The Style Block Modifiers</a></h3>
+<p>The <code>Style</code> <a href="https://guide.elm-lang.org/types/custom_types">custom type</a> is used to determine when to apply the <code>.key--primary</code> and <code>.key--secondary</code> block modifiers.</p>
+<h3 id="the-logical-representation-of-a-key"><a class="header" href="#the-logical-representation-of-a-key">The Logical Representation of a Key</a></h3>
+<p>This module provides a visual representation of a key but I also needed a logical representation which I implemented in <code>Data.Key</code>, <code>Data.Digit</code>, and <code>Data.Operator</code>.</p>
+<h4 id="datakey"><a class="header" href="#datakey"><code>Data.Key</code></a></h4>
+<pre><code class="language-elm">type Key
+    = AC
+    | Dot
+    | Equal
+    | Digit Digit
+    | Operator Operator
+
+
+toString : Key -&gt; String
+toString key =
+    case key of
+        AC -&gt;
+            "AC"
+
+        Dot -&gt;
+            "."
+
+        Equal -&gt;
+            "="
+
+        Digit digit -&gt;
+            Digit.toString digit
+
+        Operator operator -&gt;
+            Operator.toString operator
+</code></pre>
+<h4 id="datadigit"><a class="header" href="#datadigit"><code>Data.Digit</code></a></h4>
+<pre><code class="language-elm">type Digit
+    = Zero
+    | One
+    | Two
+    | Three
+    | Four
+    | Five
+    | Six
+    | Seven
+    | Eight
+    | Nine
+
+
+toInt : Digit -&gt; Int
+toInt digit =
+    case digit of
+        Zero -&gt;
+            0
+
+        One -&gt;
+            1
+
+        Two -&gt;
+            2
+
+        Three -&gt;
+            3
+
+        Four -&gt;
+            4
+
+        Five -&gt;
+            5
+
+        Six -&gt;
+            6
+
+        Seven -&gt;
+            7
+
+        Eight -&gt;
+            8
+
+        Nine -&gt;
+            9
+
+
+toString : Digit -&gt; String
+toString digit =
+    case digit of
+        Zero -&gt;
+            "0"
+
+        One -&gt;
+            "1"
+
+        Two -&gt;
+            "2"
+
+        Three -&gt;
+            "3"
+
+        Four -&gt;
+            "4"
+
+        Five -&gt;
+            "5"
+
+        Six -&gt;
+            "6"
+
+        Seven -&gt;
+            "7"
+
+        Eight -&gt;
+            "8"
+
+        Nine -&gt;
+            "9"
+</code></pre>
+<h4 id="dataoperator"><a class="header" href="#dataoperator"><code>Data.Operator</code></a></h4>
+<pre><code class="language-elm">type Operator
+    = Add
+    | Sub
+    | Mul
+    | Div
+
+
+toString : Operator -&gt; String
+toString operator =
+    case operator of
+        Add -&gt;
+            "+"
+
+        Sub -&gt;
+            "-"
+
+        Mul -&gt;
+            "×"
+
+        Div -&gt;
+            "÷"
+</code></pre>
+<h2 id="view-function"><a class="header" href="#view-function">View Function</a></h2>
+<pre><code class="language-elm">view : ViewOptions msg -&gt; H.Html msg
+view { style, key, onClick } =
+    H.button
+        [ HA.class "key"
+        , HA.class &lt;|
+            case style of
+                Default -&gt;
+                    ""
+
+                Primary -&gt;
+                    "key--primary"
+
+                Secondary -&gt;
+                    "key--secondary"
+        , HA.type_ "button"
+        , HE.onClick &lt;| onClick key
+        ]
+        [ H.text &lt;| Key.toString key ]
+</code></pre>
+<h2 id="source-code-6"><a class="header" href="#source-code-6">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Key.elm">src/View/Key.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Key.elm">src/Data/Key.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Digit.elm">src/Data/Digit.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Operator.elm">src/Data/Operator.elm</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="viewpad"><a class="header" href="#viewpad">View.Pad</a></h1>
+<p>The implementation was based on <a href="html-css-to-elm/views/../../prototype/blocks/pad.html">the <code>.pad</code> block</a>.</p>
+<ul>
+<li><a href="html-css-to-elm/views/pad.html#view-options">View Options</a></li>
+<li><a href="html-css-to-elm/views/pad.html#view-function">View Function</a></li>
+<li><a href="html-css-to-elm/views/pad.html#source-code">Source Code</a></li>
+</ul>
+<h2 id="view-options-1"><a class="header" href="#view-options-1">View Options</a></h2>
+<pre><code class="language-elm">view : (Key -&gt; msg) -&gt; H.Html msg
+view onClick =
+    -- ...
+</code></pre>
+<p>Since I only needed one option, i.e. <code>onClick</code>, I didn't create a <code>ViewOptions</code> type alias.</p>
+<h2 id="view-function-1"><a class="header" href="#view-function-1">View Function</a></h2>
+<pre><code class="language-elm">view : (Key -&gt; msg) -&gt; H.Html msg
+view onClick =
+    H.div [ HA.class "pad" ]
+        [ viewPadSlot
+            { position = ( 0, 0 )
+            , span = Just Colspan
+            , style = Key.Primary
+            , key = Key.AC
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 0, 2 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Operator Operator.Div
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 0, 3 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Operator Operator.Mul
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 1, 0 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Digit Digit.Seven
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 1, 1 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Digit Digit.Eight
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 1, 2 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Digit Digit.Nine
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 1, 3 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Operator Operator.Sub
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 2, 0 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Digit Digit.Four
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 2, 1 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Digit Digit.Five
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 2, 2 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Digit Digit.Six
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 2, 3 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Operator Operator.Add
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 3, 0 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Digit Digit.One
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 3, 1 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Digit Digit.Two
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 3, 2 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Digit Digit.Three
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 3, 3 )
+            , span = Just Rowspan
+            , style = Key.Secondary
+            , key = Key.Equal
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 4, 0 )
+            , span = Just Colspan
+            , style = Key.Default
+            , key = Key.Digit Digit.Zero
+            , onClick = onClick
+            }
+        , viewPadSlot
+            { position = ( 4, 2 )
+            , span = Nothing
+            , style = Key.Default
+            , key = Key.Dot
+            , onClick = onClick
+            }
+        ]
+</code></pre>
+<h3 id="viewpadslot"><a class="header" href="#viewpadslot"><code>viewPadSlot</code></a></h3>
+<p>The <code>viewPadSlot</code> function abstracts over the <code>.pad__slot</code> element. The <code>.pad__slot</code> element itself can be given a row and column position via row and column classes, i.e. <code>.r0</code>, <code>.r1</code>, <code>.r2</code>, <code>.r3</code>, <code>.r4</code>, <code>.c0</code>, <code>.c1</code>, <code>.c2</code>, and <code>.c3</code>, and an optional spanning direction class, i.e. <code>.rowspan2</code> and <code>.colspan2</code>. It is also the parent of the <code>.key</code> block so I decided to pass along the corresponding <code>View.Key.ViewOptions</code>, i.e. <code>style</code>, <code>key</code>, and <code>onClick</code>.</p>
+<pre><code class="language-elm">type Span
+    = Colspan
+    | Rowspan
+
+
+viewPadSlot :
+    { position : ( Int, Int )
+    , span : Maybe Span
+    , style : Key.Style
+    , key : Key
+    , onClick : Key -&gt; msg
+    }
+    -&gt; H.Html msg
+viewPadSlot { position, span, style, key, onClick } =
+    let
+        ( r, c ) =
+            position
+    in
+    H.div
+        [ HA.class "pad__slot"
+        , HA.class &lt;| "r" ++ String.fromInt r
+        , HA.class &lt;| "c" ++ String.fromInt c
+        , HA.class &lt;|
+            case span of
+                Nothing -&gt;
+                    ""
+
+                Just Colspan -&gt;
+                    "colspan2"
+
+                Just Rowspan -&gt;
+                    "rowspan2"
+        ]
+        [ Key.view
+            { style = style
+            , key = key
+            , onClick = onClick
+            }
+        ]
+</code></pre>
+<h4 id="an-alternative-api"><a class="header" href="#an-alternative-api">An Alternative API</a></h4>
+<p>An alternative API for the <code>viewPadSlot</code> function could have been:</p>
+<pre><code class="language-elm">viewPadSlot :
+    { position : ( Int, Int )
+    , span : Maybe Span
+    , key : Key.ViewOptions msg
+    }
+    -&gt; H.Html msg
+viewPadSlot { position, span, key } =
+    -- ...
+</code></pre>
+<p>This would have simplified the call to <code>Key.view</code>, it's just <code>Key.view key</code> now, but would have made the <code>viewPadSlot</code> calls more verbose:</p>
+<pre><code class="language-elm">viewPadSlot
+    { position = ( 0, 0 )
+    , span = Just Colspan
+    , key =
+        { style = Key.Primary
+        , key = Key.AC
+        , onClick = onClick
+        }
+    }
+</code></pre>
+<p>Since <code>viewPadSlot</code> is called more than <code>Key.view</code> I decided against this alternative API.</p>
+<h2 id="source-code-7"><a class="header" href="#source-code-7">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Pad.elm">src/View/Pad.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Key.elm">src/View/Key.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Key.elm">src/Data/Key.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Digit.elm">src/Data/Digit.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Operator.elm">src/Data/Operator.elm</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="viewdisplay"><a class="header" href="#viewdisplay">View.Display</a></h1>
+<p>The implementation was based on <a href="html-css-to-elm/views/../../prototype/blocks/display.html">the <code>.display</code> block</a>.</p>
+<ul>
+<li><a href="html-css-to-elm/views/display.html#view-options">View Options</a></li>
+<li><a href="html-css-to-elm/views/display.html#view-function">View Function</a></li>
+<li><a href="html-css-to-elm/views/display.html#source-code">Source Code</a></li>
+</ul>
+<h2 id="view-options-2"><a class="header" href="#view-options-2">View Options</a></h2>
+<pre><code class="language-elm">type alias ViewOptions =
+    { line1 : String
+    , line2 : String
+    }
+</code></pre>
+<h2 id="view-function-2"><a class="header" href="#view-function-2">View Function</a></h2>
+<pre><code class="language-elm">view : ViewOptions -&gt; H.Html msg
+view { line1, line2 } =
+    H.div [ HA.class "display" ]
+        [ H.div [ HA.class "display__line1" ] [ H.text line1 ]
+        , H.div [ HA.class "display__line2" ] [ H.text line2 ]
+        ]
+</code></pre>
+<h2 id="source-code-8"><a class="header" href="#source-code-8">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Display.elm">src/View/Display.elm</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="viewcalculator"><a class="header" href="#viewcalculator">View.Calculator</a></h1>
+<p>The implementation was based on <a href="html-css-to-elm/views/../../prototype/blocks/calculator.html">the <code>.calculator</code> block</a>.</p>
+<ul>
+<li><a href="html-css-to-elm/views/calculator.html#view-options">View Options</a></li>
+<li><a href="html-css-to-elm/views/calculator.html#view-function">View Function</a></li>
+<li><a href="html-css-to-elm/views/calculator.html#source-code">Source Code</a></li>
+</ul>
+<h2 id="view-options-3"><a class="header" href="#view-options-3">View Options</a></h2>
+<pre><code class="language-elm">type alias ViewOptions msg =
+    { line1 : String
+    , line2 : String
+    , onClick : Key -&gt; msg
+    }
+</code></pre>
+<h2 id="view-function-3"><a class="header" href="#view-function-3">View Function</a></h2>
+<pre><code class="language-elm">view : ViewOptions msg -&gt; H.Html msg
+view { line1, line2, onClick } =
+    H.div [ HA.class "calculator" ]
+        [ H.div
+            [ HA.class "calculator__display" ]
+            [ Display.view
+                { line1 = line1
+                , line2 = line2
+                }
+            ]
+        , H.div
+            [ HA.class "calculator__pad" ]
+            [ Pad.view onClick ]
+        ]
+</code></pre>
+<h2 id="source-code-9"><a class="header" href="#source-code-9">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Calculator.elm">src/View/Calculator.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Display.elm">src/View/Display.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Pad.elm">src/View/Pad.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Key.elm">src/Data/Key.elm</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="viewattribution"><a class="header" href="#viewattribution">View.Attribution</a></h1>
+<p>The implementation was based on <a href="html-css-to-elm/views/../../prototype/blocks/attribution.html">the <code>.attribution</code> block</a>.</p>
+<ul>
+<li><a href="html-css-to-elm/views/attribution.html#view-options">View Options</a></li>
+<li><a href="html-css-to-elm/views/attribution.html#view-function">View Function</a></li>
+<li><a href="html-css-to-elm/views/attribution.html#source-code">Source Code</a></li>
+</ul>
+<h2 id="view-options-4"><a class="header" href="#view-options-4">View Options</a></h2>
+<pre><code class="language-elm">type alias ViewOptions =
+    { name : String
+    , title : String
+    , url : String
+    }
+</code></pre>
+<h2 id="view-function-4"><a class="header" href="#view-function-4">View Function</a></h2>
+<pre><code class="language-elm">view : ViewOptions -&gt; H.Html msg
+view { name, title, url } =
+    H.p [ HA.class "attribution" ]
+        [ H.text "Developed by "
+        , H.a
+            [ HA.class "attribution__link"
+            , HA.href url
+            , HA.target "_blank"
+            , HA.title title
+            ]
+            [ H.text name ]
+        ]
+</code></pre>
+<h2 id="source-code-10"><a class="header" href="#source-code-10">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Attribution.elm">src/View/Attribution.elm</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="viewpage"><a class="header" href="#viewpage">View.Page</a></h1>
+<p>The implementation was based on <a href="html-css-to-elm/views/../../prototype/blocks/page.html">the <code>.page</code> block</a>.</p>
+<ul>
+<li><a href="html-css-to-elm/views/page.html#view-options">View Options</a></li>
+<li><a href="html-css-to-elm/views/page.html#view-function">View Function</a></li>
+<li><a href="html-css-to-elm/views/page.html#source-code">Source Code</a></li>
+</ul>
+<h2 id="view-options-5"><a class="header" href="#view-options-5">View Options</a></h2>
+<pre><code class="language-elm">type alias ViewOptions msg =
+    { calculator : Calculator.ViewOptions msg
+    , attribution : Attribution.ViewOptions
+    }
+</code></pre>
+<h2 id="view-function-5"><a class="header" href="#view-function-5">View Function</a></h2>
+<pre><code class="language-elm">view : ViewOptions msg -&gt; H.Html msg
+view { calculator, attribution } =
+    H.div [ HA.class "page" ]
+        [ H.div [ HA.class "page__wrapper" ]
+            [ H.div [ HA.class "page__content" ]
+                [ H.main_ [] [ Calculator.view calculator ]
+                , H.footer [] [ Attribution.view attribution ]
+                ]
+            ]
+        ]
+</code></pre>
+<h2 id="source-code-11"><a class="header" href="#source-code-11">Source Code</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Page.elm">src/View/Page.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Calculator.elm">src/View/Calculator.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Attribution.elm">src/View/Attribution.elm</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="reflections-on-the-ui"><a class="header" href="#reflections-on-the-ui">Reflections on the UI</a></h1>
+<p>The <a href="html-css-to-elm/../prototype/index.html">prototyping</a> and <a href="html-css-to-elm/./index.html">translating</a> phases of my process led me to an Elm view, i.e. <a href="html-css-to-elm/./views/page.html#view-function"><code>View.Page.view</code></a>, that abstracted the user interface of the entire web application. <code>View.Page.view</code> is composed of reusable view functions that I designed based on the <a href="html-css-to-elm/../prototype/blocks/index.html">blocks</a>, i.e. components, that arose from <a href="html-css-to-elm/../prototype/index.html#from-design-to-prototype">my decomposition of the design</a>.</p>
+<pre><code class="language-elm">View.Page.view
+    { calculator =
+        { line1 = line1
+        , line2 = line2
+        , onClick = onClick
+        }
+    , attribution =
+        { name = "Dwayne Crooks"
+        , title = "Dwayne's GitHub profile"
+        , url = "https://github.com/dwayne"
+        }
+    }
+</code></pre>
+<p>All I need in order to display the web application are the two display lines and a click handler. No application logic required. 🙌</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="domain-modeling"><a class="header" href="#domain-modeling">Domain Modeling</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="rational-numbers"><a class="header" href="#rational-numbers">Rational Numbers</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="evaluating-infix-expressions"><a class="header" href="#evaluating-infix-expressions">Evaluating Infix Expressions</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="tokens"><a class="header" href="#tokens">Tokens</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="stacks"><a class="header" href="#stacks">Stacks</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="dijkstras-shunting-yard-algorithm"><a class="header" href="#dijkstras-shunting-yard-algorithm">Dijkstra's Shunting Yard Algorithm</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="testing-the-evaluator"><a class="header" href="#testing-the-evaluator">Testing the Evaluator</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="calculator-1"><a class="header" href="#calculator-1">Calculator</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="parsing-input"><a class="header" href="#parsing-input">Parsing Input</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="displaying-output"><a class="header" href="#displaying-output">Displaying Output</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="testing-the-calculator"><a class="header" href="#testing-the-calculator">Testing the Calculator</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ui--application-logic"><a class="header" href="#ui--application-logic">UI + Application Logic</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h1>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+    </div>
+    </body>
+</html>
