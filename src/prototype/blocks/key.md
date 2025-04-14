@@ -96,5 +96,5 @@ The key should take up the full width and height of its parent. This allows the 
 ## Source Code
 
 - [prototype/key.html](https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/key.html)
-- [sass/_colors.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss)
 - [sass/blocks/_key.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_key.scss)
+- [sass/_colors.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss)

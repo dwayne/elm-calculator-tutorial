@@ -59,6 +59,6 @@ I don't explicitly style the `.calculator__pad` element. However, it does serve 
 ## Source Code
 
 - [prototype/calculator.html](https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/calculator.html)
-- [sass/_colors.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss)
-- [sass/blocks/_pad.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_pad.scss)
 - [sass/blocks/_calculator.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_calculator.scss)
+- [sass/blocks/_pad.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_pad.scss)
+- [sass/_colors.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss)

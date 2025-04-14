@@ -38,7 +38,9 @@ It's interesting that even though the structure is simple and it seems like noth
 </div>
 ```
 
-While I was playing around with the display I realized that long input text broke it and it forced me to handle that case immediately. This is one of the major benefits of working through UI problems, in a dedicated environment, independently of everything else. Brad Frost explains the approach and many more benefits quite nicely in "[A Frontend Workshop Environment](https://bradfrost.com/blog/post/a-frontend-workshop-environment/)".
+While I was playing around with the display I realized that long input text broke it and it forced me to handle that case immediately. This is one of the major benefits of working through UI problems, in a dedicated environment, independently of everything else.
+
+- [A Frontend Workshop Environment](https://bradfrost.com/blog/post/a-frontend-workshop-environment/)
 
 ## Sass
 
@@ -81,7 +83,7 @@ While I was playing around with the display I realized that long input text brok
 
 ### Typography
 
-I prefer to refer to my font stacks by name, just as I do with colors. A [two-tier system](./key.md#colors), similar to the one for colors, can be established here as well.
+I prefer to refer to my font stacks by name, just as I do with colors. A [two-tier system](./key.md#colors) can be established here as well.
 
 ### The Empty State
 
@@ -162,5 +164,6 @@ Sometimes I write my Sass based on the problems a group of rules are intended to
 ## Source Code
 
 - [prototype/display.html](https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/display.html)
-- [sass/_typography.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_typography.scss)
 - [sass/blocks/_display.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_display.scss)
+- [sass/_colors.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss)
+- [sass/_typography.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_typography.scss)

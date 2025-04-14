@@ -24,6 +24,8 @@ The **page** composes all the components to form the user interface for the enti
 </div>
 ```
 
+[The `<main>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/main) represents the dominant content of the `<body>` of a document. That's why I made the calculator a child of that element.
+
 ## Sass
 
 ```scss
@@ -40,7 +42,7 @@ The **page** composes all the components to form the user interface for the enti
 
 ### Mixins
 
-The `.page` block and `.page__content` element both make use of general layout patterns that I made reusable via Sass [mixins](https://sass-lang.com/documentation/at-rules/mixin/).
+The `.page` block and `.page__content` element both make use of general layout patterns that I made reusable with [mixins](https://sass-lang.com/documentation/at-rules/mixin/).
 
 ```scss
 @mixin centered-column($gap) {
@@ -70,7 +72,7 @@ The `.page` block and `.page__content` element both make use of general layout p
 }
 ```
 
-And, here's the CSS that gets generated:
+Here's the CSS that's generated:
 
 ```css
 .page {
@@ -99,5 +101,5 @@ And, here's the CSS that gets generated:
 ## Source Code
 
 - [prototype/page.html](https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/page.html)
-- [sass/_layouts.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_layouts.scss)
 - [sass/blocks/_page.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_page.scss)
+- [sass/_layouts.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_layouts.scss)

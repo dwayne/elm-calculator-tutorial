@@ -1,6 +1,6 @@
 # pad
 
-The **pad** or keypad consists of the set of [key](./key.md)s arranged in a grid.
+The **pad** or keypad consists of the set of [keys](./key.md) arranged in a grid.
 
 - [HTML](#html)
 - [Sass](#sass)
@@ -69,7 +69,9 @@ The **pad** or keypad consists of the set of [key](./key.md)s arranged in a grid
 </div>
 ```
 
-The pad contains slots for the keys. I made the deliberate choice to style the position and size of each slot using [immutable CSS](https://csswizardry.com/2015/03/immutable-css/) scoped to the slots. This was surely a break from the BEM naming convention but it seemed like a good compromise in this case.
+The pad contains slots for the keys. I made the deliberate choice to style the position and size of each slot using utility classes scoped to the slots.
+
+- [The Role of Utility Classes in Scalable CSS](https://davidtheclark.com/on-utility-classes/)
 
 ## Sass
 
@@ -108,15 +110,15 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
 }
 
 .pad__slot.r2 {
-  top: 2 * $pad-slot-height + 3 * $pad-slot-spacing-around
+  top: 2 * $pad-slot-height + 3 * $pad-slot-spacing-around;
 }
 
 .pad__slot.r3 {
-  top: 3 * $pad-slot-height + 4 * $pad-slot-spacing-around
+  top: 3 * $pad-slot-height + 4 * $pad-slot-spacing-around;
 }
 
 .pad__slot.r4 {
-  top: 4 * $pad-slot-height + 5 * $pad-slot-spacing-around
+  top: 4 * $pad-slot-height + 5 * $pad-slot-spacing-around;
 }
 
 .pad__slot.c0 {
@@ -124,23 +126,23 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
 }
 
 .pad__slot.c1 {
-  left: $pad-slot-width + 2 * $pad-slot-spacing-around
+  left: $pad-slot-width + 2 * $pad-slot-spacing-around;
 }
 
 .pad__slot.c2 {
-  left: 2 * $pad-slot-width + 3 * $pad-slot-spacing-around
+  left: 2 * $pad-slot-width + 3 * $pad-slot-spacing-around;
 }
 
 .pad__slot.c3 {
-  left: 3 * $pad-slot-width + 4 * $pad-slot-spacing-around
+  left: 3 * $pad-slot-width + 4 * $pad-slot-spacing-around;
 }
 
 .pad__slot.rowspan2 {
-  height: 2 * $pad-slot-height + $pad-slot-spacing-around
+  height: 2 * $pad-slot-height + $pad-slot-spacing-around;
 }
 
 .pad__slot.colspan2 {
-  width: 2 * $pad-slot-width + $pad-slot-spacing-around
+  width: 2 * $pad-slot-width + $pad-slot-spacing-around;
 }
 ```
 
@@ -154,7 +156,7 @@ The width, height, and spacing around the slots can each be overriden when using
 );
 ```
 
-You can read "[Configuration](https://sass-lang.com/documentation/at-rules/use/#configuration)" to learn more about this feature of `@use`.
+- [`@use`: Configuration](https://sass-lang.com/documentation/at-rules/use/#configuration)
 
 ## Demo
 
@@ -164,3 +166,4 @@ You can read "[Configuration](https://sass-lang.com/documentation/at-rules/use/#
 
 - [prototype/pad.html](https://github.com/dwayne/elm-calculator/blob/1.0.0/prototype/pad.html)
 - [sass/blocks/_pad.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_pad.scss)
+- [sass/_colors.scss](https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss)
