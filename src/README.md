@@ -53,9 +53,9 @@ The next step in my process is realizing the design using HTML, CSS, and JavaScr
 
 1. HTML is for structure and semantics (meaning).
 2. CSS is for styling and layout.
-3. JavaScript is for controlling dynamic behaviour and modeling application logic.
+3. JavaScript is for controlling dynamic behaviour and managing application logic.
 
-In practice, by keeping these concepts in mind, it helps me to have a clear separation between the user interface (UI) and the application logic. For me, the UI consists of HTML, CSS, and some JavaScript for controlling dynamic behaviour. The application logic is entirely within the purview of JavaScript.
+In practice, by keeping these concepts in mind, it helps me to have a clear separation between the user interface (UI) and the application logic. The UI consists of HTML, CSS, and some JavaScript for controlling dynamic behaviour. The application logic is handled by JavaScript.
 
 The main goal I try to achieve in this phase is to solve most if not all the UI related problems that the design surfaces. This phase is the phase to figure out HTML semantics, CSS selector names, accessibility, layout, etc.
 
@@ -65,10 +65,10 @@ At this point in the process most if not all of my UI related problems have been
 
 ### Application Logic
 
-The brains of the application is handled by JavaScript and hence, in our case as Elm developers, by Elm. In this part of the process I build a logical model for the application domain. Elm really shines during this part of the process because functional programming using modules, opaque types, union types, pattern matching, immutable data types, and pure functions supports a delightful approach to [domain modeling](https://thoughtbot.com/blog/data-modeling-resources-in-elm).
+The brains of the application is handled by JavaScript and hence, in our case as Elm developers, by Elm. In this part of the process I build a logical model for the application domain. Elm really shines during this part of the process because functional programming using modules, opaque types, union types, pattern matching, immutable data types, and pure functions supports a delightful approach to [data modeling](https://thoughtbot.com/blog/data-modeling-resources-in-elm).
 
 I don't practice test-driven development but I do test and unit testing the tricky parts of my application logic helps me to find and fix bugs.
 
 ### Web Application = UI + Application Logic
 
-Finally, I connect the UI to the application logic and I experience a moment of bliss.
+Finally, I connect the UI with the application logic. The UI provides the means by which input gets passed to the API that models the application domain.

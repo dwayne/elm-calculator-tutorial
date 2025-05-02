@@ -28,10 +28,10 @@
 # Application Logic
 
 - [Domain Modeling](application-logic/README.md)
-- [Rational Numbers](application-logic/rational-numbers.md)
+- [Rational Numbers](application-logic/rational-numbers/README.md)
+  - [Decimal Representation](application-logic/rational-numbers/decimal-representation.md)
 - [Evaluating Infix Expressions](application-logic/evaluating-infix-expressions/README.md)
-  - [Tokens](application-logic/evaluating-infix-expressions/tokens.md)
-  - [Stacks](application-logic/evaluating-infix-expressions/stacks.md)
+  - [Stack](application-logic/evaluating-infix-expressions/stack.md)
   - [Dijkstra's Shunting Yard Algorithm](application-logic/evaluating-infix-expressions/shunting-yard.md)
   - [Testing the Evaluator](application-logic/evaluating-infix-expressions/testing-the-evaluator.md)
 - [Calculator](application-logic/calculator/README.md)
