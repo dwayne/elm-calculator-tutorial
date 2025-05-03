@@ -87,11 +87,11 @@ I prefer to refer to my font stacks by name, just as I do with colors. A [two-ti
 
 ### The Empty State
 
-When the display lines are empty they collapse on themselves. In order to avoid that from happening I use [the `:empty` CSS pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/:empty) to select the lines when they have no children and add content, a [non-breaking space](https://en.wikipedia.org/wiki/Non-breaking_space), to them. This ensure that they don't collapse and the height of the lines remain intact.
+When the display lines are empty they collapse on themselves. In order to avoid that from happening I use [the `:empty` CSS pseudo-class](https://developer.mozilla.org/en-US/docs/Web/CSS/:empty) to select the lines when they have no children and add content, a [non-breaking space](https://en.wikipedia.org/wiki/Non-breaking_space), to them. This ensures that they don't collapse and the height of the lines remain intact.
 
 ### Long Text
 
-The following two CSS rules ensure that long text within the lines is handled correctly.
+The following two CSS rules ensure that long text, within the lines, is handled correctly.
 
 ```scss
 .display {
