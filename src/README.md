@@ -2,38 +2,41 @@
 
 In this tutorial, I'll share with you how I built [freeCodeCamp](https://www.freecodecamp.com/)'s [Build a JavaScript Calculator](https://www.freecodecamp.org/learn/front-end-development-libraries/front-end-development-libraries-projects/build-a-javascript-calculator) frontend project with [Elm](https://elm-lang.org/).
 
-Here's the [live demo](https://dwayne.github.io/elm-calculator/) of the Elm web application for you to explore how it works. And, here's the reference to the full [source code](https://github.com/dwayne/elm-calculator/tree/1.0.0).
+Here's the [live demo](https://dwayne.github.io/elm-calculator/) of the Elm web application for you to explore how it works. And, here's the reference to its [source code](https://github.com/dwayne/elm-calculator/tree/1.0.0).
 
-My primary goal is to share a process that has worked for me when building my Elm web applications in the hopes that it can work for you as well. This is only one way to go about it but I think it's a useful and undervalued approach that I haven't seen described elsewhere in the Elm community.
+My primary goal is to share my experience, perspective and processes so that you are exposed to an alternative approach to web application development with Elm. I am not aware of any resources that explain how to develop web applications with Elm that are similar to mine. That's why I thought it might be valuable to share this with the Elm community. I am not trying to teach you Elm, nor am I trying to teach you web application development. All I'm trying to do is to have you take a look over my shoulder as I explain to you how I built the application so that you can be exposed to ideas that could be helpful to you in your own Elm projects.
 
 ## Audience
 
-Any web developer interested in using Elm to build reliable web applications.
+Any web developer interested in using Elm to build maintainable, testable, and reliable web applications.
 
 ## Prerequisites
 
 - A basic knowledge of [HTML](https://web.dev/learn/html), [CSS](https://web.dev/learn/css), and [JavaScript](https://web.dev/learn/javascript).
+- A basic knowledge of web application development. For e.g. if you've had exposure to [React](https://react.dev/), [Vue.js](https://vuejs.org/), [Angular](https://angular.dev/), [Ember.js](https://emberjs.com/) or something else, it would be helpful.
 - And, a basic knowledge of Elm as provided by the [official Elm guide](https://guide.elm-lang.org/).
 
 ## Exposure
 
-After completing this tutorial you will have been exposed to:
+As I've stated before, I'm not intentionally trying to teach you anything in particular. That's why there are no learning outcomes. However, I am delibrately trying to expose you to ideas. As many ideas as it takes to develop the application in an honest and realistic way. So, after completing this tutorial I hope you will have been exposed to:
 
 - A process for building any Elm web application starting from a given design.
 - A bottom-up approach for building reliable UIs with HTML/CSS that's easy to maintain and extend.
+  - This approach which I independently discovered and adopted, I recently learned, is similar in spirit to [Component Driven Development](https://www.componentdriven.org/) and [Atomic Design](https://bradfrost.com/blog/post/atomic-web-design/).
 - A way to prototype with HTML/CSS.
+  - I also recently learned that what I have is a poor man's version of [Storybook](https://storybook.js.org/). And, the general idea is related to [Brad Frost](https://bradfrost.com/)'s [frontend workshop environment](https://bradfrost.com/blog/post/a-frontend-workshop-environment/) idea.
 - A way to structure your HTML/CSS with [BEM](https://getbem.com/).
 - A way to design an API for your Elm views.
 - A way to separate your UI and application logic.
+- Unit testing.
 
-Other interesting things I'd cover, because I'm working on a calculator, include:
+Other interesting things you'd be exposed to because I'm working on a calculator, include:
 
 - Building a module for [rational number](https://en.wikipedia.org/wiki/Rational_number) arithmetic.
 - Displaying rational numbers using decimal notation for both terminating and [repeating decimals](https://en.wikipedia.org/wiki/Repeating_decimal).
 - Building a module for a [Stack](https://en.wikipedia.org/wiki/Stack_(abstract_data_type)) data structure.
 - Evaluating infix expressions using [Dijkstra's shunting yard algorithm](https://en.wikipedia.org/wiki/Shunting_yard_algorithm).
 - Parsing user input using a [finite-state machine](https://en.wikipedia.org/wiki/Finite-state_machine).
-- Writing unit tests.
 
 ## The 10,000 Foot View
 
