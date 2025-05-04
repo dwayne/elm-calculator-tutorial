@@ -295,7 +295,7 @@ view { calculator } =
 
 #### Why `Lib`?
 
-It's a personal preference of mine to place modules in `Lib` that I feel are general enough to one day deserve there own library or at least be reused in other projects. By placing them in `Lib` it's easier for me to identify these reusable modules when I'm scanning through my projects.
+It's a personal preference of mine to place modules in `Lib` that I feel are general enough to one day deserve their own library or at least be reused in other projects. By placing them in `Lib` it's easier for me to identify these reusable modules when I'm scanning through my projects.
 
 ### The Tricky Bits
 
