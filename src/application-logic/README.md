@@ -166,39 +166,39 @@ toDecimalString : Rational -> String
 `toString` converts a rational number to either an integral or fractional string. Here are some examples:
 
 ```elm
-new 0 1 >> Maybe.map toString == Just "0"
-new 5 1 >> Maybe.map toString == Just "5"
-new -5 1 >> Maybe.map toString == Just "-5"
+Maybe.map toString (new 0 1) == Just "0"
+Maybe.map toString (new 0 2) == Just "0"
+Maybe.map toString (new 5 1) == Just "5"
+Maybe.map toString (new -5 1) == Just "-5"
 
-new 0 2 >> Maybe.map toString == Just "0"
-new 5 2 >> Maybe.map toString == Just "5/2"
-new -5 2 >> Maybe.map toString == Just "-5/2"
-new 5 -2 >> Maybe.map toString == Just "-5/2"
-new -5 -2 >> Maybe.map toString == Just "5/2"
+Maybe.map toString (new 5 2) == Just "5/2"
+Maybe.map toString (new -5 2) == Just "-5/2"
+Maybe.map toString (new 5 -2) == Just "-5/2"
+Maybe.map toString (new -5 -2) == Just "5/2"
 
-new 3 6 >> Maybe.map toString == Just "1/2"
-new 6 3 >> Maybe.map toString == Just "2"
+Maybe.map toString (new 3 6) == Just "1/2"
+Maybe.map toString (new 6 3) == Just "2"
 ```
 
 `toDecimalString` converts a rational number to a, wait for it, decimal string. Here are some examples:
 
 ```elm
-new 0 1 >> Maybe.map toDecimalString == Just "0"
-new 5 1 >> Maybe.map toDecimalString == Just "5"
-new -5 1 >> Maybe.map toDecimalString == Just "-5"
+Maybe.map toDecimalString (new 0 1) == Just "0"
+Maybe.map toDecimalString (new 5 1) == Just "5"
+Maybe.map toDecimalString (new -5 1) == Just "-5"
 
-new 0 2 >> Maybe.map toDecimalString == Just "0"
-new 5 2 >> Maybe.map toDecimalString == Just "2.5"
-new -5 2 >> Maybe.map toDecimalString == Just "-2.5"
-new 5 -2 >> Maybe.map toDecimalString == Just "-2.5"
-new -5 -2 >> Maybe.map toDecimalString == Just "2.5"
+Maybe.map toDecimalString (new 0 2) == Just "0"
+Maybe.map toDecimalString (new 5 2) == Just "2.5"
+Maybe.map toDecimalString (new -5 2) == Just "-2.5"
+Maybe.map toDecimalString (new 5 -2) == Just "-2.5"
+Maybe.map toDecimalString (new -5 -2) == Just "2.5"
 
-new 3 6 >> Maybe.map toDecimalString == Just "0.5"
-new 6 3 >> Maybe.map toDecimalString == Just "2"
+Maybe.map toDecimalString (new 3 6) == Just "0.5"
+Maybe.map toDecimalString (new 6 3) == Just "2"
 
-new 1 3 >> Maybe.map toDecimalString == Just "0.(3)"
-new 7 12 >> Maybe.map toDecimalString == Just "0.58(3)"
-new 1 23 >> Maybe.map toDecimalString == Just "0.(0434782608695652173913)"
+Maybe.map toDecimalString (new 1 3) == Just "0.(3)"
+Maybe.map toDecimalString (new 7 12) == Just "0.58(3)"
+Maybe.map toDecimalString (new 1 23) == Just "0.(0434782608695652173913)"
 ```
 
 The `toString` and `toDecimalString` functions are good candidates for unit testing.
@@ -319,7 +319,7 @@ The 3 groups can be worked on independently of each other.
 
 Moving forward we'd tackle and solve the problems of each group in the order: Group 3, Group 2, and Group 1.
 
-Let's get started on the rational numbers.
+Let's get started on the [rational numbers](./rational-numbers/index.html).
 
 ## An Aside: My Historically Accurate First Draft
 

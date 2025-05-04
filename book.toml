@@ -5,6 +5,9 @@ src = "src"
 language = "en"
 multilingual = false
 
+[output.html]
+mathjax-support = true
+
 [output.html.code.hidelines]
 css = "~"
 elm = "~"

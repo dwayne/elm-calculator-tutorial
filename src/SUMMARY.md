@@ -29,15 +29,19 @@
 
 - [Domain Modeling](application-logic/README.md)
 - [Rational Numbers](application-logic/rational-numbers/README.md)
-  - [Decimal Representation](application-logic/rational-numbers/decimal-representation.md)
+  - [Representation](application-logic/rational-numbers/representation.md)
+  - [Constructors](application-logic/rational-numbers/constructors.md)
+  - [Arithmetic](application-logic/rational-numbers/arithmetic.md)
+  - [Conversion](application-logic/rational-numbers/conversion.md)
+  - [Unit Tests](application-logic/rational-numbers/unit-tests.md)
 - [Evaluating Infix Expressions](application-logic/evaluating-infix-expressions/README.md)
   - [Stack](application-logic/evaluating-infix-expressions/stack.md)
-  - [Dijkstra's Shunting Yard Algorithm](application-logic/evaluating-infix-expressions/shunting-yard.md)
-  - [Testing the Evaluator](application-logic/evaluating-infix-expressions/testing-the-evaluator.md)
+  - [Dijkstra's Shunting Yard Algorithm](application-logic/evaluating-infix-expressions/dijkstras-shunting-yard-algorithm.md)
+  - [Unit Tests](application-logic/evaluating-infix-expressions/unit-tests.md)
 - [Calculator](application-logic/calculator/README.md)
   - [Parsing Input](application-logic/calculator/parsing-input.md)
   - [Displaying Output](application-logic/calculator/displaying-output.md)
-  - [Testing the Calculator](application-logic/calculator/testing-the-calculator.md)
+  - [Unit Tests](application-logic/calculator/unit-tests.md)
 
 # Putting It All Together
 
