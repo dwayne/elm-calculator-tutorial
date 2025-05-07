@@ -1,1 +1,3 @@
 # Evaluating Infix Expressions
+
+When the user interacts with the calculator and presses certain buttons (`0-9`, `.`, `+`, `-`, `×`, `÷`), under the hood, they are actually building up a data structure that represents an infix expression. To evaluate that infix expression I use [Dijkstra's Shunting Yard Algorithm](https://en.wikipedia.org/wiki/Shunting_yard_algorithm) to convert it into a postfix expression which is much easier to evaluate. The postfix expression is never explicitly returned since I evaluate it on the fly. As such, my evaluation function makes use of two stacks. Therefore, let's start with an implementation of a stack data structure before moving on to the star of the show.
