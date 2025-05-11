@@ -321,7 +321,7 @@ Moving forward we'd tackle and solve the problems of each group in the order: Gr
 
 Let's get started on the [rational numbers](./rational-numbers/index.html).
 
-## An Aside: My Historically Accurate First Draft
+## An Aside: My Historically Accurate First Attempt
 
 This is how I literally first worked my way through the project when I was learning Elm:
 
