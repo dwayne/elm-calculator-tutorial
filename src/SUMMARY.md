@@ -39,7 +39,7 @@
   - [Dijkstra's Shunting Yard Algorithm](application-logic/evaluating-infix-expressions/dijkstras-shunting-yard-algorithm.md)
   - [Unit Tests](application-logic/evaluating-infix-expressions/unit-tests.md)
 - [Calculator](application-logic/calculator/README.md)
-  - [Parsing Input](application-logic/calculator/parsing-input.md)
+  - [Tokenizing Input](application-logic/calculator/tokenizing-input.md)
   - [Displaying Output](application-logic/calculator/displaying-output.md)
   - [Unit Tests](application-logic/calculator/unit-tests.md)
 
