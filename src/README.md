@@ -36,7 +36,7 @@ Other interesting things you'd be exposed to because I'm working on a calculator
 - Displaying rational numbers using decimal notation for both terminating and [repeating decimals](https://en.wikipedia.org/wiki/Repeating_decimal).
 - Building a module for a [Stack](https://en.wikipedia.org/wiki/Stack_(abstract_data_type)) data structure.
 - Evaluating infix expressions using [Dijkstra's shunting yard algorithm](https://en.wikipedia.org/wiki/Shunting_yard_algorithm).
-- Parsing user input using a [finite-state machine](https://en.wikipedia.org/wiki/Finite-state_machine).
+- Tokenizing user input using a [finite-state machine](https://en.wikipedia.org/wiki/Finite-state_machine).
 
 ## The 10,000 Foot View
 
@@ -52,13 +52,13 @@ My process starts with knowing what I want to build and how I want it to look. D
 
 ### Prototype
 
-The next step in my process is realizing the design using HTML, CSS, and JavaScript. I call this my prototyping phase. Three key concepts support this phase:
+The next step in my process is realizing the design using HTML, CSS, and possibly JavaScript. I call this my prototyping phase. Three key concepts support this phase:
 
 1. HTML is for structure and semantics (meaning).
 2. CSS is for styling and layout.
 3. JavaScript is for controlling dynamic behaviour and managing application logic.
 
-In practice, by keeping these concepts in mind, it helps me to have a clear separation between the user interface (UI) and the application logic. The UI consists of HTML, CSS, and some JavaScript for controlling dynamic behaviour. The application logic is handled by JavaScript.
+In practice, by keeping these concepts in mind, it helps me to have a clear separation between the user interface (UI) and the application logic. The UI consists of HTML, CSS, and some JavaScript for controlling dynamic behaviour. The application logic consists entriely of JavaScript.
 
 The main goal I try to achieve in this phase is to solve most if not all the UI related problems that the design surfaces. This phase is the phase to figure out HTML semantics, CSS selector names, accessibility, layout, etc.
 
@@ -68,9 +68,9 @@ At this point in the process most if not all of my UI related problems have been
 
 ### Application Logic
 
-The brains of the application is handled by JavaScript and hence, in our case as Elm developers, by Elm. In this part of the process I build a logical model for the application domain. Elm really shines during this part of the process because functional programming using modules, opaque types, union types, pattern matching, immutable data types, and pure functions supports a delightful approach to [data modeling](https://thoughtbot.com/blog/data-modeling-resources-in-elm).
+The brains of the application is managed by JavaScript and hence, in our case as Elm developers, by Elm. In this part of the process I build a logical model for the application domain. Elm really shines during this part of the process because functional programming using modules, opaque types, union types, pattern matching, immutable data types, and pure functions supports a delightful approach to [data modeling](https://thoughtbot.com/blog/data-modeling-resources-in-elm).
 
-I don't practice test-driven development but I do test and unit testing the tricky parts of my application logic helps me to find and fix bugs.
+I don't practice [test-driven development](https://cleancoders.com/episode/clean-code-episode-6-p1) but I do test and unit testing the tricky parts of my application logic helps me to find and fix bugs.
 
 ### Web Application = UI + Application Logic
 

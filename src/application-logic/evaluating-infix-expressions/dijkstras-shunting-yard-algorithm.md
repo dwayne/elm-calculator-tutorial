@@ -89,11 +89,20 @@ end
 
 ## Tokenization
 
-| Infix Expression | List of Token |
-|------------------|---------------|
-| `1 + 2` | `[ Number (Rational.fromInt 1), Operand Add, Number (Rational.fromInt 2) ]` |
-| `-3`    | `[ Number (Rational.fromInt -3) ]` |
-| `9 - 17 × 3 ÷ 4` | `[ Number (Rational.fromInt 9), Operand Sub, Number (Rational.fromInt 17), Operand Mul, Number (Rational.fromInt 3), Operand Div, Number (Rational.fromInt 2) ]` |
+The infix expression `1 + 9 - 17 × 3 ÷ 4` would be tokenized as follows:
+
+```elm
+[ Number (Rational.fromInt 1)
+, Operand Add
+, Number (Rational.fromInt 9)
+, Operand Sub
+, Number (Rational.fromInt 17)
+, Operand Mul
+, Number (Rational.fromInt 3)
+, Operand Div
+, Number (Rational.fromInt 2)
+]
+```
 
 ## Precedence
 

@@ -24,7 +24,7 @@ The **page** composes all the components to form the user interface for the enti
 </div>
 ```
 
-[The `<main>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/main) represents the dominant content of the `<body>` of a document. That's why I made the calculator a child of that element.
+The [`<main>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/main) element represents the dominant content of the `<body>` of a document. That's why I made the calculator a child of that element.
 
 ## Sass
 

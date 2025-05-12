@@ -35,12 +35,10 @@ By default, a `<button>` element has its `type` attribute set to `submit`. Since
 <button class="key key--secondary" type="button">=</button>
 ```
 
-Since keys only have a style modifier I chose to keep the naming simple. No modifier signals the default and the `key--primary` and `key--secondary` block modifiers signal the primary and secondary styles respectively. An alternative naming system for the style modifier could have been one of the following sets of names:
+Since keys only have a style modifier I chose to keep the naming simple. No modifier signals the default and the `key--primary` and `key--secondary` block modifiers signal the primary and secondary styles respectively. An alternative naming system for the style modifier could have been:
 
-- `key--style-default`, `key--style-primary`, `key--style-secondary`
-  - I don't like this convention because it gets ambiguous when the property or the value also has a hyphen.
-- `key--style--default`, `key--style--primary`, `key--style--secondary`
-  - I prefer this convention since it gets rid of the ambiguity. However, for this situation, it's overkill.
+- The [two dashes style](https://en.bem.info/methodology/naming-convention/#two-dashes-style) with modifier name and value
+  - `key--style--default`, `key--style--primary`, `key--style--secondary`
 
 ## Sass
 

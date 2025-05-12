@@ -93,6 +93,40 @@ test "1+2-5*8+6-10*3" <|
             (int -61)
 ```
 
+## Helpers
+
+```elm
+expectEval : List Token -> Rational -> Expectation
+expectEval tokens expectedRational =
+    case E.eval tokens of
+        Ok actualRational ->
+            Expect.equal expectedRational actualRational
+
+        Err _ ->
+            Expect.fail "eval failed"
+
+
+int : Int -> Rational
+int =
+    Rational.fromInt
+
+
+rational : Int -> Int -> Rational
+rational n d =
+    Rational.new n d
+        |> Maybe.withDefault Rational.zero
+
+
+intT : Int -> Token
+intT =
+    Token.Number << int
+
+
+operatorT : Operator -> Token
+operatorT =
+    Token.Operator
+```
+
 ## Resources
 
 - [tests/Test/Data/Evaluator.elm](https://github.com/dwayne/elm-calculator/blob/1.0.0/tests/Test/Data/Evaluator.elm)

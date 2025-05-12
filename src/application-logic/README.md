@@ -161,7 +161,7 @@ toDecimalString : Rational -> String
 
 `zero`, `fromInt`, and `new` can be used to construct rational numbers.
 
-`add`, `sub`, `mul`, and `div` perform the usual arithmetic over the rationals. To keep things simple I decided to ignore division by zero, that's why you don't see `div : Rational -> Rational -> Maybe Rational`. Instead, `div r zero == zero` for every rational number `r`.
+`add`, `sub`, `mul`, and `div` perform the usual arithmetic over the rationals. To keep things simple, I define `div r zero == zero` for every rational number `r`.
 
 `toString` converts a rational number to either an integral or fractional string. Here are some examples:
 

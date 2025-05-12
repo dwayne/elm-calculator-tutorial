@@ -239,7 +239,7 @@ And, it will start to repeat. So,
 
 Let's take a closer look at how we determined the decimal representation for `3/7`.
 
-| n | d | 10n | q | r | seen | terms |
+| n | d | 10n | q | r | memo | terms |
 |---|---|-----|---|---|------|-------|
 | 3 | 7 | 30  | 4 | 2 | `[ (3, (4, 2)) ]` | `[ (4, 2) ]` |
 | 2 | 7 | 20  | 2 | 6 | `[ (2, (2, 6)), (3, (4, 2)) ]` | `[ (2, 6), (4, 2) ]` |
@@ -317,4 +317,4 @@ displayRepeating marker terms output =
             displayRepeating marker rest (s ++ output)
 ```
 
-`decimalRepHelper`, `displayTerminating`, and `displayRepeating` are all implemented using tail-recursion so they can be [optimized into a loops](https://functional-programming-in-elm.netlify.app/recursion/tail-call-elimination.html).
+`decimalRepHelper`, `displayTerminating`, and `displayRepeating` are all implemented using tail-recursion so they can be [optimized into loops](https://functional-programming-in-elm.netlify.app/recursion/tail-call-elimination.html).
