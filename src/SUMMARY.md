@@ -46,7 +46,3 @@
 # Putting It All Together
 
 - [UI + Application Logic](putting-it-all-together/README.md)
-
----
-
-[Conclusion](conclusion.md)
