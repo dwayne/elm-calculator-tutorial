@@ -11,6 +11,11 @@ Well, [lexical analyzers](https://en.wikipedia.org/wiki/Lexical_analysis) use re
 It has 5 states. The start state is called `Start` and it has one final state called `Answer`. The other states are called `Left`, `Partial`, and `Right`. I represented it as follows:
 
 ```elm
+import Data.Evaluator as E
+import Data.Operator exposing (Operator)
+import Data.Token exposing (Token)
+
+
 type Calculator
     = Calculator State
 
@@ -21,11 +26,6 @@ type State
     | Partial (List Token) Operator
     | Right (List Token) Operator Decimal
     | Answer (List Token) E.Answer
-
-
-type Decimal
-    = Whole Int
-    | Fractional Int Int Int
 ```
 
 `Left` represents the situation when the user is entering their first, leftmost, number.
@@ -36,7 +36,34 @@ type Decimal
 
 Notice that the `Answer` state keeps track of the full tokenized input as well as the answer produced by the evaluator.
 
-### `new`
+## What's `Decimal`?
+
+It's a type to help me tokenize decimal numbers.
+
+```elm
+type Decimal
+    = Whole Int
+    | Fractional Int Int Int
+```
+
+Let's consider an example where the user is entering the decimal number `123.456`.
+
+| Key Pressed | Decimal | Comment |
+|-------------|---------|---------|
+| `Digit One` | `Whole 1` | `Digit.toInt One = 1` |
+| `Digit Two` | `Whole 12` | `1 * 10 + Digit.toInt Two = 12` |
+| `Digit Three` | `Whole 123` | `12 * 10 + Digit.toInt Three = 123` |
+| `Dot` | `Fractional 123 0 1` | `123 + 0/1 = 123` |
+| `Digit Four` | `Fractional 123 4 10` | `123 + 4/10 = 123.4` |
+| `Digit Five` | `Fractional 123 45 100` | `123 + 45/100 = 123.45` |
+| `Digit Six` | `Fractional 123 456 1000` | `123 + 456/1000 = 123.456` |
+
+If `Whole 123` and `Fractional 123 0 1` represent the same number then why change the representation when a `Dot` is pressed?
+
+1. The pressing of the `Dot` signals that the user is about to enter the fractional part of the number so it makes sense to initialize everything we'd need to accept the fractional part.
+2. `Whole 123` and `Fractional 123 0 1` are displayed differently in line 2 of the calculator's display. `Whole 123` is displayed as `123` but `Fractional 123 0 1` is displayed as `123.`, i.e. it ends with a decimal point.
+
+## `new`
 
 ```elm
 new : Calculator
@@ -46,7 +73,7 @@ new =
 
 Naturally, the calculator starts off in the `Start` state.
 
-### `press`
+## `press`
 
 As the user presses keys the calculator should transition between states based on its current state and the key that was pressed. So, for each state, we have to figure out what to do for each key that could be pressed.
 
@@ -87,7 +114,7 @@ type Operator
     | Div
 ```
 
-And, this is how `press` was implemented:
+And, this is how `press` is implemented:
 
 ```elm
 import Data.Digit as Digit

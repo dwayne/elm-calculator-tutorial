@@ -1,6 +1,6 @@
 # Displaying Output
 
-Displaying the output was straightforward. The calculator could be in one of 5 states. So, for each state we have to stringify the data that's available and determine within which lines to display them.
+The calculator could be in one of 5 states. So, for each state we have to stringify the data that's available and determine within which lines to display them.
 
 ```elm
 type alias Output =
@@ -100,3 +100,13 @@ toRational n =
             Maybe.map2 Rational.add (Rational.new w 1) (Rational.new f p)
                 |> Maybe.withDefault Rational.zero
 ```
+
+## `toPaddedDecimalString`
+
+When the user enters trailing zeros after the decimal point we want to display that in line 2 of the display.
+
+| Decimal | String |
+|---------|--------|
+| `Fractional 0 0 1` | `"0."` |
+| `Fractional 0 0 1000` | `"0.000"` |
+| `Fractional 0 500 1000000` | `"0.000500"` |
