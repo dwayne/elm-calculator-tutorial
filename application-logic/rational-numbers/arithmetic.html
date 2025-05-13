@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Testing the Evaluator - How I Built freeCodeCamp&#x27;s Calculator with Elm</title>
+        <title>Arithmetic - How I Built freeCodeCamp&#x27;s Calculator with Elm</title>
 
 
         <!-- Custom HTML head -->
@@ -30,6 +30,8 @@
 
         <!-- Custom theme stylesheets -->
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root to javascript -->
         <script>
@@ -152,17 +154,54 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="testing-the-evaluator"><a class="header" href="#testing-the-evaluator">Testing the Evaluator</a></h1>
+                        <h1 id="arithmetic"><a class="header" href="#arithmetic">Arithmetic</a></h1>
+<ul>
+<li><a href="#addition">Addition</a></li>
+<li><a href="#subtraction">Subtraction</a></li>
+<li><a href="#multiplication">Multiplication</a></li>
+<li><a href="#division">Division</a></li>
+</ul>
+<h2 id="addition"><a class="header" href="#addition">Addition</a></h2>
+<p>\[ \frac{n_1}{d_1} + \frac{n_2}{d_2} = \frac{n_1d_2 + n_2d_1}{d_1d_2} \]</p>
+<pre><code class="language-elm">add : Rational -&gt; Rational -&gt; Rational
+add (Rational n1 d1) (Rational n2 d2) =
+    makeRational (n1 * d2 + n2 * d1) (d1 * d2)
+</code></pre>
+<h2 id="subtraction"><a class="header" href="#subtraction">Subtraction</a></h2>
+<p>\[ \frac{n_1}{d_1} - \frac{n_2}{d_2} = \frac{n_1d_2 - n_2d_1}{d_1d_2} \]</p>
+<pre><code class="language-elm">sub : Rational -&gt; Rational -&gt; Rational
+sub (Rational n1 d1) (Rational n2 d2) =
+    makeRational (n1 * d2 - n2 * d1) (d1 * d2)
+</code></pre>
+<h2 id="multiplication"><a class="header" href="#multiplication">Multiplication</a></h2>
+<p>\[ \frac{n_1}{d_1} \times \frac{n_2}{d_2} = \frac{n_1n_2}{d_1d_2} \]</p>
+<pre><code class="language-elm">mul : Rational -&gt; Rational -&gt; Rational
+mul (Rational n1 d1) (Rational n2 d2) =
+    makeRational (n1 * n2) (d1 * d2)
+</code></pre>
+<h2 id="division"><a class="header" href="#division">Division</a></h2>
+<p>\[ \frac{n_1}{d_1} \div \frac{n_2}{d_2} = \frac{n_1}{d_1} \times \frac{d_2}{n_2} = \frac{n_1d_2}{d_1n_2} \text{, } n_2 \neq 0 \]</p>
+<pre><code class="language-elm">div : Rational -&gt; Rational -&gt; Rational
+div (Rational n1 d1) (Rational n2 d2) =
+    if n2 == 0 then
+        zero
+
+    else
+        makeRational (n1 * d2) (d1 * n2)
+</code></pre>
+<p>For division by zero, I chose to return the zero rational number rather than to signal an error.</p>
+<h3 id="exercise"><a class="header" href="#exercise">Exercise</a></h3>
+<p>Implement <code>div : Rational -&gt; Rational -&gt; Maybe Rational</code>, such that <code>div r zero == Nothing</code>, and solve the downstream consequences of this change.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../application-logic/evaluating-infix-expressions/shunting-yard.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../application-logic/rational-numbers/constructors.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../application-logic/calculator/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../application-logic/rational-numbers/conversion.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -172,11 +211,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../application-logic/evaluating-infix-expressions/shunting-yard.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../application-logic/rational-numbers/constructors.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../application-logic/calculator/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../application-logic/rational-numbers/conversion.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

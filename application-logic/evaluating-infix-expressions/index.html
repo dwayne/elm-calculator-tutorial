@@ -30,6 +30,8 @@
 
         <!-- Custom theme stylesheets -->
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root to javascript -->
         <script>
@@ -153,16 +155,17 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="evaluating-infix-expressions"><a class="header" href="#evaluating-infix-expressions">Evaluating Infix Expressions</a></h1>
+<p>When the user interacts with the calculator and presses certain buttons (<code>0-9</code>, <code>.</code>, <code>+</code>, <code>-</code>, <code>×</code>, <code>÷</code>), under the hood, they are actually building up a data structure that represents an infix expression. To evaluate that infix expression I use <a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra's Shunting Yard Algorithm</a> to convert it into a postfix expression which is much easier to evaluate. The postfix expression is never explicitly returned since I evaluate it on the fly. As such, my evaluation function makes use of two stacks. Therefore, let's start with an implementation of a stack data structure before moving on to the star of the show.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../application-logic/rational-numbers.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../application-logic/rational-numbers/unit-tests.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../application-logic/evaluating-infix-expressions/tokens.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../application-logic/evaluating-infix-expressions/stack.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -172,11 +175,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../application-logic/rational-numbers.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../application-logic/rational-numbers/unit-tests.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../application-logic/evaluating-infix-expressions/tokens.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../application-logic/evaluating-infix-expressions/stack.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

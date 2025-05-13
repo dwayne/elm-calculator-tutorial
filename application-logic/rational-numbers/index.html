@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Testing the Calculator - How I Built freeCodeCamp&#x27;s Calculator with Elm</title>
+        <title>Rational Numbers - How I Built freeCodeCamp&#x27;s Calculator with Elm</title>
 
 
         <!-- Custom HTML head -->
@@ -30,6 +30,8 @@
 
         <!-- Custom theme stylesheets -->
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root to javascript -->
         <script>
@@ -152,17 +154,48 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="testing-the-calculator"><a class="header" href="#testing-the-calculator">Testing the Calculator</a></h1>
+                        <h1 id="rational-numbers"><a class="header" href="#rational-numbers">Rational Numbers</a></h1>
+<p>A <a href="https://artofproblemsolving.com/wiki/index.php/Rational_number">rational number</a> is a <a href="https://artofproblemsolving.com/wiki/index.php/Real_number">real number</a> that can be expressed as the fraction \( \frac{p}{q} \) of two <a href="https://artofproblemsolving.com/wiki/index.php/Integer">integers</a> with a numerator \( p \) and a non-zero denominator \( q \).</p>
+<h2 id="public-api"><a class="header" href="#public-api">Public API</a></h2>
+<pre><code class="language-elm">module Lib.Rational exposing
+    ( Rational
+    , new, zero, fromInt
+    , add, sub, mul, div
+    , toString, toDecimalString
+    )
+
+-- Representation
+
+type Rational
+
+-- Constructors
+
+new : Int -&gt; Int -&gt; Maybe Rational
+zero : Rational
+fromInt : Int -&gt; Rational
+
+-- Arithmetic
+
+add : Rational -&gt; Rational -&gt; Rational
+sub : Rational -&gt; Rational -&gt; Rational
+mul : Rational -&gt; Rational -&gt; Rational
+div : Rational -&gt; Rational -&gt; Rational
+
+-- Conversion
+
+toString : Rational -&gt; String
+toDecimalString : Rational -&gt; String
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../application-logic/calculator/displaying-output.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../application-logic/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../putting-it-all-together/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../application-logic/rational-numbers/representation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -172,11 +205,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../application-logic/calculator/displaying-output.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../application-logic/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../putting-it-all-together/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../application-logic/rational-numbers/representation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

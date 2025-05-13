@@ -30,6 +30,8 @@
 
         <!-- Custom theme stylesheets -->
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root to javascript -->
         <script>
@@ -153,6 +155,335 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="domain-modeling"><a class="header" href="#domain-modeling">Domain Modeling</a></h1>
+<p>This is the phase where I build a logical model of the application domain and expose an API that can be used by the UI I built in the previous phases.</p>
+<p>Consider a physical digital calculator. It has a casing and some electronics on a circuit board. I think of the UI as the casing and the application logic as the electronics.</p>
+<p>I have no prescriptive way of building the logical model. This is a creative process that I approach in incremental steps that allow me to slowly eat away at the problem until I have a solution. Usually the first solution I come up with isn't well refined and it takes me a few more sessions to refactor it into a final form that pleases me.</p>
+<h2 id="preliminary-analysis"><a class="header" href="#preliminary-analysis">Preliminary Analysis</a></h2>
+<p>Here are some rough notes I used to think about the problem.</p>
+<ul>
+<li>The UI is complete but it's inert</li>
+<li><code>AC</code> means "All Clear"</li>
+<li>The operations are addition (<code>+</code>), subtraction (<code>-</code>), multiplication (<code>×</code>), and division (<code>÷</code>)</li>
+<li>A user can only enter decimal numbers using the digits <code>0</code> through <code>9</code> and the decimal point (<code>.</code>)</li>
+<li>The non-terminating non-repeating decimal numbers are the irrational numbers
+<ul>
+<li><a href="https://www.cuemath.com/numbers/decimal-representation-of-irrational-numbers/">Decimal Representation of Irrational Numbers</a></li>
+</ul>
+</li>
+<li>Can the user enter irrational numbers?
+<ul>
+<li>No, it's not possible with the inputs available</li>
+</ul>
+</li>
+<li>Can the user enter an expression that evaluates to an irrational number?
+<ul>
+<li>No, it's not possible with the operations available</li>
+</ul>
+</li>
+<li>It follows that we'd only need support for rational numbers</li>
+<li><code>=</code> means to calculate what's been input
+<ul>
+<li>The input appears on line 1 of the display</li>
+</ul>
+</li>
+<li><code>1 + 2 * 3</code> is a possible infix expression that the user can input
+<ul>
+<li>Either <code>1 + 2 * 3 = 1 + 6 = 7</code> or <code>1 + 2 * 3 = 3 * 3 = 9</code></li>
+<li>We want the answer to be <code>7</code> which means we want to respect the usual operator precedence when evaluating expressions</li>
+<li><a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra's shunting yard algorithm</a> can be used to help us evaluate the infix expressions while respecting operator precedence
+<ul>
+<li>I was aware of this algorithm from my Computer Science classes</li>
+<li>Alternatively, you could have researched the following question "How does a calculator evaluate infix expressions?", and you would have found answers pointing you in a similar direction. For e.g. when I asked Google I found this <a href="https://www.geeksforgeeks.org/expression-evaluation/">Expression Evaluation</a> article</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>1 / 3</code> results in the repeating decimal <code>0.333...</code>
+<ul>
+<li>We can display repeating decimals by highlighting the repeating digits</li>
+<li>So for e.g. we can display <code>1 / 3</code> as <code>0.(3)</code></li>
+</ul>
+</li>
+<li>From <a href="../html-css-to-elm/views/key.html"><code>View.Key</code></a>, I already identified a need for <a href="../html-css-to-elm/views/key.html#datakey"><code>Data.Key</code></a>, <a href="../html-css-to-elm/views/key.html#datadigit"><code>Data.Digit</code></a>, and <a href="../html-css-to-elm/views/key.html#dataoperator"><code>Data.Operator</code></a></li>
+<li>The user interacts with the UI by pressing keys on the keypad. These key presses are used to build up an infix expression. When the user is ready to evaluate the infix expression they press the <code>=</code> key</li>
+</ul>
+<h2 id="api-sketch"><a class="header" href="#api-sketch">API Sketch</a></h2>
+<p>Based on the preliminary analysis I then thought through what the API could be over several sessions. At this point I was trying to figure out, at a high-level, how all the pieces would fit together to become a cohesive solution to the problem. Some questions I tried to answer included:</p>
+<ul>
+<li>What's the overall shape of the solution?</li>
+<li>What modules do I need?</li>
+<li>What data structures do I need?</li>
+<li>What are the interesting parts that will need more thought?</li>
+</ul>
+<h3 id="datacalculator"><a class="header" href="#datacalculator"><code>Data.Calculator</code></a></h3>
+<pre><code class="language-elm">module Data.Calculator exposing
+    ( Calculator
+    , new
+    , press
+    , Output, toOutput
+    )
+
+import Data.Key exposing (Key)
+
+type Calculator
+
+new : Calculator
+
+press : Key -&gt; Calculator -&gt; Calculator
+
+type alias Output =
+    { line1 : String
+    , line2 : String
+    }
+
+toOutput : Calculator -&gt; Output
+</code></pre>
+<p>The idea I had in mind is that <code>Data.Calculator</code> would serve as the logical representation of the calculator. It has an internal data structure that it uses to keep track of the infix expression that the users builds one key press at a time.</p>
+<p><code>new</code> creates a calculator in its initial state.</p>
+<p><code>press</code> takes a key pressed by the user and updates the calculator's internal data structures.</p>
+<p><code>toOutput</code> transforms the internal data structures into a format that can be used to display the infix expression that's being built (i.e. line 1) and the user's current input (i.e. line 2).</p>
+<p>The key thing would be figuring out what this internal data structure needs to be for the API to work.</p>
+<h3 id="dataevaluator"><a class="header" href="#dataevaluator"><code>Data.Evaluator</code></a></h3>
+<pre><code class="language-elm">module Data.Evaluator exposing (Answer, Error(..), eval)
+
+import Data.Token exposing (Token)
+import Lib.Rational exposing (Rational)
+
+type alias Answer =
+    Result Error Rational
+
+type Error
+
+eval : List Token -&gt; Answer
+</code></pre>
+<p>Recall that I would need to be able to evaluate infix expressions and respect operator precedence. Dijkstra's shunting yard algorithm allows me to do that and <code>Data.Evaluator</code> exports the function <code>eval</code> that implements said algorithm.</p>
+<p><code>Error</code> would enumerate all the possible errors that could occur based on <code>eval</code>'s evaluation of the list of tokens.</p>
+<p>I'm expecting an infix expression like <code>1 + 2 * 3</code> to be represented as a list of tokens as follows:</p>
+<pre><code>[ Number (Rational.fromInt 1), Operator Add, Number (Rational.fromInt 2), Operator Mul, Number (Rational.fromInt 3) ]
+</code></pre>
+<p>Hence, part of <code>Data.Calculator</code>'s job would be to tokenize the user's input.</p>
+<h3 id="datatoken"><a class="header" href="#datatoken"><code>Data.Token</code></a></h3>
+<pre><code class="language-elm">module Data.Token exposing (Token(..), toString)
+
+import Data.Operator as Operator exposing (Operator)
+import Lib.Rational as Rational exposing (Rational)
+
+
+type Token
+    = Number Rational
+    | Operator Operator
+
+
+toString : Token -&gt; String
+toString token =
+    case token of
+        Number r -&gt;
+            Rational.toDecimalString r
+
+        Operator op -&gt;
+            Operator.toString op
+</code></pre>
+<p>I came up with this based on the tokens I expected to be present in the infix expressions that could be entered by a user.</p>
+<h3 id="librational"><a class="header" href="#librational"><code>Lib.Rational</code></a></h3>
+<pre><code class="language-elm">module Lib.Rational exposing
+    ( Rational
+    , zero, fromInt, new
+    , add, sub, mul, div
+    , toString, toDecimalString
+    )
+
+type Rational
+
+zero : Rational
+fromInt : Int -&gt; Rational
+new : Int -&gt; Int -&gt; Maybe Rational
+
+add : Rational -&gt; Rational -&gt; Rational
+sub : Rational -&gt; Rational -&gt; Rational
+mul : Rational -&gt; Rational -&gt; Rational
+div : Rational -&gt; Rational -&gt; Rational
+
+toString : Rational -&gt; String
+toDecimalString : Rational -&gt; String
+</code></pre>
+<p><code>zero</code>, <code>fromInt</code>, and <code>new</code> can be used to construct rational numbers.</p>
+<p><code>add</code>, <code>sub</code>, <code>mul</code>, and <code>div</code> perform the usual arithmetic over the rationals. To keep things simple, I define <code>div r zero == zero</code> for every rational number <code>r</code>.</p>
+<p><code>toString</code> converts a rational number to either an integral or fractional string. Here are some examples:</p>
+<pre><code class="language-elm">Maybe.map toString (new 0 1) == Just "0"
+Maybe.map toString (new 0 2) == Just "0"
+Maybe.map toString (new 5 1) == Just "5"
+Maybe.map toString (new -5 1) == Just "-5"
+
+Maybe.map toString (new 5 2) == Just "5/2"
+Maybe.map toString (new -5 2) == Just "-5/2"
+Maybe.map toString (new 5 -2) == Just "-5/2"
+Maybe.map toString (new -5 -2) == Just "5/2"
+
+Maybe.map toString (new 3 6) == Just "1/2"
+Maybe.map toString (new 6 3) == Just "2"
+</code></pre>
+<p><code>toDecimalString</code> converts a rational number to a, wait for it, decimal string. Here are some examples:</p>
+<pre><code class="language-elm">Maybe.map toDecimalString (new 0 1) == Just "0"
+Maybe.map toDecimalString (new 5 1) == Just "5"
+Maybe.map toDecimalString (new -5 1) == Just "-5"
+
+Maybe.map toDecimalString (new 0 2) == Just "0"
+Maybe.map toDecimalString (new 5 2) == Just "2.5"
+Maybe.map toDecimalString (new -5 2) == Just "-2.5"
+Maybe.map toDecimalString (new 5 -2) == Just "-2.5"
+Maybe.map toDecimalString (new -5 -2) == Just "2.5"
+
+Maybe.map toDecimalString (new 3 6) == Just "0.5"
+Maybe.map toDecimalString (new 6 3) == Just "2"
+
+Maybe.map toDecimalString (new 1 3) == Just "0.(3)"
+Maybe.map toDecimalString (new 7 12) == Just "0.58(3)"
+Maybe.map toDecimalString (new 1 23) == Just "0.(0434782608695652173913)"
+</code></pre>
+<p>The <code>toString</code> and <code>toDecimalString</code> functions are good candidates for unit testing.</p>
+<h3 id="libstack"><a class="header" href="#libstack"><code>Lib.Stack</code></a></h3>
+<pre><code class="language-elm">module Lib.Stack exposing
+    ( Stack
+    , new
+    , isEmpty
+    , push, pop
+    )
+
+type Stack a
+
+new : Stack a
+
+isEmpty : Stack a -&gt; Bool
+
+push : a -&gt; Stack a -&gt; Stack a
+pop : Stack a -&gt; Maybe ( a, Stack a )
+</code></pre>
+<p>Stacks are used in Dijkstra's shunting yard algorithm. There are a few simple ways to implement them so I knew this wasn't going to be a problem.</p>
+<h2 id="questions-answered"><a class="header" href="#questions-answered">Questions Answered</a></h2>
+<p>After sketching out the API I had a better sense of the shape of the solution, I understood the modules and data structures I needed, and I knew where the tricky bits lay.</p>
+<h3 id="shape-of-the-solution"><a class="header" href="#shape-of-the-solution">Shape of the Solution</a></h3>
+<pre><code class="language-elm">-- MODEL
+
+
+type alias Model =
+    { calculator : Calculator
+    }
+
+
+init : Model
+init =
+    { calculator = Calculator.new
+    }
+
+
+
+-- UPDATE
+
+
+type Msg
+    = Clicked Key
+
+
+update : Msg -&gt; Model -&gt; Model
+update msg model =
+    case msg of
+        Clicked key -&gt;
+            { model | calculator = Calculator.press key model.calculator }
+
+
+
+-- VIEW
+
+
+view : Model -&gt; H.Html Msg
+view { calculator } =
+    let
+        { line1, line2 } =
+            Calculator.toOutput calculator
+    in
+    Page.view
+        { calculator =
+            { line1 = line1
+            , line2 = line2
+            , onClick = Clicked
+            }
+        , attribution =
+            { name = "Dwayne Crooks"
+            , title = "Dwayne's GitHub profile"
+            , url = "https://github.com/dwayne"
+            }
+        }
+</code></pre>
+<h3 id="modules-and-data-structures"><a class="header" href="#modules-and-data-structures">Modules and Data Structures</a></h3>
+<ul>
+<li><code>Data.Calculator</code></li>
+<li><code>Data.Evaluator</code></li>
+<li><code>Data.Token</code></li>
+<li><code>Lib.Rational</code></li>
+<li><code>Lib.Stack</code></li>
+</ul>
+<h4 id="why-lib"><a class="header" href="#why-lib">Why <code>Lib</code>?</a></h4>
+<p>It's a personal preference of mine to place modules in <code>Lib</code> that I feel are general enough to one day deserve their own library or at least be reused in other projects. By placing them in <code>Lib</code> it's easier for me to identify these reusable modules when I'm scanning through my projects.</p>
+<h3 id="the-tricky-bits"><a class="header" href="#the-tricky-bits">The Tricky Bits</a></h3>
+<p>These are the parts that are non-trivial to figure out and where I expected to spend most of my time in this phase of the project.</p>
+<ul>
+<li>Group 1
+<ul>
+<li>What's <code>type Calculator</code> going to be?</li>
+<li>How to tokenize the user's input as they press keys?</li>
+<li>How to implement <code>Calculator.press</code>?</li>
+<li>How to implement <code>Calculator.toOutput</code>?</li>
+</ul>
+</li>
+<li>Group 2
+<ul>
+<li>How to implement Dijkstra's shunting yard algorithm, <code>Evaluator.eval</code>, in a pure functional language?</li>
+</ul>
+</li>
+<li>Group 3
+<ul>
+<li>How to implement <code>Rational.toDecimalString</code>?</li>
+</ul>
+</li>
+</ul>
+<p>The 3 groups can be worked on independently of each other.</p>
+<p><code>Calculator.press</code>, <code>Calculator.toOutput</code>, <code>Evaluator.eval</code>, and <code>Rational.toDecimalString</code> are great candidates for unit testing. I didn't practice test-driven development but I did cycle between tests and implementation in order to implement the functions.</p>
+<h2 id="the-plan"><a class="header" href="#the-plan">The Plan</a></h2>
+<p>Moving forward we'd tackle and solve the problems of each group in the order: Group 3, Group 2, and Group 1.</p>
+<p>Let's get started on the <a href="./rational-numbers/index.html">rational numbers</a>.</p>
+<h2 id="an-aside-my-historically-accurate-first-attempt"><a class="header" href="#an-aside-my-historically-accurate-first-attempt">An Aside: My Historically Accurate First Attempt</a></h2>
+<p>This is how I literally first worked my way through the project when I was learning Elm:</p>
+<ul>
+<li>I made the calculator work for <code>AC</code>, <code>0-9</code>, <code>+</code>/<code>-</code>, and <code>=</code>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/21b89460ee169de1f30efd66b327bb299852688f">Add and test the calculator's logic</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/c8bdd2ecffa0f3215dd183a9a050cd01fa443ab5">Make the calculator UI work for AC, digits, +/- and =</a></li>
+</ul>
+</li>
+<li>I added support for multiplication
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/848c4e35d9cb0d5ea0140b283beff5b3e77cdd1e">Add multiplication</a></li>
+</ul>
+</li>
+<li>I implemented Dijkstra's shunting yard algorithm to handle operator precedence
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/0c1f708e1983b1afb75f023fd7ff190fea6587fd">Add an expression evaluator that respects operator precedence</a></li>
+</ul>
+</li>
+<li>I added support for integer division
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/dea53dbe32209927e74dbbe65cc4c8f5abab7305">Add integer division</a></li>
+</ul>
+</li>
+<li>I added support for rational arithmetic
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/375b155150dafaab3c46d71ccbdf563fb87ac48d">Add a type for dealing with rational numbers</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/ecf14554a3bddc415aa7f43d4dbe0427ce921e27">Add rational arithmetic to the calculator</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/1e0785589a3b2f5ff559b1c1617038df199f9cb7">Add decimal input</a></li>
+</ul>
+</li>
+</ul>
+<p>Then, over the years, as my understanding for Elm grew I refactored my first solution into what it is today.</p>
 
                     </main>
 
@@ -162,7 +493,7 @@
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../application-logic/rational-numbers.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../application-logic/rational-numbers/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -176,7 +507,7 @@
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../application-logic/rational-numbers.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../application-logic/rational-numbers/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

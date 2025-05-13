@@ -30,6 +30,8 @@
 
         <!-- Custom theme stylesheets -->
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root to javascript -->
         <script>
@@ -153,16 +155,121 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="displaying-output"><a class="header" href="#displaying-output">Displaying Output</a></h1>
+<p>The calculator could be in one of 5 states. So, for each state we have to stringify the data that's available and determine within which lines to display them.</p>
+<pre><code class="language-elm">type alias Output =
+    { line1 : String
+    , line2 : String
+    }
 
+
+toOutput : Calculator -&gt; Output
+toOutput (Calculator state) =
+    case state of
+        Start -&gt;
+            Output "" "0"
+
+        Left n -&gt;
+            let
+                line1 =
+                    Rational.toDecimalString &lt;| toRational n
+
+                line2 =
+                    toPaddedDecimalString n
+            in
+            Output line1 line2
+
+        Partial tokens op -&gt;
+            let
+                line1 =
+                    toExpr tokens ++ line2
+
+                line2 =
+                    Operator.toString op
+            in
+            Output line1 line2
+
+        Right tokens op n -&gt;
+            let
+                line1 =
+                    toExpr tokens ++ Operator.toString op ++ right
+
+                right =
+                    Rational.toDecimalString &lt;| toRational n
+
+                line2 =
+                    toPaddedDecimalString n
+            in
+            Output line1 line2
+
+        Answer tokens answer -&gt;
+            let
+                line1 =
+                    toExpr tokens ++ "=" ++ line2
+
+                line2 =
+                    case answer of
+                        Ok r -&gt;
+                            Rational.toDecimalString r
+
+                        Err _ -&gt;
+                            "TODO: Display an appropriate error message."
+            in
+            Output line1 line2
+
+
+toPaddedDecimalString : Decimal -&gt; String
+toPaddedDecimalString n =
+    case n of
+        Whole w -&gt;
+            String.fromInt w
+
+        Fractional w f p -&gt;
+            String.concat
+                [ String.fromInt w
+                , "."
+                , if f == 0 &amp;&amp; p == 1 then
+                    ""
+
+                  else
+                    String.padLeft
+                        (String.length (String.fromInt p) - 1)
+                        '0'
+                        (String.fromInt f)
+                ]
+
+
+toExpr : List Token -&gt; String
+toExpr =
+    String.concat &lt;&lt; List.map Token.toString &lt;&lt; List.reverse
+
+
+toRational : Decimal -&gt; Rational
+toRational n =
+    case n of
+        Whole w -&gt;
+            Rational.fromInt w
+
+        Fractional w f p -&gt;
+            Maybe.map2 Rational.add (Rational.new w 1) (Rational.new f p)
+                |&gt; Maybe.withDefault Rational.zero
+</code></pre>
+<h2 id="topaddeddecimalstring"><a class="header" href="#topaddeddecimalstring"><code>toPaddedDecimalString</code></a></h2>
+<p>When the user enters trailing zeros after the decimal point we want to display that in line 2 of the display.</p>
+<div class="table-wrapper"><table><thead><tr><th>Decimal</th><th>String</th></tr></thead><tbody>
+<tr><td><code>Fractional 0 0 1</code></td><td><code>"0."</code></td></tr>
+<tr><td><code>Fractional 0 0 1000</code></td><td><code>"0.000"</code></td></tr>
+<tr><td><code>Fractional 0 500 1000000</code></td><td><code>"0.000500"</code></td></tr>
+</tbody></table>
+</div>
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../application-logic/calculator/parsing-input.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../application-logic/calculator/tokenizing-input.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../application-logic/calculator/testing-the-calculator.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../application-logic/calculator/unit-tests.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -172,11 +279,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../application-logic/calculator/parsing-input.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../application-logic/calculator/tokenizing-input.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../application-logic/calculator/testing-the-calculator.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../application-logic/calculator/unit-tests.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

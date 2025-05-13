@@ -30,6 +30,8 @@
 
         <!-- Custom theme stylesheets -->
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root to javascript -->
         <script>
@@ -153,16 +155,48 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="calculator"><a class="header" href="#calculator">Calculator</a></h1>
+<p>The logical representation of the calculator. It has an internal data structure that it uses to keep track of the infix expression that the user builds one key press at a time.</p>
+<h2 id="public-api"><a class="header" href="#public-api">Public API</a></h2>
+<pre><code class="language-elm">module Data.Calculator exposing
+    ( Calculator
+    , new
+    , press
+    , Output, toOutput
+    )
+
+import Data.Key exposing (Key)
+
+-- Representation
+
+type Calculator
+
+-- Constructor
+
+new : Calculator
+
+-- Update
+
+press : Key -&gt; Calculator -&gt; Calculator
+
+-- Conversion
+
+type alias Output =
+    { line1 : String
+    , line2 : String
+    }
+
+toOutput : Calculator -&gt; Output
+</code></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../application-logic/evaluating-infix-expressions/testing-the-evaluator.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../application-logic/evaluating-infix-expressions/unit-tests.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../application-logic/calculator/parsing-input.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../application-logic/calculator/tokenizing-input.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -172,11 +206,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../application-logic/evaluating-infix-expressions/testing-the-evaluator.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../application-logic/evaluating-infix-expressions/unit-tests.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../application-logic/calculator/parsing-input.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../application-logic/calculator/tokenizing-input.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

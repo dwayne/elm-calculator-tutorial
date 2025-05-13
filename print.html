@@ -31,6 +31,8 @@
 
         <!-- Custom theme stylesheets -->
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root to javascript -->
         <script>
@@ -155,33 +157,42 @@
                     <main>
                         <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
 <p>In this tutorial, I'll share with you how I built <a href="https://www.freecodecamp.com/">freeCodeCamp</a>'s <a href="https://www.freecodecamp.org/learn/front-end-development-libraries/front-end-development-libraries-projects/build-a-javascript-calculator">Build a JavaScript Calculator</a> frontend project with <a href="https://elm-lang.org/">Elm</a>.</p>
-<p>Here's the <a href="https://dwayne.github.io/elm-calculator/">live demo</a> of the Elm web application for you to explore how it works. And, here's the reference to the full <a href="https://github.com/dwayne/elm-calculator/tree/1.0.0">source code</a>.</p>
-<p>My primary goal is to share a process that has worked for me when building my Elm web applications in the hopes that it can work for you as well. This is only one way to go about it but I think it's a useful and undervalued approach that I haven't seen described elsewhere in the Elm community.</p>
+<p>Here's the <a href="https://dwayne.github.io/elm-calculator/">live demo</a> of the Elm web application for you to explore how it works. And, here's the reference to its <a href="https://github.com/dwayne/elm-calculator/tree/1.0.0">source code</a>.</p>
+<p>My primary goal is to share my experience, perspective and processes so that you are exposed to an alternative approach to web application development with Elm. I am not aware of any resources that explain how to develop web applications with Elm that are similar to mine. That's why I thought it might be valuable to share this with the Elm community. I am not trying to teach you Elm, nor am I trying to teach you web application development. All I'm trying to do is to have you take a look over my shoulder as I explain to you how I built the application so that you can be exposed to ideas that could be helpful to you in your own Elm projects.</p>
 <h2 id="audience"><a class="header" href="#audience">Audience</a></h2>
-<p>Any web developer interested in using Elm to build reliable web applications.</p>
+<p>Any web developer interested in using Elm to build maintainable, testable, and reliable web applications.</p>
 <h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
 <ul>
 <li>A basic knowledge of <a href="https://web.dev/learn/html">HTML</a>, <a href="https://web.dev/learn/css">CSS</a>, and <a href="https://web.dev/learn/javascript">JavaScript</a>.</li>
+<li>A basic knowledge of web application development. For e.g. if you've had exposure to <a href="https://react.dev/">React</a>, <a href="https://vuejs.org/">Vue.js</a>, <a href="https://angular.dev/">Angular</a>, <a href="https://emberjs.com/">Ember.js</a> or something else, it would be helpful.</li>
 <li>And, a basic knowledge of Elm as provided by the <a href="https://guide.elm-lang.org/">official Elm guide</a>.</li>
 </ul>
 <h2 id="exposure"><a class="header" href="#exposure">Exposure</a></h2>
-<p>After completing this tutorial you will have been exposed to:</p>
+<p>As I've stated before, I'm not intentionally trying to teach you anything in particular. That's why there are no learning outcomes. However, I am delibrately trying to expose you to ideas. As many ideas as it takes to develop the application in an honest and realistic way. So, after completing this tutorial I hope you will have been exposed to:</p>
 <ul>
 <li>A process for building any Elm web application starting from a given design.</li>
-<li>A bottom-up approach for building reliable UIs with HTML/CSS that's easy to maintain and extend.</li>
-<li>A way to prototype with HTML/CSS.</li>
+<li>A bottom-up approach for building reliable UIs with HTML/CSS that's easy to maintain and extend.
+<ul>
+<li>This approach which I independently discovered and adopted, I recently learned, is similar in spirit to <a href="https://www.componentdriven.org/">Component Driven Development</a> and <a href="https://bradfrost.com/blog/post/atomic-web-design/">Atomic Design</a>.</li>
+</ul>
+</li>
+<li>A way to prototype with HTML/CSS.
+<ul>
+<li>I also recently learned that what I have is a poor man's version of <a href="https://storybook.js.org/">Storybook</a>. And, the general idea is related to <a href="https://bradfrost.com/">Brad Frost</a>'s <a href="https://bradfrost.com/blog/post/a-frontend-workshop-environment/">frontend workshop environment</a> idea.</li>
+</ul>
+</li>
 <li>A way to structure your HTML/CSS with <a href="https://getbem.com/">BEM</a>.</li>
 <li>A way to design an API for your Elm views.</li>
 <li>A way to separate your UI and application logic.</li>
+<li>Unit testing.</li>
 </ul>
-<p>Other interesting things I'd cover, because I'm working on a calculator, include:</p>
+<p>Other interesting things you'd be exposed to because I'm working on a calculator, include:</p>
 <ul>
 <li>Building a module for <a href="https://en.wikipedia.org/wiki/Rational_number">rational number</a> arithmetic.</li>
 <li>Displaying rational numbers using decimal notation for both terminating and <a href="https://en.wikipedia.org/wiki/Repeating_decimal">repeating decimals</a>.</li>
 <li>Building a module for a <a href="https://en.wikipedia.org/wiki/Stack_(abstract_data_type)">Stack</a> data structure.</li>
 <li>Evaluating infix expressions using <a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra's shunting yard algorithm</a>.</li>
-<li>Parsing user input using a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">finite-state machine</a>.</li>
-<li>Writing unit tests.</li>
+<li>Tokenizing user input using a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">finite-state machine</a>.</li>
 </ul>
 <h2 id="the-10000-foot-view"><a class="header" href="#the-10000-foot-view">The 10,000 Foot View</a></h2>
 <ul>
@@ -194,21 +205,21 @@
 <h3 id="design"><a class="header" href="#design">Design</a></h3>
 <p>My process starts with knowing what I want to build and how I want it to look. Design is important but it has a separate process that is outside the scope of this tutorial. The design for the calculator was <del>inspired by</del> lifted from this <a href="https://codepen.io/freeCodeCamp/full/wgGVVX">CodePen example</a>. Thanks <a href="https://www.freecodecamp.org/no-stack-dub-sack">Peter Weinberg</a>.</p>
 <h3 id="prototype"><a class="header" href="#prototype">Prototype</a></h3>
-<p>The next step in my process is realizing the design using HTML, CSS, and JavaScript. I call this my prototyping phase. Three key concepts support this phase:</p>
+<p>The next step in my process is realizing the design using HTML, CSS, and possibly JavaScript. I call this my prototyping phase. Three key concepts support this phase:</p>
 <ol>
 <li>HTML is for structure and semantics (meaning).</li>
 <li>CSS is for styling and layout.</li>
-<li>JavaScript is for controlling dynamic behaviour and modeling application logic.</li>
+<li>JavaScript is for controlling dynamic behaviour and managing application logic.</li>
 </ol>
-<p>In practice, by keeping these concepts in mind, it helps me to have a clear separation between the user interface (UI) and the application logic. For me, the UI consists of HTML, CSS, and some JavaScript for controlling dynamic behaviour. The application logic is entirely within the purview of JavaScript.</p>
+<p>In practice, by keeping these concepts in mind, it helps me to have a clear separation between the user interface (UI) and the application logic. The UI consists of HTML, CSS, and some JavaScript for controlling dynamic behaviour. The application logic consists entriely of JavaScript.</p>
 <p>The main goal I try to achieve in this phase is to solve most if not all the UI related problems that the design surfaces. This phase is the phase to figure out HTML semantics, CSS selector names, accessibility, layout, etc.</p>
 <h3 id="htmlcss-to-elm"><a class="header" href="#htmlcss-to-elm">HTML/CSS to Elm</a></h3>
 <p>At this point in the process most if not all of my UI related problems have been solved and it's time to translate the HTML portion into <a href="https://package.elm-lang.org/packages/elm/html/latest/"><code>elm/html</code></a>. This is typically straightforward to do but there is a little bit of view function API design that tends to occur. However, this is definitely the easiest part of the entire process.</p>
 <h3 id="application-logic"><a class="header" href="#application-logic">Application Logic</a></h3>
-<p>The brains of the application is handled by JavaScript and hence, in our case as Elm developers, by Elm. In this part of the process I build a logical model for the application domain. Elm really shines during this part of the process because functional programming using modules, opaque types, union types, pattern matching, immutable data types, and pure functions supports a delightful approach to <a href="https://thoughtbot.com/blog/data-modeling-resources-in-elm">domain modeling</a>.</p>
-<p>I don't practice test-driven development but I do test and unit testing the tricky parts of my application logic helps me to find and fix bugs.</p>
+<p>The brains of the application is managed by JavaScript and hence, in our case as Elm developers, by Elm. In this part of the process I build a logical model for the application domain. Elm really shines during this part of the process because functional programming using modules, opaque types, union types, pattern matching, immutable data types, and pure functions supports a delightful approach to <a href="https://thoughtbot.com/blog/data-modeling-resources-in-elm">data modeling</a>.</p>
+<p>I don't practice <a href="https://cleancoders.com/episode/clean-code-episode-6-p1">test-driven development</a> but I do test and unit testing the tricky parts of my application logic helps me to find and fix bugs.</p>
 <h3 id="web-application--ui--application-logic"><a class="header" href="#web-application--ui--application-logic">Web Application = UI + Application Logic</a></h3>
-<p>Finally, I connect the UI to the application logic and I experience a moment of bliss.</p>
+<p>Finally, I connect the UI with the application logic. The UI provides the means by which input gets passed to the API that models the application domain.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="prototyping"><a class="header" href="#prototyping">Prototyping</a></h1>
 <p>This is the phase where I go from design to prototype.</p>
 <h2 id="from-design-to-prototype"><a class="header" href="#from-design-to-prototype">From Design to Prototype</a></h2>
@@ -261,16 +272,11 @@
 <h3 id="secondary"><a class="header" href="#secondary">Secondary</a></h3>
 <pre><code class="language-html">&lt;button class="key key--secondary" type="button"&gt;=&lt;/button&gt;
 </code></pre>
-<p>Since keys only have a style modifier I chose to keep the naming simple. No modifier signals the default and the <code>key--primary</code> and <code>key--secondary</code> block modifiers signal the primary and secondary styles respectively. An alternative naming system for the style modifier could have been one of the following sets of names:</p>
+<p>Since keys only have a style modifier I chose to keep the naming simple. No modifier signals the default and the <code>key--primary</code> and <code>key--secondary</code> block modifiers signal the primary and secondary styles respectively. An alternative naming system for the style modifier could have been:</p>
 <ul>
-<li><code>key--style-default</code>, <code>key--style-primary</code>, <code>key--style-secondary</code>
+<li>The <a href="https://en.bem.info/methodology/naming-convention/#two-dashes-style">two dashes style</a> with modifier name and value
 <ul>
-<li>I don't like this convention because it gets ambiguous when the property or the value also has a hyphen.</li>
-</ul>
-</li>
-<li><code>key--style--default</code>, <code>key--style--primary</code>, <code>key--style--secondary</code>
-<ul>
-<li>I prefer this convention since it gets rid of the ambiguity. However, for this situation, it's overkill.</li>
+<li><code>key--style--default</code>, <code>key--style--primary</code>, <code>key--style--secondary</code></li>
 </ul>
 </li>
 </ul>
@@ -550,9 +556,9 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
 <h3 id="typography"><a class="header" href="#typography">Typography</a></h3>
 <p>I prefer to refer to my font stacks by name, just as I do with colors. A <a href="prototype/blocks/./key.html#colors">two-tier system</a> can be established here as well.</p>
 <h3 id="the-empty-state"><a class="header" href="#the-empty-state">The Empty State</a></h3>
-<p>When the display lines are empty they collapse on themselves. In order to avoid that from happening I use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:empty">the <code>:empty</code> CSS pseudo-class</a> to select the lines when they have no children and add content, a <a href="https://en.wikipedia.org/wiki/Non-breaking_space">non-breaking space</a>, to them. This ensure that they don't collapse and the height of the lines remain intact.</p>
+<p>When the display lines are empty they collapse on themselves. In order to avoid that from happening I use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:empty">the <code>:empty</code> CSS pseudo-class</a> to select the lines when they have no children and add content, a <a href="https://en.wikipedia.org/wiki/Non-breaking_space">non-breaking space</a>, to them. This ensures that they don't collapse and the height of the lines remain intact.</p>
 <h3 id="long-text"><a class="header" href="#long-text">Long Text</a></h3>
-<p>The following two CSS rules ensure that long text within the lines is handled correctly.</p>
+<p>The following two CSS rules ensure that long text, within the lines, is handled correctly.</p>
 <pre><code class="language-scss">.display {
   overflow-wrap: break-word;
 }
@@ -734,7 +740,7 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
   &lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/main">The <code>&lt;main&gt;</code> element</a> represents the dominant content of the <code>&lt;body&gt;</code> of a document. That's why I made the calculator a child of that element.</p>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/main"><code>&lt;main&gt;</code></a> element represents the dominant content of the <code>&lt;body&gt;</code> of a document. That's why I made the calculator a child of that element.</p>
 <h2 id="sass-5"><a class="header" href="#sass-5">Sass</a></h2>
 <pre><code class="language-scss">@use "../layouts";
 
@@ -1359,18 +1365,2546 @@ view { calculator, attribution } =
 </code></pre>
 <p>All I need in order to display the web application are the two display lines and a click handler. No application logic required. 🙌</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="domain-modeling"><a class="header" href="#domain-modeling">Domain Modeling</a></h1>
+<p>This is the phase where I build a logical model of the application domain and expose an API that can be used by the UI I built in the previous phases.</p>
+<p>Consider a physical digital calculator. It has a casing and some electronics on a circuit board. I think of the UI as the casing and the application logic as the electronics.</p>
+<p>I have no prescriptive way of building the logical model. This is a creative process that I approach in incremental steps that allow me to slowly eat away at the problem until I have a solution. Usually the first solution I come up with isn't well refined and it takes me a few more sessions to refactor it into a final form that pleases me.</p>
+<h2 id="preliminary-analysis"><a class="header" href="#preliminary-analysis">Preliminary Analysis</a></h2>
+<p>Here are some rough notes I used to think about the problem.</p>
+<ul>
+<li>The UI is complete but it's inert</li>
+<li><code>AC</code> means "All Clear"</li>
+<li>The operations are addition (<code>+</code>), subtraction (<code>-</code>), multiplication (<code>×</code>), and division (<code>÷</code>)</li>
+<li>A user can only enter decimal numbers using the digits <code>0</code> through <code>9</code> and the decimal point (<code>.</code>)</li>
+<li>The non-terminating non-repeating decimal numbers are the irrational numbers
+<ul>
+<li><a href="https://www.cuemath.com/numbers/decimal-representation-of-irrational-numbers/">Decimal Representation of Irrational Numbers</a></li>
+</ul>
+</li>
+<li>Can the user enter irrational numbers?
+<ul>
+<li>No, it's not possible with the inputs available</li>
+</ul>
+</li>
+<li>Can the user enter an expression that evaluates to an irrational number?
+<ul>
+<li>No, it's not possible with the operations available</li>
+</ul>
+</li>
+<li>It follows that we'd only need support for rational numbers</li>
+<li><code>=</code> means to calculate what's been input
+<ul>
+<li>The input appears on line 1 of the display</li>
+</ul>
+</li>
+<li><code>1 + 2 * 3</code> is a possible infix expression that the user can input
+<ul>
+<li>Either <code>1 + 2 * 3 = 1 + 6 = 7</code> or <code>1 + 2 * 3 = 3 * 3 = 9</code></li>
+<li>We want the answer to be <code>7</code> which means we want to respect the usual operator precedence when evaluating expressions</li>
+<li><a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra's shunting yard algorithm</a> can be used to help us evaluate the infix expressions while respecting operator precedence
+<ul>
+<li>I was aware of this algorithm from my Computer Science classes</li>
+<li>Alternatively, you could have researched the following question "How does a calculator evaluate infix expressions?", and you would have found answers pointing you in a similar direction. For e.g. when I asked Google I found this <a href="https://www.geeksforgeeks.org/expression-evaluation/">Expression Evaluation</a> article</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>1 / 3</code> results in the repeating decimal <code>0.333...</code>
+<ul>
+<li>We can display repeating decimals by highlighting the repeating digits</li>
+<li>So for e.g. we can display <code>1 / 3</code> as <code>0.(3)</code></li>
+</ul>
+</li>
+<li>From <a href="application-logic/../html-css-to-elm/views/key.html"><code>View.Key</code></a>, I already identified a need for <a href="application-logic/../html-css-to-elm/views/key.html#datakey"><code>Data.Key</code></a>, <a href="application-logic/../html-css-to-elm/views/key.html#datadigit"><code>Data.Digit</code></a>, and <a href="application-logic/../html-css-to-elm/views/key.html#dataoperator"><code>Data.Operator</code></a></li>
+<li>The user interacts with the UI by pressing keys on the keypad. These key presses are used to build up an infix expression. When the user is ready to evaluate the infix expression they press the <code>=</code> key</li>
+</ul>
+<h2 id="api-sketch"><a class="header" href="#api-sketch">API Sketch</a></h2>
+<p>Based on the preliminary analysis I then thought through what the API could be over several sessions. At this point I was trying to figure out, at a high-level, how all the pieces would fit together to become a cohesive solution to the problem. Some questions I tried to answer included:</p>
+<ul>
+<li>What's the overall shape of the solution?</li>
+<li>What modules do I need?</li>
+<li>What data structures do I need?</li>
+<li>What are the interesting parts that will need more thought?</li>
+</ul>
+<h3 id="datacalculator"><a class="header" href="#datacalculator"><code>Data.Calculator</code></a></h3>
+<pre><code class="language-elm">module Data.Calculator exposing
+    ( Calculator
+    , new
+    , press
+    , Output, toOutput
+    )
+
+import Data.Key exposing (Key)
+
+type Calculator
+
+new : Calculator
+
+press : Key -&gt; Calculator -&gt; Calculator
+
+type alias Output =
+    { line1 : String
+    , line2 : String
+    }
+
+toOutput : Calculator -&gt; Output
+</code></pre>
+<p>The idea I had in mind is that <code>Data.Calculator</code> would serve as the logical representation of the calculator. It has an internal data structure that it uses to keep track of the infix expression that the users builds one key press at a time.</p>
+<p><code>new</code> creates a calculator in its initial state.</p>
+<p><code>press</code> takes a key pressed by the user and updates the calculator's internal data structures.</p>
+<p><code>toOutput</code> transforms the internal data structures into a format that can be used to display the infix expression that's being built (i.e. line 1) and the user's current input (i.e. line 2).</p>
+<p>The key thing would be figuring out what this internal data structure needs to be for the API to work.</p>
+<h3 id="dataevaluator"><a class="header" href="#dataevaluator"><code>Data.Evaluator</code></a></h3>
+<pre><code class="language-elm">module Data.Evaluator exposing (Answer, Error(..), eval)
+
+import Data.Token exposing (Token)
+import Lib.Rational exposing (Rational)
+
+type alias Answer =
+    Result Error Rational
+
+type Error
+
+eval : List Token -&gt; Answer
+</code></pre>
+<p>Recall that I would need to be able to evaluate infix expressions and respect operator precedence. Dijkstra's shunting yard algorithm allows me to do that and <code>Data.Evaluator</code> exports the function <code>eval</code> that implements said algorithm.</p>
+<p><code>Error</code> would enumerate all the possible errors that could occur based on <code>eval</code>'s evaluation of the list of tokens.</p>
+<p>I'm expecting an infix expression like <code>1 + 2 * 3</code> to be represented as a list of tokens as follows:</p>
+<pre><code>[ Number (Rational.fromInt 1), Operator Add, Number (Rational.fromInt 2), Operator Mul, Number (Rational.fromInt 3) ]
+</code></pre>
+<p>Hence, part of <code>Data.Calculator</code>'s job would be to tokenize the user's input.</p>
+<h3 id="datatoken"><a class="header" href="#datatoken"><code>Data.Token</code></a></h3>
+<pre><code class="language-elm">module Data.Token exposing (Token(..), toString)
+
+import Data.Operator as Operator exposing (Operator)
+import Lib.Rational as Rational exposing (Rational)
+
+
+type Token
+    = Number Rational
+    | Operator Operator
+
+
+toString : Token -&gt; String
+toString token =
+    case token of
+        Number r -&gt;
+            Rational.toDecimalString r
+
+        Operator op -&gt;
+            Operator.toString op
+</code></pre>
+<p>I came up with this based on the tokens I expected to be present in the infix expressions that could be entered by a user.</p>
+<h3 id="librational"><a class="header" href="#librational"><code>Lib.Rational</code></a></h3>
+<pre><code class="language-elm">module Lib.Rational exposing
+    ( Rational
+    , zero, fromInt, new
+    , add, sub, mul, div
+    , toString, toDecimalString
+    )
+
+type Rational
+
+zero : Rational
+fromInt : Int -&gt; Rational
+new : Int -&gt; Int -&gt; Maybe Rational
+
+add : Rational -&gt; Rational -&gt; Rational
+sub : Rational -&gt; Rational -&gt; Rational
+mul : Rational -&gt; Rational -&gt; Rational
+div : Rational -&gt; Rational -&gt; Rational
+
+toString : Rational -&gt; String
+toDecimalString : Rational -&gt; String
+</code></pre>
+<p><code>zero</code>, <code>fromInt</code>, and <code>new</code> can be used to construct rational numbers.</p>
+<p><code>add</code>, <code>sub</code>, <code>mul</code>, and <code>div</code> perform the usual arithmetic over the rationals. To keep things simple, I define <code>div r zero == zero</code> for every rational number <code>r</code>.</p>
+<p><code>toString</code> converts a rational number to either an integral or fractional string. Here are some examples:</p>
+<pre><code class="language-elm">Maybe.map toString (new 0 1) == Just "0"
+Maybe.map toString (new 0 2) == Just "0"
+Maybe.map toString (new 5 1) == Just "5"
+Maybe.map toString (new -5 1) == Just "-5"
+
+Maybe.map toString (new 5 2) == Just "5/2"
+Maybe.map toString (new -5 2) == Just "-5/2"
+Maybe.map toString (new 5 -2) == Just "-5/2"
+Maybe.map toString (new -5 -2) == Just "5/2"
+
+Maybe.map toString (new 3 6) == Just "1/2"
+Maybe.map toString (new 6 3) == Just "2"
+</code></pre>
+<p><code>toDecimalString</code> converts a rational number to a, wait for it, decimal string. Here are some examples:</p>
+<pre><code class="language-elm">Maybe.map toDecimalString (new 0 1) == Just "0"
+Maybe.map toDecimalString (new 5 1) == Just "5"
+Maybe.map toDecimalString (new -5 1) == Just "-5"
+
+Maybe.map toDecimalString (new 0 2) == Just "0"
+Maybe.map toDecimalString (new 5 2) == Just "2.5"
+Maybe.map toDecimalString (new -5 2) == Just "-2.5"
+Maybe.map toDecimalString (new 5 -2) == Just "-2.5"
+Maybe.map toDecimalString (new -5 -2) == Just "2.5"
+
+Maybe.map toDecimalString (new 3 6) == Just "0.5"
+Maybe.map toDecimalString (new 6 3) == Just "2"
+
+Maybe.map toDecimalString (new 1 3) == Just "0.(3)"
+Maybe.map toDecimalString (new 7 12) == Just "0.58(3)"
+Maybe.map toDecimalString (new 1 23) == Just "0.(0434782608695652173913)"
+</code></pre>
+<p>The <code>toString</code> and <code>toDecimalString</code> functions are good candidates for unit testing.</p>
+<h3 id="libstack"><a class="header" href="#libstack"><code>Lib.Stack</code></a></h3>
+<pre><code class="language-elm">module Lib.Stack exposing
+    ( Stack
+    , new
+    , isEmpty
+    , push, pop
+    )
+
+type Stack a
+
+new : Stack a
+
+isEmpty : Stack a -&gt; Bool
+
+push : a -&gt; Stack a -&gt; Stack a
+pop : Stack a -&gt; Maybe ( a, Stack a )
+</code></pre>
+<p>Stacks are used in Dijkstra's shunting yard algorithm. There are a few simple ways to implement them so I knew this wasn't going to be a problem.</p>
+<h2 id="questions-answered"><a class="header" href="#questions-answered">Questions Answered</a></h2>
+<p>After sketching out the API I had a better sense of the shape of the solution, I understood the modules and data structures I needed, and I knew where the tricky bits lay.</p>
+<h3 id="shape-of-the-solution"><a class="header" href="#shape-of-the-solution">Shape of the Solution</a></h3>
+<pre><code class="language-elm">-- MODEL
+
+
+type alias Model =
+    { calculator : Calculator
+    }
+
+
+init : Model
+init =
+    { calculator = Calculator.new
+    }
+
+
+
+-- UPDATE
+
+
+type Msg
+    = Clicked Key
+
+
+update : Msg -&gt; Model -&gt; Model
+update msg model =
+    case msg of
+        Clicked key -&gt;
+            { model | calculator = Calculator.press key model.calculator }
+
+
+
+-- VIEW
+
+
+view : Model -&gt; H.Html Msg
+view { calculator } =
+    let
+        { line1, line2 } =
+            Calculator.toOutput calculator
+    in
+    Page.view
+        { calculator =
+            { line1 = line1
+            , line2 = line2
+            , onClick = Clicked
+            }
+        , attribution =
+            { name = "Dwayne Crooks"
+            , title = "Dwayne's GitHub profile"
+            , url = "https://github.com/dwayne"
+            }
+        }
+</code></pre>
+<h3 id="modules-and-data-structures"><a class="header" href="#modules-and-data-structures">Modules and Data Structures</a></h3>
+<ul>
+<li><code>Data.Calculator</code></li>
+<li><code>Data.Evaluator</code></li>
+<li><code>Data.Token</code></li>
+<li><code>Lib.Rational</code></li>
+<li><code>Lib.Stack</code></li>
+</ul>
+<h4 id="why-lib"><a class="header" href="#why-lib">Why <code>Lib</code>?</a></h4>
+<p>It's a personal preference of mine to place modules in <code>Lib</code> that I feel are general enough to one day deserve their own library or at least be reused in other projects. By placing them in <code>Lib</code> it's easier for me to identify these reusable modules when I'm scanning through my projects.</p>
+<h3 id="the-tricky-bits"><a class="header" href="#the-tricky-bits">The Tricky Bits</a></h3>
+<p>These are the parts that are non-trivial to figure out and where I expected to spend most of my time in this phase of the project.</p>
+<ul>
+<li>Group 1
+<ul>
+<li>What's <code>type Calculator</code> going to be?</li>
+<li>How to tokenize the user's input as they press keys?</li>
+<li>How to implement <code>Calculator.press</code>?</li>
+<li>How to implement <code>Calculator.toOutput</code>?</li>
+</ul>
+</li>
+<li>Group 2
+<ul>
+<li>How to implement Dijkstra's shunting yard algorithm, <code>Evaluator.eval</code>, in a pure functional language?</li>
+</ul>
+</li>
+<li>Group 3
+<ul>
+<li>How to implement <code>Rational.toDecimalString</code>?</li>
+</ul>
+</li>
+</ul>
+<p>The 3 groups can be worked on independently of each other.</p>
+<p><code>Calculator.press</code>, <code>Calculator.toOutput</code>, <code>Evaluator.eval</code>, and <code>Rational.toDecimalString</code> are great candidates for unit testing. I didn't practice test-driven development but I did cycle between tests and implementation in order to implement the functions.</p>
+<h2 id="the-plan"><a class="header" href="#the-plan">The Plan</a></h2>
+<p>Moving forward we'd tackle and solve the problems of each group in the order: Group 3, Group 2, and Group 1.</p>
+<p>Let's get started on the <a href="application-logic/./rational-numbers/index.html">rational numbers</a>.</p>
+<h2 id="an-aside-my-historically-accurate-first-attempt"><a class="header" href="#an-aside-my-historically-accurate-first-attempt">An Aside: My Historically Accurate First Attempt</a></h2>
+<p>This is how I literally first worked my way through the project when I was learning Elm:</p>
+<ul>
+<li>I made the calculator work for <code>AC</code>, <code>0-9</code>, <code>+</code>/<code>-</code>, and <code>=</code>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/21b89460ee169de1f30efd66b327bb299852688f">Add and test the calculator's logic</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/c8bdd2ecffa0f3215dd183a9a050cd01fa443ab5">Make the calculator UI work for AC, digits, +/- and =</a></li>
+</ul>
+</li>
+<li>I added support for multiplication
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/848c4e35d9cb0d5ea0140b283beff5b3e77cdd1e">Add multiplication</a></li>
+</ul>
+</li>
+<li>I implemented Dijkstra's shunting yard algorithm to handle operator precedence
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/0c1f708e1983b1afb75f023fd7ff190fea6587fd">Add an expression evaluator that respects operator precedence</a></li>
+</ul>
+</li>
+<li>I added support for integer division
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/dea53dbe32209927e74dbbe65cc4c8f5abab7305">Add integer division</a></li>
+</ul>
+</li>
+<li>I added support for rational arithmetic
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/375b155150dafaab3c46d71ccbdf563fb87ac48d">Add a type for dealing with rational numbers</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/ecf14554a3bddc415aa7f43d4dbe0427ce921e27">Add rational arithmetic to the calculator</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/1e0785589a3b2f5ff559b1c1617038df199f9cb7">Add decimal input</a></li>
+</ul>
+</li>
+</ul>
+<p>Then, over the years, as my understanding for Elm grew I refactored my first solution into what it is today.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="rational-numbers"><a class="header" href="#rational-numbers">Rational Numbers</a></h1>
+<p>A <a href="https://artofproblemsolving.com/wiki/index.php/Rational_number">rational number</a> is a <a href="https://artofproblemsolving.com/wiki/index.php/Real_number">real number</a> that can be expressed as the fraction \( \frac{p}{q} \) of two <a href="https://artofproblemsolving.com/wiki/index.php/Integer">integers</a> with a numerator \( p \) and a non-zero denominator \( q \).</p>
+<h2 id="public-api"><a class="header" href="#public-api">Public API</a></h2>
+<pre><code class="language-elm">module Lib.Rational exposing
+    ( Rational
+    , new, zero, fromInt
+    , add, sub, mul, div
+    , toString, toDecimalString
+    )
+
+-- Representation
+
+type Rational
+
+-- Constructors
+
+new : Int -&gt; Int -&gt; Maybe Rational
+zero : Rational
+fromInt : Int -&gt; Rational
+
+-- Arithmetic
+
+add : Rational -&gt; Rational -&gt; Rational
+sub : Rational -&gt; Rational -&gt; Rational
+mul : Rational -&gt; Rational -&gt; Rational
+div : Rational -&gt; Rational -&gt; Rational
+
+-- Conversion
+
+toString : Rational -&gt; String
+toDecimalString : Rational -&gt; String
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="representation"><a class="header" href="#representation">Representation</a></h1>
+<p>A rational number can be represented as follows:</p>
+<pre><code class="language-elm">type Rational
+    = Rational Int Int
+</code></pre>
+<p>So, for example, one-half can be represented by <code>Rational 1 2</code>.</p>
+<h2 id="zero-in-the-denominator"><a class="header" href="#zero-in-the-denominator">Zero in the Denominator</a></h2>
+<p>By definition, a rational number is not supposed to have a zero in its denominator. But, the above representation doesn't prevent this possibility since, for example, <code>Rational 3 0</code> is a valid value of type <code>Rational</code>. However, we can control the way values of type <code>Rational</code> get created by not exporting the type's constructor and instead exporting a custom function, in this case <code>new</code>, that constructs values which obey the definition of a rational number.</p>
+<p>We call the <code>Rational</code> type an <a href="https://elm-radio.com/episode/intro-to-opaque-types/">opaque type</a> since its constructors are private to the module. It's opaque because users of the module can't see and thus access the internal details of the type.</p>
+<p>We call <code>new</code> a <a href="https://wiki.haskell.org/Smart_constructors">smart constructor</a> because it uses a bit of logic to decide how and when to construct a value of type <code>Rational</code>.</p>
+<h2 id="equivalent-rational-numbers"><a class="header" href="#equivalent-rational-numbers">Equivalent Rational Numbers</a></h2>
+<p>One-half can also be represented by <code>Rational 2 4</code>, <code>Rational 3 6</code>, <code>Rational 4 8</code>, and so on. I decided to use the representation that had all common factors removed from both the numerator and denominator.</p>
+<h2 id="negative-rational-numbers"><a class="header" href="#negative-rational-numbers">Negative Rational Numbers</a></h2>
+<p>Negative one-half can be represented by <code>Rational -1 2</code> or <code>Rational 1 -2</code>. I decided to represent negative rational numbers such that the numerator always contains the negative value.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="constructors"><a class="header" href="#constructors">Constructors</a></h1>
+<ul>
+<li><a href="application-logic/rational-numbers/constructors.html#new"><code>new</code></a></li>
+<li><a href="application-logic/rational-numbers/constructors.html#zero"><code>zero</code></a></li>
+<li><a href="application-logic/rational-numbers/constructors.html#fromint"><code>fromInt</code></a></li>
+</ul>
+<h2 id="new"><a class="header" href="#new"><code>new</code></a></h2>
+<p>Based on the decisions I made in <a href="application-logic/rational-numbers/./representation.html">Representation</a> I came up with the following requirements for <code>new</code>.</p>
+<pre><code class="language-elm">new 1 2 == Just (Rational 1 2)
+
+new 3 0 == Nothing
+
+new 2 4 == Just (Rational 1 2)
+new 3 6 == Just (Rational 1 2)
+new 4 8 == Just (Rational 1 2)
+
+new -1 2 == Just (Rational -1 2)
+new 1 -2 == Just (Rational -1 2)
+new -1 -2 == Just (Rational 1 2)
+
+new -2 4 == Just (Rational -1 2)
+new 2 -4 == Just (Rational -1 2)
+new -2 -4 == Just (Rational 1 2)
+</code></pre>
+<p>The following implementation satisfies the requirements:</p>
+<pre><code class="language-elm">new : Int -&gt; Int -&gt; Maybe Rational
+new numer denom =
+    if denom == 0 then
+        Nothing
+
+    else
+        Just (makeRational numer denom)
+
+
+makeRational : Int -&gt; Int -&gt; Rational
+makeRational numer denom =
+    let
+        divisor =
+            gcd numer denom
+
+        g =
+            if denom &lt; 0 then
+                -divisor
+
+            else
+                divisor
+
+        n =
+            numer // g
+
+        d =
+            denom // g
+    in
+    Rational n d
+
+
+gcd : Int -&gt; Int -&gt; Int
+gcd a b =
+    gcdHelper (abs a) (abs b)
+
+
+gcdHelper : Int -&gt; Int -&gt; Int
+gcdHelper a b =
+    if b == 0 then
+        a
+
+    else
+        gcdHelper b (modBy b a)
+</code></pre>
+<p>To remove all the common factors from both the numerator and denominator I divide both by their greatest common divisor. <code>gcd</code> implements the <a href="https://en.wikipedia.org/wiki/Euclidean_algorithm">Euclidean algorithm</a>, which is an efficient method for computing the <a href="https://en.wikipedia.org/wiki/Greatest_common_divisor">greatest common divisor</a> (GCD) of two integers.</p>
+<p><code>gcdHelper</code> is implemented using tail-recursion so that it can be <a href="https://functional-programming-in-elm.netlify.app/recursion/tail-call-elimination.html">optimized into a loop</a>.</p>
+<p>I tested that <code>new</code> met the requirements using <code>elm repl</code>. The unit tests came later.</p>
+<h2 id="convenient-constructors"><a class="header" href="#convenient-constructors">Convenient Constructors</a></h2>
+<p>Having to deal with <code>Maybe</code> everytime you need a rational number can become tedious. The <code>zero</code> and <code>fromInt</code> constructors make it quite easy to create the rational numbers for zero and the other integers.</p>
+<h3 id="zero"><a class="header" href="#zero"><code>zero</code></a></h3>
+<pre><code class="language-elm">zero : Rational
+zero =
+    Rational 0 1
+</code></pre>
+<h3 id="fromint"><a class="header" href="#fromint"><code>fromInt</code></a></h3>
+<pre><code class="language-elm">fromInt : Rational
+fromInt n =
+    Rational n 1
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="arithmetic"><a class="header" href="#arithmetic">Arithmetic</a></h1>
+<ul>
+<li><a href="application-logic/rational-numbers/arithmetic.html#addition">Addition</a></li>
+<li><a href="application-logic/rational-numbers/arithmetic.html#subtraction">Subtraction</a></li>
+<li><a href="application-logic/rational-numbers/arithmetic.html#multiplication">Multiplication</a></li>
+<li><a href="application-logic/rational-numbers/arithmetic.html#division">Division</a></li>
+</ul>
+<h2 id="addition"><a class="header" href="#addition">Addition</a></h2>
+<p>\[ \frac{n_1}{d_1} + \frac{n_2}{d_2} = \frac{n_1d_2 + n_2d_1}{d_1d_2} \]</p>
+<pre><code class="language-elm">add : Rational -&gt; Rational -&gt; Rational
+add (Rational n1 d1) (Rational n2 d2) =
+    makeRational (n1 * d2 + n2 * d1) (d1 * d2)
+</code></pre>
+<h2 id="subtraction"><a class="header" href="#subtraction">Subtraction</a></h2>
+<p>\[ \frac{n_1}{d_1} - \frac{n_2}{d_2} = \frac{n_1d_2 - n_2d_1}{d_1d_2} \]</p>
+<pre><code class="language-elm">sub : Rational -&gt; Rational -&gt; Rational
+sub (Rational n1 d1) (Rational n2 d2) =
+    makeRational (n1 * d2 - n2 * d1) (d1 * d2)
+</code></pre>
+<h2 id="multiplication"><a class="header" href="#multiplication">Multiplication</a></h2>
+<p>\[ \frac{n_1}{d_1} \times \frac{n_2}{d_2} = \frac{n_1n_2}{d_1d_2} \]</p>
+<pre><code class="language-elm">mul : Rational -&gt; Rational -&gt; Rational
+mul (Rational n1 d1) (Rational n2 d2) =
+    makeRational (n1 * n2) (d1 * d2)
+</code></pre>
+<h2 id="division"><a class="header" href="#division">Division</a></h2>
+<p>\[ \frac{n_1}{d_1} \div \frac{n_2}{d_2} = \frac{n_1}{d_1} \times \frac{d_2}{n_2} = \frac{n_1d_2}{d_1n_2} \text{, } n_2 \neq 0 \]</p>
+<pre><code class="language-elm">div : Rational -&gt; Rational -&gt; Rational
+div (Rational n1 d1) (Rational n2 d2) =
+    if n2 == 0 then
+        zero
+
+    else
+        makeRational (n1 * d2) (d1 * n2)
+</code></pre>
+<p>For division by zero, I chose to return the zero rational number rather than to signal an error.</p>
+<h3 id="exercise"><a class="header" href="#exercise">Exercise</a></h3>
+<p>Implement <code>div : Rational -&gt; Rational -&gt; Maybe Rational</code>, such that <code>div r zero == Nothing</code>, and solve the downstream consequences of this change.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="conversion"><a class="header" href="#conversion">Conversion</a></h1>
+<ul>
+<li><a href="application-logic/rational-numbers/conversion.html#tostring"><code>toString</code></a></li>
+<li><a href="application-logic/rational-numbers/conversion.html#todecimalstring"><code>toDecimalString</code></a></li>
+</ul>
+<h2 id="tostring"><a class="header" href="#tostring"><code>toString</code></a></h2>
+<p>It converts a rational number to either an integral or fractional string. The requirements are:</p>
+<pre><code class="language-elm">toString zero == "0"
+
+-- A good candidate for a fuzz test:
+toString (fromInt n) == String.fromInt n
+
+Maybe.map toString (new 5 2) == Just "5/2"
+Maybe.map toString (new -5 2) == Just "-5/2"
+Maybe.map toString (new 5 -2) == Just "-5/2"
+Maybe.map toString (new -5 -2) == Just "5/2"
+
+Maybe.map toString (new 3 6) == Just "1/2"
+Maybe.map toString (new 6 3) == Just "2"
+</code></pre>
+<p>The following implementation satisfies the requirements:</p>
+<pre><code class="language-elm">toString : Rational -&gt; String
+toString (Rational n d) =
+    if d == 1 then
+        String.fromInt n
+
+    else
+        String.fromInt n ++ "/" ++ String.fromInt d
+</code></pre>
+<p><code>n</code> and <code>d</code> have no common factors because of the ways in which rational numbers can constructed. So we know the rational number is in lowest terms. Also, if the rational number is negative then <code>n</code> is negative and <code>d</code> is positive so we don't need to worry about where to place the minus sign. If <code>d</code> is <code>1</code> then we return the string representation of the integer <code>n</code>. Otherwise, we return the string representation of the integer <code>n</code> over the string representation of the integer <code>d</code>.</p>
+<h2 id="todecimalstring"><a class="header" href="#todecimalstring"><code>toDecimalString</code></a></h2>
+<p>It converts a rational number to either an integral or decimal string. The requirements are:</p>
+<pre><code class="language-elm">toDecimalString zero == "0"
+
+-- Another good candidate for a fuzz test:
+toDecimalString (fromInt n) == String.fromInt n
+
+Maybe.map toDecimalString (new 5 2) == Just "2.5"
+Maybe.map toDecimalString (new -5 2) == Just "-2.5"
+Maybe.map toDecimalString (new 5 -2) == Just "-2.5"
+Maybe.map toDecimalString (new -5 -2) == Just "2.5"
+
+Maybe.map toDecimalString (new 3 6) == Just "0.5"
+Maybe.map toDecimalString (new 6 3) == Just "2"
+
+Maybe.map toDecimalString (new 1 3) == Just "0.(3)"
+Maybe.map toDecimalString (new 7 12) == Just "0.58(3)"
+Maybe.map toDecimalString (new 1 23) == Just "0.(0434782608695652173913)"
+</code></pre>
+<p>Here's the start of an implementation that satisfies the requirements:</p>
+<pre><code class="language-elm">toDecimalString : Rational -&gt; String
+toDecimalString (Rational n d) =
+    if d == 1 then
+        String.fromInt n
+
+    else
+        let
+            sign =
+                if n &lt; 0 then
+                    "-"
+
+                else
+                    ""
+
+            m =
+                abs n
+
+            quotient =
+                m // d
+
+            remainder =
+                modBy d m
+        in
+        sign ++ String.fromInt quotient ++ "." ++ decimalRep remainder d
+</code></pre>
+<p>The interesting part is handled by <code>decimalRep remainder d</code>, where <code>1 &lt;= remainder &lt; d</code>. Let's develop an understanding for the problem that <code>decimalRep</code> needs to solve.</p>
+<h3 id="decimal-notation"><a class="header" href="#decimal-notation">Decimal Notation</a></h3>
+<p>Decimal notation is a way of representing numbers using powers of <code>10</code>. For e.g.</p>
+<p>\[ 123.456 = 1 \times 10^2 + 2 \times 10^1 + 3 \times 10^0 + 4 \times 10^{-1} + 5 \times 10^{-2} + 6 \times 10^{-3} \]</p>
+<p>As a result, it is easier to convert a fraction to a decimal when its denominator is a power of <code>10</code>. For e.g.</p>
+<p>\[ \frac{98765}{1000} = 98.765 \]</p>
+<h3 id="multiplication-by-1"><a class="header" href="#multiplication-by-1">Multiplication by <code>1</code></a></h3>
+<p>Let <code>r</code> be any rational number. Then, <code>r * 1 = r</code>. In particular, notice that <code>10/10 = 1</code>. So, <code>r * 10/10 = r = 10r * 1/10</code>. If <code>r</code> has numerator <code>n</code> and denominator <code>d</code> then <code>r = 10n/d * 1/10</code>. How can this help us? We can use this to get powers of <code>10</code> in the denominator to make it easier to extract the decimal digits. Let's look at a few examples:</p>
+<h4 id="example-1-12"><a class="header" href="#example-1-12">Example 1: <code>1/2</code></a></h4>
+<p>\[
+\begin{align}
+\frac{1}{2} &amp;= \frac{1}{2} \times 1 \\
+&amp;= \frac{1}{2} \times \frac{10}{10} \\
+&amp;= \frac{10}{2} \times \frac{1}{10} \\
+&amp;= 5 \times \frac{1}{10} \\
+&amp;= \frac{5}{10} \\
+&amp;= 0.5
+\end{align}
+\]</p>
+<h4 id="example-2-14"><a class="header" href="#example-2-14">Example 2: <code>1/4</code></a></h4>
+<p>\[
+\begin{align}
+\frac{1}{4} &amp;= \frac{1}{4} \times 1 \\
+&amp;= \frac{1}{4} \times \frac{10}{10} \\
+&amp;= \frac{10}{4} \times \frac{1}{10} \\
+&amp;= 2 \frac{1}{2} \times \frac{1}{10} \\
+&amp;= (2 + \frac{1}{2}) \times \frac{1}{10} \\
+&amp;= \frac{2}{10} + 0.5 \times \frac{1}{10} \\
+&amp;= 0.2 + 0.05 \\
+&amp;= 0.25
+\end{align}
+\]</p>
+<h4 id="example-3-18"><a class="header" href="#example-3-18">Example 3: <code>1/8</code></a></h4>
+<p>\[
+\begin{align}
+\frac{1}{8} &amp;= \frac{1}{8} \times 1 \\
+&amp;= \frac{1}{8} \times \frac{10}{10} \\
+&amp;= \frac{10}{8} \times \frac{1}{10} \\
+&amp;= 1 \frac{1}{4} \times \frac{1}{10} \\
+&amp;= (1 + \frac{1}{4}) \times \frac{1}{10} \\
+&amp;= \frac{1}{10} + 0.25 \times \frac{1}{10} \\
+&amp;= 0.1 + 0.025 \\
+&amp;= 0.125
+\end{align}
+\]</p>
+<h4 id="example-4-37"><a class="header" href="#example-4-37">Example 4: <code>3/7</code></a></h4>
+<p>\[
+\begin{align}
+\frac{3}{7} &amp;= \frac{3}{7} \times 1 \\
+&amp;= \frac{3}{7} \times \frac{10}{10} \\
+&amp;= \frac{30}{7} \times \frac{1}{10} \\
+&amp;= 4 \frac{2}{7} \times \frac{1}{10} \\
+&amp;= (4 + \frac{2}{7}) \times \frac{1}{10} \\
+&amp;= 0.4 + \frac{2}{7} \times \frac{1}{10} \\
+\end{align}
+\]</p>
+<p>\[
+\begin{align}
+\frac{2}{7} &amp;= \frac{2}{7} \times 1 \\
+&amp;= \frac{2}{7} \times \frac{10}{10} \\
+&amp;= \frac{20}{7} \times \frac{1}{10} \\
+&amp;= 2 \frac{6}{7} \times \frac{1}{10} \\
+&amp;= (2 + \frac{6}{7}) \times \frac{1}{10} \\
+&amp;= 0.2 + \frac{6}{7} \times \frac{1}{10} \\
+\end{align}
+\]</p>
+<p>\[
+\begin{align}
+\frac{6}{7} &amp;= \frac{6}{7} \times 1 \\
+&amp;= \frac{6}{7} \times \frac{10}{10} \\
+&amp;= \frac{60}{7} \times \frac{1}{10} \\
+&amp;= 8 \frac{4}{7} \times \frac{1}{10} \\
+&amp;= (8 + \frac{4}{7}) \times \frac{1}{10} \\
+&amp;= 0.8 + \frac{4}{7} \times \frac{1}{10} \\
+\end{align}
+\]</p>
+<p>\[
+\begin{align}
+\frac{4}{7} &amp;= \frac{4}{7} \times 1 \\
+&amp;= \frac{4}{7} \times \frac{10}{10} \\
+&amp;= \frac{40}{7} \times \frac{1}{10} \\
+&amp;= 5 \frac{5}{7} \times \frac{1}{10} \\
+&amp;= (5 + \frac{5}{7}) \times \frac{1}{10} \\
+&amp;= 0.5 + \frac{5}{7} \times \frac{1}{10} \\
+\end{align}
+\]</p>
+<p>\[
+\begin{align}
+\frac{5}{7} &amp;= \frac{5}{7} \times 1 \\
+&amp;= \frac{5}{7} \times \frac{10}{10} \\
+&amp;= \frac{50}{7} \times \frac{1}{10} \\
+&amp;= 7 \frac{1}{7} \times \frac{1}{10} \\
+&amp;= (7 + \frac{1}{7}) \times \frac{1}{10} \\
+&amp;= 0.7 + \frac{1}{7} \times \frac{1}{10} \\
+\end{align}
+\]</p>
+<p>\[
+\begin{align}
+\frac{1}{7} &amp;= \frac{1}{7} \times 1 \\
+&amp;= \frac{1}{7} \times \frac{10}{10} \\
+&amp;= \frac{10}{7} \times \frac{1}{10} \\
+&amp;= 1 \frac{3}{7} \times \frac{1}{10} \\
+&amp;= (1 + \frac{3}{7}) \times \frac{1}{10} \\
+&amp;= 0.1 + \frac{3}{7} \times \frac{1}{10} \\
+\end{align}
+\]</p>
+<p>And, it will start to repeat. So,</p>
+<p>\[
+\begin{align}
+\frac{3}{7} &amp;= 0.4 + \frac{2}{7} \times \frac{1}{10} \\
+&amp;= 0.4 + (0.2 + \frac{6}{7} \times \frac{1}{10}) \times \frac{1}{10} \\
+&amp;= 0.4 + (0.2 + (0.8 + \frac{4}{7} \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10} \\
+&amp;= 0.4 + (0.2 + (0.8 + (0.5 + \frac{5}{7} \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10} \\
+&amp;= 0.4 + (0.2 + (0.8 + (0.5 + (0.7 + \frac{1}{7} \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10} \\
+&amp;= 0.4 + (0.2 + (0.8 + (0.5 + (0.7 + (0.1 + \frac{3}{7} \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10} \\
+&amp;= 0.4 + 0.02 + (0.8 + (0.5 + (0.7 + (0.1 + \frac{3}{7} \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{100} \\
+&amp;= 0.4 + 0.02 + 0.008 + (0.5 + (0.7 + (0.1 + \frac{3}{7} \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{1000} \\
+&amp;= 0.4 + 0.02 + 0.008 + 0.0005 + (0.7 + (0.1 + \frac{3}{7} \times \frac{1}{10}) \times \frac{1}{10}) \times \frac{1}{10000} \\
+&amp;= 0.4 + 0.02 + 0.008 + 0.0005 + 0.00007 + (0.1 + \frac{3}{7} \times \frac{1}{10}) \times \frac{1}{100000} \\
+&amp;= 0.4 + 0.02 + 0.008 + 0.0005 + 0.00007 + 0.000001 + \frac{3}{7} \times \frac{1}{1000000} \\
+&amp;= 0.428571 + \frac{3}{7} \times \frac{1}{1000000} \\
+\end{align}
+\]</p>
+<h3 id="towards-an-algorithm"><a class="header" href="#towards-an-algorithm">Towards an Algorithm</a></h3>
+<p>Let's take a closer look at how we determined the decimal representation for <code>3/7</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>n</th><th>d</th><th>10n</th><th>q</th><th>r</th><th>memo</th><th>terms</th></tr></thead><tbody>
+<tr><td>3</td><td>7</td><td>30</td><td>4</td><td>2</td><td><code>[ (3, (4, 2)) ]</code></td><td><code>[ (4, 2) ]</code></td></tr>
+<tr><td>2</td><td>7</td><td>20</td><td>2</td><td>6</td><td><code>[ (2, (2, 6)), (3, (4, 2)) ]</code></td><td><code>[ (2, 6), (4, 2) ]</code></td></tr>
+<tr><td>6</td><td>7</td><td>60</td><td>8</td><td>4</td><td><code>[ (6, (8, 4)), (2, (2, 6)), (3, (4, 2)) ]</code></td><td><code>[ (8, 4), (2, 6), (4, 2) ]</code></td></tr>
+<tr><td>4</td><td>7</td><td>40</td><td>5</td><td>5</td><td><code>[ (4, (5, 5)), (6, (8, 4)), (2, (2, 6)), (3, (4, 2)) ]</code></td><td><code>[ (5, 5), (8, 4), (2, 6), (4, 2) ]</code></td></tr>
+<tr><td>5</td><td>7</td><td>50</td><td>7</td><td>1</td><td><code>[ (5, (7, 1)), (4, (5, 5)), (6, (8, 4)), (2, (2, 6)), (3, (4, 2)) ]</code></td><td><code>[ (7, 1), (5, 5), (8, 4), (2, 6), (4, 2) ]</code></td></tr>
+<tr><td>1</td><td>7</td><td>10</td><td>1</td><td>3</td><td><code>[ (1, (1, 3)), (5, (7, 1)), (4, (5, 5)), (6, (8, 4)), (2, (2, 6)), (3, (4, 2)) ]</code></td><td><code>[ (1, 3), (7, 1), (5, 5), (8, 4), (2, 6), (4, 2) ]</code></td></tr>
+<tr><td>3</td><td>7</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+</tbody></table>
+</div>
+<p>where <code>q = 10n div d</code> and <code>r = 10n mod d</code>. We keep going until either <code>(n, d)</code> repeats or <code>r = 0</code>.</p>
+<h3 id="decimalrep"><a class="header" href="#decimalrep"><code>decimalRep</code></a></h3>
+<p>Based on the above analysis, here's an implementation for <code>decimalRep</code> that satisfies the requirements:</p>
+<pre><code class="language-elm">decimalRep : Int -&gt; Int -&gt; String
+decimalRep n d =
+    decimalRepHelper n d [] Dict.empty
+
+
+decimalRepHelper : Int -&gt; Int -&gt; List ( Int, Int ) -&gt; Dict Int ( Int, Int ) -&gt; String
+decimalRepHelper n d terms memo =
+    case Dict.get n memo of
+        Just ( q, r ) -&gt;
+            displayRepeating ( q, r ) terms ")"
+
+        Nothing -&gt;
+            let
+                n10 =
+                    n * 10
+
+                q =
+                    n10 // d
+
+                r =
+                    modBy d n10
+            in
+            if r == 0 then
+                displayTerminating (( q, r ) :: terms) ""
+
+            else
+                decimalRepHelper
+                    r
+                    d
+                    (( q, r ) :: terms)
+                    (Dict.insert n ( q, r ) memo)
+
+
+displayTerminating : List ( Int, Int ) -&gt; String -&gt; String
+displayTerminating terms output =
+    case terms of
+        [] -&gt;
+            output
+
+        ( q, _ ) :: rest -&gt;
+            displayTerminating rest (String.fromInt q ++ output)
+
+
+displayRepeating : ( Int, Int ) -&gt; List ( Int, Int ) -&gt; String -&gt; String
+displayRepeating marker terms output =
+    case terms of
+        [] -&gt;
+            output
+
+        ( q, r ) :: rest -&gt;
+            let
+                s =
+                    if ( q, r ) == marker then
+                        "(" ++ String.fromInt q
+
+                    else
+                        String.fromInt q
+            in
+            displayRepeating marker rest (s ++ output)
+</code></pre>
+<p><code>decimalRepHelper</code>, <code>displayTerminating</code>, and <code>displayRepeating</code> are all implemented using tail-recursion so they can be <a href="https://functional-programming-in-elm.netlify.app/recursion/tail-call-elimination.html">optimized into loops</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="unit-tests"><a class="header" href="#unit-tests">Unit Tests</a></h1>
+<h2 id="new-1"><a class="header" href="#new-1"><code>new</code></a></h2>
+<pre><code class="language-elm">test "both numerator and denominator are positive" &lt;|
+    \_ -&gt;
+        Rational.new 2 4
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "1/2")
+
+test "only numerator is positive" &lt;|
+    \_ -&gt;
+        Rational.new 2 -4
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "-1/2")
+
+test "only denominator is positive" &lt;|
+    \_ -&gt;
+        Rational.new -2 4
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "-1/2")
+
+test "both numerator and denominator are negative" &lt;|
+    \_ -&gt;
+        Rational.new -2 -4
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "1/2")
+</code></pre>
+<h2 id="arithmetic-1"><a class="header" href="#arithmetic-1">Arithmetic</a></h2>
+<pre><code class="language-elm">test "1/2 + 1/8" &lt;|
+    \_ -&gt;
+        Maybe.map2 Rational.add (Rational.new 1 2) (Rational.new 1 8)
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "5/8")
+
+test "1/2 - 1/8" &lt;|
+    \_ -&gt;
+        Maybe.map2 Rational.sub (Rational.new 1 2) (Rational.new 1 8)
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "3/8")
+
+test "1/2 * 1/8" &lt;|
+    \_ -&gt;
+        Maybe.map2 Rational.mul (Rational.new 1 2) (Rational.new 1 8)
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "1/16")
+
+test "1/2 / 1/8" &lt;|
+    \_ -&gt;
+        Maybe.map2 Rational.div (Rational.new 1 2) (Rational.new 1 8)
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "4")
+
+test "1/4 / 0" &lt;|
+    \_ -&gt;
+        Maybe.map2 Rational.div (Rational.new 1 4) (Rational.new 0 1)
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "0")
+</code></pre>
+<h2 id="decimal-conversion"><a class="header" href="#decimal-conversion">Decimal Conversion</a></h2>
+<h3 id="terminating-decimals"><a class="header" href="#terminating-decimals">Terminating Decimals</a></h3>
+<pre><code class="language-elm">test "1/2" &lt;|
+    \_ -&gt;
+        Rational.new 1 2
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.5")
+
+test "-1/2" &lt;|
+    \_ -&gt;
+        Rational.new -1 2
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "-0.5")
+
+test "5/2" &lt;|
+    \_ -&gt;
+        Rational.new 5 2
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "2.5")
+
+test "1/4" &lt;|
+    \_ -&gt;
+        Rational.new 1 4
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.25")
+
+test "1/5" &lt;|
+    \_ -&gt;
+        Rational.new 1 5
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.2")
+
+test "1/8" &lt;|
+    \_ -&gt;
+        Rational.new 1 8
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.125")
+</code></pre>
+<h3 id="repeating-decimals"><a class="header" href="#repeating-decimals">Repeating Decimals</a></h3>
+<pre><code class="language-elm">test "1/3" &lt;|
+    \_ -&gt;
+        Rational.new 1 3
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(3)")
+
+test "2/3" &lt;|
+    \_ -&gt;
+        Rational.new 2 3
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(6)")
+
+test "1/6" &lt;|
+    \_ -&gt;
+        Rational.new 1 6
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.1(6)")
+
+test "5/6" &lt;|
+    \_ -&gt;
+        Rational.new 5 6
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.8(3)")
+
+test "1/7" &lt;|
+    \_ -&gt;
+        Rational.new 1 7
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(142857)")
+
+test "2/7" &lt;|
+    \_ -&gt;
+        Rational.new 2 7
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(285714)")
+
+test "3/7" &lt;|
+    \_ -&gt;
+        Rational.new 3 7
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(428571)")
+
+test "1/9" &lt;|
+    \_ -&gt;
+        Rational.new 1 9
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(1)")
+
+test "2/9" &lt;|
+    \_ -&gt;
+        Rational.new 2 9
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(2)")
+
+test "8/9" &lt;|
+    \_ -&gt;
+        Rational.new 8 9
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(8)")
+
+test "7/12" &lt;|
+    \_ -&gt;
+        Rational.new 7 12
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.58(3)")
+
+test "1/23" &lt;|
+    \_ -&gt;
+        Rational.new 1 23
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(0434782608695652173913)")
+
+test "1/97" &lt;|
+    \_ -&gt;
+        Rational.new 1 97
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(010309278350515463917525773195876288659793814432989690721649484536082474226804123711340206185567)")
+</code></pre>
+<h2 id="resources"><a class="header" href="#resources">Resources</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/tests/Test/Lib/Rational.elm">tests/Test/Lib/Rational.elm</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="evaluating-infix-expressions"><a class="header" href="#evaluating-infix-expressions">Evaluating Infix Expressions</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="tokens"><a class="header" href="#tokens">Tokens</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="stacks"><a class="header" href="#stacks">Stacks</a></h1>
+<p>When the user interacts with the calculator and presses certain buttons (<code>0-9</code>, <code>.</code>, <code>+</code>, <code>-</code>, <code>×</code>, <code>÷</code>), under the hood, they are actually building up a data structure that represents an infix expression. To evaluate that infix expression I use <a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra's Shunting Yard Algorithm</a> to convert it into a postfix expression which is much easier to evaluate. The postfix expression is never explicitly returned since I evaluate it on the fly. As such, my evaluation function makes use of two stacks. Therefore, let's start with an implementation of a stack data structure before moving on to the star of the show.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="stack"><a class="header" href="#stack">Stack</a></h1>
+<p>A stack is a data structure that follows the Last In, First Out (LIFO) principle, meaning the last element added is the first one to be removed. It operates like a stack of plates, where you can only add or remove plates from the top.</p>
+<h2 id="public-api-1"><a class="header" href="#public-api-1">Public API</a></h2>
+<pre><code class="language-elm">module Lib.Stack exposing
+    ( Stack
+    , new
+    , isEmpty
+    , push, pop
+    )
+
+-- Representation
+
+type Stack a
+
+-- Constructor
+
+new : Stack
+
+-- Query
+
+isEmpty : Stack -&gt; Bool
+
+-- Modifiers
+
+push : a -&gt; Stack a -&gt; Stack a
+pop : Stack a -&gt; Maybe ( a, Stack a )
+</code></pre>
+<h2 id="representation-1"><a class="header" href="#representation-1">Representation</a></h2>
+<p>I represent a stack using a list where the head of the list corresponds to the top of the stack.</p>
+<pre><code class="language-elm">type Stack a
+    = Stack (List a)
+</code></pre>
+<h2 id="constructor"><a class="header" href="#constructor">Constructor</a></h2>
+<p>The one constructor, <code>new</code>, creates an empty stack which is just an empty list.</p>
+<pre><code class="language-elm">new : Stack a
+new =
+    Stack []
+</code></pre>
+<h2 id="query"><a class="header" href="#query">Query</a></h2>
+<p>A stack is empty if it's the empty list.</p>
+<pre><code class="language-elm">isEmpty : Stack a -&gt; Bool
+isEmpty (Stack xs) =
+    xs == []
+</code></pre>
+<h2 id="modifiers"><a class="header" href="#modifiers">Modifiers</a></h2>
+<p>The two main operations of a stack are <code>push</code> and <code>pop</code>.</p>
+<h3 id="push"><a class="header" href="#push"><code>push</code></a></h3>
+<p>It adds an element to the top of the stack.</p>
+<pre><code class="language-elm">push : a -&gt; Stack a -&gt; Stack a
+push x (Stack xs) =
+    Stack (x :: xs)
+</code></pre>
+<h3 id="pop"><a class="header" href="#pop"><code>pop</code></a></h3>
+<p>It removes and returns the element at the top of the stack. We have to take into account that the stack may be empty.</p>
+<pre><code class="language-elm">pop : Stack a -&gt; Maybe ( a, Stack a )
+pop (Stack xs) =
+    case xs of
+        [] -&gt;
+            Nothing
+
+        x :: rest -&gt;
+            Just ( x, Stack rest )
+</code></pre>
+<h2 id="resources-1"><a class="header" href="#resources-1">Resources</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Lib/Stack.elm">src/Lib/Stack.elm</a></li>
+<li><a href="https://www.geeksforgeeks.org/stack-data-structure/">GeeksforGeeks: Stack Data Structure</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Stack_(abstract_data_type)">Wikipedia: Stack (abstract data type)</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="dijkstras-shunting-yard-algorithm"><a class="header" href="#dijkstras-shunting-yard-algorithm">Dijkstra's Shunting Yard Algorithm</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="testing-the-evaluator"><a class="header" href="#testing-the-evaluator">Testing the Evaluator</a></h1>
+<h2 id="algorithm"><a class="header" href="#algorithm">Algorithm</a></h2>
+<p>The following pseudocode describes an algorithm, based on <a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra's shunting yard algorithm</a>, for evaluating infix expressions. It assumes that the infix expression has already been <a href="application-logic/evaluating-infix-expressions/dijkstras-shunting-yard-algorithm.html#tokenization">tokenized</a>.</p>
+<pre><code class="language-txt">eval(tokens: List of Token) -&gt; Rational or Error
+  -- Initialization
+
+  operands = Stack.empty()
+  operators = Stack.empty()
+
+  -- Process the tokens
+
+  for t in tokens do
+    if t is a number, n then
+      operands.push(n)
+
+    else if t is an operator, op1 then
+      -- Evaluate the dominant operators
+
+      while operators.isNotEmpty() do
+        op2 = operators.top()
+
+        if precendence(op2) &gt;= precendence(op1) then
+          op2 = operators.pop()
+          evalBinOp(op2, operands)
+
+        else
+          break
+        end if
+      end while
+
+      operators.push(op1)
+    end if
+  end for
+
+  -- Process the operators
+
+  while operators.isNotEmpty() do
+    op = operators.pop()
+    evalBinOp(op, operands)
+  end while
+
+  -- Return the value
+
+  if operands.isEmpty() then
+    raise an error
+  end if
+
+  value = operands.pop()
+
+  if operands.isEmpty() then
+    return value
+
+  else
+    raise an error
+  end if
+end
+
+evalBinOp(op: Operator, operands: Stack of Rational) -&gt; () or Error
+  if operands.isEmpty() then
+    raise an error
+  end if
+
+  b = operands.pop()
+
+  if operands.isEmpty() then
+    raise an error
+  end if
+
+  a = operands.pop()
+
+  if op is addition then
+    operands.push(a + b)
+
+  else if op is subtraction then
+    operands.push(a - b)
+
+  else if op is multiplication then
+    operands.push(a × b)
+
+  else if op is division then
+    operands.push(a ÷ b)
+  end if
+end
+</code></pre>
+<h2 id="tokenization"><a class="header" href="#tokenization">Tokenization</a></h2>
+<p>The infix expression <code>1 + 9 - 17 × 3 ÷ 4</code> would be tokenized as follows:</p>
+<pre><code class="language-elm">[ Number (Rational.fromInt 1)
+, Operand Add
+, Number (Rational.fromInt 9)
+, Operand Sub
+, Number (Rational.fromInt 17)
+, Operand Mul
+, Number (Rational.fromInt 3)
+, Operand Div
+, Number (Rational.fromInt 2)
+]
+</code></pre>
+<h2 id="precedence"><a class="header" href="#precedence">Precedence</a></h2>
+<p>The precendence of the supported operators are as follows:</p>
+<div class="table-wrapper"><table><thead><tr><th>Operator</th><th>Precedence</th></tr></thead><tbody>
+<tr><td><code>Add</code></td><td><code>1</code></td></tr>
+<tr><td><code>Sub</code></td><td><code>1</code></td></tr>
+<tr><td><code>Mul</code></td><td><code>2</code></td></tr>
+<tr><td><code>Div</code></td><td><code>2</code></td></tr>
+</tbody></table>
+</div>
+<p><code>Add</code> and <code>Sub</code> have the same level but lower precedence than <code>Mul</code> and <code>Div</code>. All the supported operators are left-associative so we don't have to deal with associativity. However, if we decide to add exponentiation, which is right-associative, then we'd have to start considering associativity.</p>
+<p>The corresponding <code>precedence</code> function can be implemented as follows:</p>
+<pre><code class="language-elm">precedence : Operator -&gt; Int
+precedence op =
+    case op of
+        Add -&gt;
+            1
+
+        Sub -&gt;
+            1
+
+        Mul -&gt;
+            2
+
+        Div -&gt;
+            2
+</code></pre>
+<h2 id="examples"><a class="header" href="#examples">Examples</a></h2>
+<p>These examples are here to help you understand the algorithm.</p>
+<h3 id="example-1"><a class="header" href="#example-1">Example 1</a></h3>
+<p>Input: <code>3</code></p>
+<div class="table-wrapper"><table><thead><tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th></tr></thead><tbody>
+<tr><td><code>3</code></td><td>Push <code>3</code> to operands</td><td><code>[ 3 ]</code></td><td><code>[]</code></td><td></td></tr>
+<tr><td>None</td><td>Pop from operands</td><td><code>[]</code></td><td><code>[]</code></td><td><code>3</code></td></tr>
+</tbody></table>
+</div>
+<p>Output: <code>3</code></p>
+<h3 id="example-2"><a class="header" href="#example-2">Example 2</a></h3>
+<p>Input: <code>1 + 2</code></p>
+<div class="table-wrapper"><table><thead><tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th><th>Comment</th></tr></thead><tbody>
+<tr><td><code>1</code></td><td>Push <code>1</code> to operands</td><td><code>[ 1 ]</code></td><td><code>[]</code></td><td></td><td></td></tr>
+<tr><td><code>+</code></td><td>Push <code>+</code> to operators</td><td><code>[ 1 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
+<tr><td><code>2</code></td><td>Push <code>2</code> to operands</td><td><code>[ 2, 1 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
+<tr><td>None</td><td>Process <code>+</code> operator</td><td><code>[ 3 ]</code></td><td><code>[]</code></td><td></td><td><code>1 + 2</code></td></tr>
+<tr><td>None</td><td>Pop from operands</td><td><code>[]</code></td><td><code>[]</code></td><td><code>3</code></td><td></td></tr>
+</tbody></table>
+</div>
+<p>Output: <code>3</code></p>
+<h3 id="example-3"><a class="header" href="#example-3">Example 3</a></h3>
+<p>Input: <code>1 + 2 × 3</code></p>
+<div class="table-wrapper"><table><thead><tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th><th>Comment</th></tr></thead><tbody>
+<tr><td><code>1</code></td><td>Push <code>1</code> to operands</td><td><code>[ 1 ]</code></td><td><code>[]</code></td><td></td><td></td></tr>
+<tr><td><code>+</code></td><td>Push <code>+</code> to operators</td><td><code>[ 1 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
+<tr><td><code>2</code></td><td>Push <code>2</code> to operands</td><td><code>[ 2, 1 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
+<tr><td><code>×</code></td><td>Push <code>×</code> to operators</td><td><code>[ 2, 1 ]</code></td><td><code>[ ×, + ]</code></td><td></td><td></td></tr>
+<tr><td><code>3</code></td><td>Push <code>3</code> to operands</td><td><code>[ 3, 2, 1 ]</code></td><td><code>[ ×, + ]</code></td><td></td><td></td></tr>
+<tr><td>None</td><td>Process <code>×</code> operator</td><td><code>[ 6, 1 ]</code></td><td><code>[ + ]</code></td><td></td><td><code>2 × 3</code></td></tr>
+<tr><td>None</td><td>Process <code>+</code> operator</td><td><code>[ 7 ]</code></td><td><code>[]</code></td><td></td><td><code>1 + 6</code></td></tr>
+<tr><td>None</td><td>Pop from operands</td><td><code>[]</code></td><td><code>[]</code></td><td><code>7</code></td><td></td></tr>
+</tbody></table>
+</div>
+<p>Output: <code>7</code></p>
+<h3 id="example-4"><a class="header" href="#example-4">Example 4</a></h3>
+<p>Input: <code>4 × 5 + 6</code></p>
+<div class="table-wrapper"><table><thead><tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th><th>Comment</th></tr></thead><tbody>
+<tr><td><code>4</code></td><td>Push <code>4</code> to operands</td><td><code>[ 4 ]</code></td><td><code>[]</code></td><td></td><td></td></tr>
+<tr><td><code>×</code></td><td>Push <code>×</code> to operators</td><td><code>[ 4 ]</code></td><td><code>[ × ]</code></td><td></td><td></td></tr>
+<tr><td><code>5</code></td><td>Push <code>5</code> to operands</td><td><code>[ 5, 4 ]</code></td><td><code>[ × ]</code></td><td></td><td></td></tr>
+<tr><td><code>+</code></td><td>Process <code>×</code> operator</td><td><code>[ 20 ]</code></td><td><code>[]</code></td><td></td><td><code>4 × 5</code></td></tr>
+<tr><td><code>+</code></td><td>Push <code>+</code> to operators</td><td><code>[ 20 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
+<tr><td><code>6</code></td><td>Push <code>6</code> to operands</td><td><code>[ 6, 20 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
+<tr><td>None</td><td>Process <code>+</code> operator</td><td><code>[ 26 ]</code></td><td><code>[]</code></td><td></td><td><code>20 + 6</code></td></tr>
+<tr><td>None</td><td>Pop from operands</td><td><code>[]</code></td><td><code>[]</code></td><td><code>26</code></td><td></td></tr>
+</tbody></table>
+</div>
+<p>Output: <code>26</code></p>
+<h3 id="example-5"><a class="header" href="#example-5">Example 5</a></h3>
+<p>Input: <code>3 + 4 × 2 ÷ 4</code></p>
+<div class="table-wrapper"><table><thead><tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th><th>Comment</th></tr></thead><tbody>
+<tr><td><code>3</code></td><td>Push <code>3</code> to operands</td><td><code>[ 3 ]</code></td><td><code>[]</code></td><td></td><td></td></tr>
+<tr><td><code>+</code></td><td>Push <code>+</code> to operators</td><td><code>[ 3 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
+<tr><td><code>4</code></td><td>Push <code>4</code> to operands</td><td><code>[ 4, 3 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
+<tr><td><code>×</code></td><td>Push <code>×</code> to operators</td><td><code>[ 4, 3 ]</code></td><td><code>[ ×, + ]</code></td><td></td><td></td></tr>
+<tr><td><code>2</code></td><td>Push <code>2</code> to operands</td><td><code>[ 2, 4, 3 ]</code></td><td><code>[ ×, + ]</code></td><td></td><td></td></tr>
+<tr><td><code>÷</code></td><td>Process <code>×</code> operator</td><td><code>[ 8, 3 ]</code></td><td><code>[ + ]</code></td><td></td><td><code>4 × 2</code></td></tr>
+<tr><td><code>÷</code></td><td>Push <code>÷</code> to operators</td><td><code>[ 8, 3 ]</code></td><td><code>[ ÷, + ]</code></td><td></td><td></td></tr>
+<tr><td><code>4</code></td><td>Push <code>4</code> to operands</td><td><code>[ 4, 8, 3 ]</code></td><td><code>[ ÷, + ]</code></td><td></td><td></td></tr>
+<tr><td>None</td><td>Process <code>÷</code> operator</td><td><code>[ 2, 3 ]</code></td><td><code>[ + ]</code></td><td></td><td><code>8 ÷ 4</code></td></tr>
+<tr><td>None</td><td>Process <code>+</code> operator</td><td><code>[ 5 ]</code></td><td><code>[]</code></td><td></td><td><code>3 + 2</code></td></tr>
+<tr><td>None</td><td>Pop from operands</td><td><code>[]</code></td><td><code>[]</code></td><td><code>5</code></td><td></td></tr>
+</tbody></table>
+</div>
+<p>Output: <code>5</code></p>
+<h2 id="translating-the-algorithm-to-elm"><a class="header" href="#translating-the-algorithm-to-elm">Translating the Algorithm to Elm</a></h2>
+<h3 id="preamble"><a class="header" href="#preamble">Preamble</a></h3>
+<pre><code class="language-elm">module Data.Evaluator exposing (Answer, Error(..), eval)
+
+import Data.Operator exposing (Operator(..))
+import Data.Token exposing (Token(..))
+import Lib.Rational as Rational exposing (Rational)
+import Lib.Stack as Stack exposing (Stack)
+
+
+type alias Answer =
+    Result Error Rational
+
+
+type Error
+    = SyntaxError
+
+
+eval : List Token -&gt; Answer
+eval tokens =
+    -- ...
+</code></pre>
+<p>When evaluating a given infix expression we can either get a syntax error or a rational number.</p>
+<p>A syntax error, <code>SyntaxError</code>, is possible if <code>tokens</code> is illegally formed, for e.g.:</p>
+<div class="table-wrapper"><table><thead><tr><th><code>tokens</code></th></tr></thead><tbody>
+<tr><td><code>[]</code></td></tr>
+<tr><td><code>[ Operator Add ]</code></td></tr>
+<tr><td><code>[ Number (Rational.fromInt 1), Operator Add ]</code></td></tr>
+<tr><td><code>[ Number (Rational.fromInt 1), Number (Rational.fromInt 2) ]</code></td></tr>
+</tbody></table>
+</div>
+<h3 id="dealing-with-mutation"><a class="header" href="#dealing-with-mutation">Dealing with Mutation</a></h3>
+<p>The algorithm treats <code>operands</code> and <code>operators</code> as mutable stacks. Since Elm doesn't support mutable data structures we'd have to find another way to change the stacks as the program performs its steps. The typical way we simulate mutability is inputing and outputing a value of the same type. I stored all the global state together in one record type called <code>State</code>:</p>
+<pre><code class="language-elm">type alias State =
+    { operands : Stack Rational
+    , operators : Stack Operator
+    }
+</code></pre>
+<p>To make <code>State</code> easier to work with and "mutate", I implemented the following helper functions:</p>
+<pre><code class="language-elm">pushOperand : Rational -&gt; State -&gt; Result Error State
+pushOperand q state =
+    Ok { state | operands = Stack.push q state.operands }
+
+
+popOperand : State -&gt; Result Error ( Rational, State )
+popOperand state =
+    case Stack.pop state.operands of
+        Just ( q, operands ) -&gt;
+            Ok ( q, { state | operands = operands } )
+
+        Nothing -&gt;
+            Err SyntaxError
+
+
+pushOperator : Operator -&gt; State -&gt; Result Error State
+pushOperator op state =
+    Ok { state | operators = Stack.push op state.operators }
+
+
+popOperator : (Operator -&gt; State -&gt; Result Error State) -&gt; (State -&gt; Result Error State) -&gt; State -&gt; Result Error State
+popOperator onOperator onEmpty state =
+    case Stack.pop state.operators of
+        Just ( op, operators ) -&gt;
+            onOperator op { state | operators = operators }
+
+        Nothing -&gt;
+            onEmpty state
+</code></pre>
+<h3 id="initialization"><a class="header" href="#initialization">Initialization</a></h3>
+<p>From the algorithm:</p>
+<pre><code>eval(tokens: List of Token) -&gt; Rational or Error
+  -- Initialization
+
+  operands = Stack.empty()
+  operators = Stack.empty()
+
+  -- Process the tokens
+
+  for t in tokens do
+    -- ...
+  end for
+
+  -- Process the operators
+  -- Return the value
+end
+</code></pre>
+<p>Translated to Elm:</p>
+<pre><code class="language-elm">eval : List Token -&gt; Answer
+eval tokens =
+    let
+        -- Initialization
+
+        state =
+            { operands = Stack.new
+            , operators = Stack.new
+            }
+    in
+    -- Process the tokens
+    -- Process the operators
+
+    evalTokens tokens state
+        |&gt; Result.andThen
+            (\{ operands, operators } -&gt;
+                -- Return the value
+            )
+</code></pre>
+<h3 id="process-the-tokens"><a class="header" href="#process-the-tokens">Process the Tokens</a></h3>
+<p>From the algorithm:</p>
+<pre><code>-- Process the tokens
+
+for t in tokens do
+  if t is a number, n then
+    operands.push(n)
+
+  else if t is an operator, op1 then
+    -- Evaluate the dominant operators
+  end if
+end for
+
+-- Process the operators
+-- Return the value
+</code></pre>
+<p>Translated to Elm:</p>
+<pre><code class="language-elm">evalTokens : List Token -&gt; State -&gt; Result Error State
+evalTokens tokens state =
+    case tokens of
+        [] -&gt;
+            -- Process the operators
+
+            evalOperators state
+
+        token :: restTokens -&gt;
+            evalToken token state
+                |&gt; Result.andThen (evalTokens restTokens)
+
+
+evalToken : Token -&gt; State -&gt; Result Error State
+evalToken token state =
+    case token of
+        Number n -&gt;
+            pushOperand n state
+
+        Operator op -&gt;
+            -- Evaluate the dominant operators
+
+            evalDominantOperators op state
+</code></pre>
+<h3 id="evaluate-the-dominant-operators"><a class="header" href="#evaluate-the-dominant-operators">Evaluate the Dominant Operators</a></h3>
+<p>From the algorithm:</p>
+<pre><code>-- Evaluate the dominant operators
+
+while operators.isNotEmpty() do
+  op2 = operators.top()
+
+  if precendence(op2) &gt;= precendence(op1) then
+    op2 = operators.pop()
+    evalBinOp(op2, operands)
+
+  else
+    break
+  end if
+end while
+
+operators.push(op1)
+</code></pre>
+<p>And, <code>evalBinOp</code> from the algorithm:</p>
+<pre><code>evalBinOp(op: Operator, operands: Stack of Rational) -&gt; () or Error
+  if operands.isEmpty() then
+    raise an error
+  end if
+
+  b = operands.pop()
+
+  if operands.isEmpty() then
+    raise an error
+  end if
+
+  a = operands.pop()
+
+  if op is addition then
+    operands.push(a + b)
+
+  else if op is subtraction then
+    operands.push(a - b)
+
+  else if op is multiplication then
+    operands.push(a × b)
+
+  else if op is division then
+    operands.push(a ÷ b)
+  end if
+end
+</code></pre>
+<p>Translated to Elm:</p>
+<pre><code class="language-elm">evalDominantOperators : Operator -&gt; State -&gt; Result Error State
+evalDominantOperators op1 state0 =
+    popOperator
+        (\op2 state1 -&gt;
+            if precedence op2 &gt;= precedence op1 then
+                evalOperation op2 state1
+                    |&gt; Result.andThen (evalDominantOperators op1)
+
+            else
+                pushOperator op1 state0
+        )
+        (pushOperator op1)
+        state0
+
+
+evalOperation : Operator -&gt; State -&gt; Result Error State
+evalOperation op state0 =
+    popOperand state0
+        |&gt; Result.andThen
+            (\( right, state1 ) -&gt;
+                popOperand state1
+                    |&gt; Result.andThen
+                        (\( left, state2 ) -&gt;
+                            evalBinOp op left right state2
+                        )
+            )
+
+
+evalBinOp : Operator -&gt; Rational -&gt; Rational -&gt; State -&gt; Result Error State
+evalBinOp op a b =
+    pushOperand &lt;|
+        case op of
+            Add -&gt;
+                Rational.add a b
+
+            Sub -&gt;
+                Rational.sub a b
+
+            Mul -&gt;
+                Rational.mul a b
+
+            Div -&gt;
+                Rational.div a b
+</code></pre>
+<h3 id="process-the-operators"><a class="header" href="#process-the-operators">Process the Operators</a></h3>
+<p>From the algorithm:</p>
+<pre><code>-- Process the operators
+
+while operators.isNotEmpty() do
+  op = operators.pop()
+  evalBinOp(op, operands)
+end while
+</code></pre>
+<p>Translated to Elm:</p>
+<pre><code class="language-elm">evalOperators : State -&gt; Result Error State
+evalOperators state0 =
+    popOperator
+        (\op state1 -&gt;
+            evalOperation op state1
+                |&gt; Result.andThen evalOperators
+        )
+        (\state1 -&gt; Ok state1)
+        state0
+</code></pre>
+<p>This can be simplified to:</p>
+<pre><code class="language-elm">evalOperators : State -&gt; Result Error State
+evalOperators =
+    popOperator
+        (\op -&gt; evalOperation op &gt;&gt; Result.andThen evalOperators)
+        Ok
+</code></pre>
+<h3 id="return-the-value"><a class="header" href="#return-the-value">Return the Value</a></h3>
+<p>From the algorithm:</p>
+<pre><code>-- Return the value
+
+if operands.isEmpty() then
+  raise an error
+end if
+
+value = operands.pop()
+
+if operands.isEmpty() then
+  return value
+
+else
+  raise an error
+end if
+</code></pre>
+<p>Translated to Elm:</p>
+<pre><code class="language-elm">case ( Stack.pop operands, Stack.isEmpty operators ) of
+    ( Just ( value, newOperands ), True ) -&gt;
+        if Stack.isEmpty newOperands then
+            Ok value
+
+        else
+            Err SyntaxError
+
+    _ -&gt;
+        Err SyntaxError
+</code></pre>
+<h2 id="all-together"><a class="header" href="#all-together">All Together</a></h2>
+<pre><code class="language-elm">module Data.Evaluator exposing (Answer, Error(..), eval)
+
+import Data.Operator exposing (Operator(..))
+import Data.Token exposing (Token(..))
+import Lib.Rational as Rational exposing (Rational)
+import Lib.Stack as Stack exposing (Stack)
+
+
+type alias Answer =
+    Result Error Rational
+
+
+type Error
+    = SyntaxError
+
+
+type alias State =
+    { operands : Stack Rational
+    , operators : Stack Operator
+    }
+
+
+eval : List Token -&gt; Answer
+eval tokens =
+    let
+        state =
+            { operands = Stack.new
+            , operators = Stack.new
+            }
+    in
+    evalTokens tokens state
+        |&gt; Result.andThen
+            (\{ operands, operators } -&gt;
+                case ( Stack.pop operands, Stack.isEmpty operators ) of
+                    ( Just ( value, newOperands ), True ) -&gt;
+                        if Stack.isEmpty newOperands then
+                            Ok value
+
+                        else
+                            Err SyntaxError
+
+                    _ -&gt;
+                        Err SyntaxError
+            )
+
+
+evalTokens : List Token -&gt; State -&gt; Result Error State
+evalTokens tokens state =
+    case tokens of
+        [] -&gt;
+            evalOperators state
+
+        token :: restTokens -&gt;
+            evalToken token state
+                |&gt; Result.andThen (evalTokens restTokens)
+
+
+evalToken : Token -&gt; State -&gt; Result Error State
+evalToken token state =
+    case token of
+        Number n -&gt;
+            pushOperand n state
+
+        Operator op -&gt;
+            evalDominantOperators op state
+
+
+evalDominantOperators : Operator -&gt; State -&gt; Result Error State
+evalDominantOperators op1 state0 =
+    popOperator
+        (\op2 state1 -&gt;
+            if precedence op2 &gt;= precedence op1 then
+                evalOperation op2 state1
+                    |&gt; Result.andThen (evalDominantOperators op1)
+
+            else
+                pushOperator op1 state0
+        )
+        (pushOperator op1)
+        state0
+
+
+evalOperators : State -&gt; Result Error State
+evalOperators =
+    popOperator
+        (\op -&gt; evalOperation op &gt;&gt; Result.andThen evalOperators)
+        Ok
+
+
+evalOperation : Operator -&gt; State -&gt; Result Error State
+evalOperation op state0 =
+    popOperand state0
+        |&gt; Result.andThen
+            (\( right, state1 ) -&gt;
+                popOperand state1
+                    |&gt; Result.andThen
+                        (\( left, state2 ) -&gt;
+                            evalBinOp op left right state2
+                        )
+            )
+
+
+evalBinOp : Operator -&gt; Rational -&gt; Rational -&gt; State -&gt; Result Error State
+evalBinOp op a b =
+    pushOperand &lt;|
+        case op of
+            Add -&gt;
+                Rational.add a b
+
+            Sub -&gt;
+                Rational.sub a b
+
+            Mul -&gt;
+                Rational.mul a b
+
+            Div -&gt;
+                Rational.div a b
+
+
+pushOperand : Rational -&gt; State -&gt; Result Error State
+pushOperand q state =
+    Ok { state | operands = Stack.push q state.operands }
+
+
+popOperand : State -&gt; Result Error ( Rational, State )
+popOperand state =
+    case Stack.pop state.operands of
+        Just ( q, operands ) -&gt;
+            Ok ( q, { state | operands = operands } )
+
+        Nothing -&gt;
+            Err SyntaxError
+
+
+pushOperator : Operator -&gt; State -&gt; Result Error State
+pushOperator op state =
+    Ok { state | operators = Stack.push op state.operators }
+
+
+popOperator : (Operator -&gt; State -&gt; Result Error State) -&gt; (State -&gt; Result Error State) -&gt; State -&gt; Result Error State
+popOperator onOperator onEmpty state =
+    case Stack.pop state.operators of
+        Just ( op, operators ) -&gt;
+            onOperator op { state | operators = operators }
+
+        Nothing -&gt;
+            onEmpty state
+
+
+precedence : Operator -&gt; Int
+precedence op =
+    case op of
+        Add -&gt;
+            1
+
+        Sub -&gt;
+            1
+
+        Mul -&gt;
+            2
+
+        Div -&gt;
+            2
+</code></pre>
+<h2 id="resources-2"><a class="header" href="#resources-2">Resources</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Evaluator.elm">src/Data/Evaluator.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Token.elm">src/Data/Token.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Operator.elm">src/Data/Operator.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Lib/Stack.elm">src/Lib/Stack.elm</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Lib/Rational.elm">src/Lib/Rational.elm</a></li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="unit-tests-1"><a class="header" href="#unit-tests-1">Unit Tests</a></h1>
+<h2 id="simple-expressions"><a class="header" href="#simple-expressions">Simple Expressions</a></h2>
+<pre><code class="language-elm">test "1" &lt;|
+    \_ -&gt;
+        expectEval
+            [ intT 1 ]
+            (int 1)
+
+test "1+2" &lt;|
+    \_ -&gt;
+        expectEval
+            [ intT 1, operatorT Add, intT 2 ]
+            (int 3)
+
+test "6-1" &lt;|
+    \_ -&gt;
+        expectEval
+            [ intT 6, operatorT Sub, intT 1 ]
+            (int 5)
+
+test "2*5" &lt;|
+    \_ -&gt;
+        expectEval
+            [ intT 2, operatorT Mul, intT 5 ]
+            (int 10)
+
+test "10/2" &lt;|
+    \_ -&gt;
+        expectEval
+            [ intT 10, operatorT Div, intT 2 ]
+            (int 5)
+
+test "5/2" &lt;|
+    \_ -&gt;
+        expectEval
+            [ intT 5, operatorT Div, intT 2 ]
+            (rational 5 2)
+
+test "1/0" &lt;|
+    \_ -&gt;
+        expectEval
+            [ intT 1, operatorT Div, intT 0 ]
+            (int 0)
+</code></pre>
+<h2 id="operator-precedence"><a class="header" href="#operator-precedence">Operator Precedence</a></h2>
+<pre><code class="language-elm">test "2+3-4" &lt;|
+    \_ -&gt;
+        expectEval
+            [ intT 2, operatorT Add, intT 3, operatorT Sub, intT 4 ]
+            (int 1)
+
+test "2-3+4" &lt;|
+    \_ -&gt;
+        expectEval
+            [ intT 2, operatorT Sub, intT 3, operatorT Add, intT 4 ]
+            (int 3)
+
+test "1+2*3" &lt;|
+    \_ -&gt;
+        expectEval
+            [ intT 1, operatorT Add, intT 2, operatorT Mul, intT 3 ]
+            (int 7)
+
+test "1+3/3" &lt;|
+    \_ -&gt;
+        expectEval
+            [ intT 1, operatorT Add, intT 3, operatorT Div, intT 3 ]
+            (int 2)
+
+test "1+2-5*8+6-10*3" &lt;|
+    \_ -&gt;
+        expectEval
+            [ intT 1
+            , operatorT Add
+            , intT 2
+            , operatorT Sub
+            , intT 5
+            , operatorT Mul
+            , intT 8
+            , operatorT Add
+            , intT 6
+            , operatorT Sub
+            , intT 10
+            , operatorT Mul
+            , intT 3
+            ]
+            (int -61)
+</code></pre>
+<h2 id="helpers"><a class="header" href="#helpers">Helpers</a></h2>
+<pre><code class="language-elm">expectEval : List Token -&gt; Rational -&gt; Expectation
+expectEval tokens expectedRational =
+    case E.eval tokens of
+        Ok actualRational -&gt;
+            Expect.equal expectedRational actualRational
+
+        Err _ -&gt;
+            Expect.fail "eval failed"
+
+
+int : Int -&gt; Rational
+int =
+    Rational.fromInt
+
+
+rational : Int -&gt; Int -&gt; Rational
+rational n d =
+    Rational.new n d
+        |&gt; Maybe.withDefault Rational.zero
+
+
+intT : Int -&gt; Token
+intT =
+    Token.Number &lt;&lt; int
+
+
+operatorT : Operator -&gt; Token
+operatorT =
+    Token.Operator
+</code></pre>
+<h2 id="resources-3"><a class="header" href="#resources-3">Resources</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/tests/Test/Data/Evaluator.elm">tests/Test/Data/Evaluator.elm</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="calculator-1"><a class="header" href="#calculator-1">Calculator</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="parsing-input"><a class="header" href="#parsing-input">Parsing Input</a></h1>
+<p>The logical representation of the calculator. It has an internal data structure that it uses to keep track of the infix expression that the user builds one key press at a time.</p>
+<h2 id="public-api-2"><a class="header" href="#public-api-2">Public API</a></h2>
+<pre><code class="language-elm">module Data.Calculator exposing
+    ( Calculator
+    , new
+    , press
+    , Output, toOutput
+    )
+
+import Data.Key exposing (Key)
+
+-- Representation
+
+type Calculator
+
+-- Constructor
+
+new : Calculator
+
+-- Update
+
+press : Key -&gt; Calculator -&gt; Calculator
+
+-- Conversion
+
+type alias Output =
+    { line1 : String
+    , line2 : String
+    }
+
+toOutput : Calculator -&gt; Output
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="tokenizing-input"><a class="header" href="#tokenizing-input">Tokenizing Input</a></h1>
+<p>The calculator tokenizes the user's input. This suggests the use of a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">finite-state machine</a> to help with the tokenization.</p>
+<p>Why?</p>
+<p>Well, <a href="https://en.wikipedia.org/wiki/Lexical_analysis">lexical analyzers</a> use regular expressions to tokenize a string of characters. Regular expressions are equivalent to finite-state machines. And, rather than a string of characters we have a list of key presses. So the idea is to have the calculator act like a lexical analyzer and use a finite-state machine to tokenize the list of key presses.</p>
+<h2 id="the-finite-state-machine"><a class="header" href="#the-finite-state-machine">The Finite-State Machine</a></h2>
+<p>It has 5 states. The start state is called <code>Start</code> and it has one final state called <code>Answer</code>. The other states are called <code>Left</code>, <code>Partial</code>, and <code>Right</code>. I represented it as follows:</p>
+<pre><code class="language-elm">import Data.Evaluator as E
+import Data.Operator exposing (Operator)
+import Data.Token exposing (Token)
+
+
+type Calculator
+    = Calculator State
+
+
+type State
+    = Start
+    | Left Decimal
+    | Partial (List Token) Operator
+    | Right (List Token) Operator Decimal
+    | Answer (List Token) E.Answer
+</code></pre>
+<p><code>Left</code> represents the situation when the user is entering their first, leftmost, number.</p>
+<p><code>Partial</code> represents the situation when the user just finished entering a number and they pressed an operator key.</p>
+<p><code>Right</code> represents the situation when the user is entering the second number for the operator.</p>
+<p>Notice that the <code>Answer</code> state keeps track of the full tokenized input as well as the answer produced by the evaluator.</p>
+<h2 id="whats-decimal"><a class="header" href="#whats-decimal">What's <code>Decimal</code>?</a></h2>
+<p>It's a type to help me tokenize decimal numbers.</p>
+<pre><code class="language-elm">type Decimal
+    = Whole Int
+    | Fractional Int Int Int
+</code></pre>
+<p>Let's consider an example where the user is entering the decimal number <code>123.456</code>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Key Pressed</th><th>Decimal</th><th>Comment</th></tr></thead><tbody>
+<tr><td><code>Digit One</code></td><td><code>Whole 1</code></td><td><code>Digit.toInt One = 1</code></td></tr>
+<tr><td><code>Digit Two</code></td><td><code>Whole 12</code></td><td><code>1 * 10 + Digit.toInt Two = 12</code></td></tr>
+<tr><td><code>Digit Three</code></td><td><code>Whole 123</code></td><td><code>12 * 10 + Digit.toInt Three = 123</code></td></tr>
+<tr><td><code>Dot</code></td><td><code>Fractional 123 0 1</code></td><td><code>123 + 0/1 = 123</code></td></tr>
+<tr><td><code>Digit Four</code></td><td><code>Fractional 123 4 10</code></td><td><code>123 + 4/10 = 123.4</code></td></tr>
+<tr><td><code>Digit Five</code></td><td><code>Fractional 123 45 100</code></td><td><code>123 + 45/100 = 123.45</code></td></tr>
+<tr><td><code>Digit Six</code></td><td><code>Fractional 123 456 1000</code></td><td><code>123 + 456/1000 = 123.456</code></td></tr>
+</tbody></table>
+</div>
+<p>If <code>Whole 123</code> and <code>Fractional 123 0 1</code> represent the same number then why change the representation when a <code>Dot</code> is pressed?</p>
+<ol>
+<li>The pressing of the <code>Dot</code> signals that the user is about to enter the fractional part of the number so it makes sense to initialize everything we'd need to accept the fractional part.</li>
+<li><code>Whole 123</code> and <code>Fractional 123 0 1</code> are displayed differently in line 2 of the calculator's display. <code>Whole 123</code> is displayed as <code>123</code> but <code>Fractional 123 0 1</code> is displayed as <code>123.</code>, i.e. it ends with a decimal point.</li>
+</ol>
+<h2 id="new-2"><a class="header" href="#new-2"><code>new</code></a></h2>
+<pre><code class="language-elm">new : Calculator
+new =
+    Calculator Start
+</code></pre>
+<p>Naturally, the calculator starts off in the <code>Start</code> state.</p>
+<h2 id="press"><a class="header" href="#press"><code>press</code></a></h2>
+<p>As the user presses keys the calculator should transition between states based on its current state and the key that was pressed. So, for each state, we have to figure out what to do for each key that could be pressed.</p>
+<p>Recall <code>Key</code>:</p>
+<pre><code class="language-elm">type Key
+    = AC
+    | Dot
+    | Equal
+    | Digit Digit
+    | Operator Operator
+</code></pre>
+<p>Recall <code>Digit</code>:</p>
+<pre><code class="language-elm">type Digit
+    = Zero
+    | One
+    | Two
+    | Three
+    | Four
+    | Five
+    | Six
+    | Seven
+    | Eight
+    | Nine
+</code></pre>
+<p>Recall <code>Operator</code>:</p>
+<pre><code class="language-elm">type Operator
+    = Add
+    | Sub
+    | Mul
+    | Div
+</code></pre>
+<p>And, this is how <code>press</code> is implemented:</p>
+<pre><code class="language-elm">import Data.Digit as Digit
+import Data.Evaluator as E
+import Data.Key exposing (Key(..))
+import Data.Operator as Operator exposing (Operator)
+import Data.Token as Token exposing (Token)
+import Lib.Rational as Rational exposing (Rational)
+
+
+press : Key -&gt; Calculator -&gt; Calculator
+press key (Calculator state) =
+    Calculator &lt;| pressHelper key state
+
+
+pressHelper : Key -&gt; State -&gt; State
+pressHelper key state =
+    case state of
+        Start -&gt;
+            case key of
+                AC -&gt;
+                    Start
+
+                Digit digit -&gt;
+                    Left &lt;| Whole &lt;| Digit.toInt digit
+
+                Operator _ -&gt;
+                    Start
+
+                Dot -&gt;
+                    Left &lt;| Fractional 0 0 1
+
+                Equal -&gt;
+                    Start
+
+        Left n -&gt;
+            case key of
+                AC -&gt;
+                    Start
+
+                Digit digit -&gt;
+                    let
+                        d =
+                            Digit.toInt digit
+                    in
+                    case n of
+                        Whole w -&gt;
+                            Left &lt;| Whole &lt;| w * 10 + d
+
+                        Fractional w f p -&gt;
+                            Left &lt;| Fractional w (f * 10 + d) (p * 10)
+
+                Operator op -&gt;
+                    Partial [ Token.Number &lt;| toRational n ] op
+
+                Dot -&gt;
+                    case n of
+                        Whole w -&gt;
+                            Left &lt;| Fractional w 0 1
+
+                        Fractional _ _ _ -&gt;
+                            Left n
+
+                Equal -&gt;
+                    let
+                        r =
+                            toRational n
+                    in
+                    Answer [ Token.Number r ] &lt;| Ok r
+
+        Partial tokens op -&gt;
+            case key of
+                AC -&gt;
+                    Start
+
+                Digit digit -&gt;
+                    Right tokens op &lt;| Whole &lt;| Digit.toInt digit
+
+                Operator newOp -&gt;
+                    Partial tokens newOp
+
+                Dot -&gt;
+                    Right tokens op &lt;| Fractional 0 0 1
+
+                Equal -&gt;
+                    Answer tokens &lt;| eval tokens
+
+        Right tokens op n -&gt;
+            case key of
+                AC -&gt;
+                    Start
+
+                Digit digit -&gt;
+                    let
+                        d =
+                            Digit.toInt digit
+                    in
+                    case n of
+                        Whole w -&gt;
+                            Right tokens op &lt;| Whole &lt;| w * 10 + d
+
+                        Fractional w f p -&gt;
+                            Right tokens op &lt;| Fractional w (f * 10 + d) (p * 10)
+
+                Operator newOp -&gt;
+                    let
+                        newTokens =
+                            Token.Number (toRational n) :: Token.Operator op :: tokens
+                    in
+                    Partial newTokens newOp
+
+                Dot -&gt;
+                    case n of
+                        Whole w -&gt;
+                            Right tokens op &lt;| Fractional w 0 1
+
+                        Fractional _ _ _ -&gt;
+                            Right tokens op n
+
+                Equal -&gt;
+                    let
+                        newTokens =
+                            Token.Number (toRational n) :: Token.Operator op :: tokens
+                    in
+                    Answer newTokens &lt;| eval newTokens
+
+        Answer _ answer -&gt;
+            case key of
+                AC -&gt;
+                    Start
+
+                Digit digit -&gt;
+                    Left &lt;| Whole &lt;| Digit.toInt digit
+
+                Operator op -&gt;
+                    case answer of
+                        Ok r -&gt;
+                            Partial [ Token.Number r ] op
+
+                        Err _ -&gt;
+                            state
+
+                Dot -&gt;
+                    Left &lt;| Fractional 0 0 1
+
+                Equal -&gt;
+                    state
+
+
+eval : List Token -&gt; E.Answer
+eval =
+    E.eval &lt;&lt; List.reverse
+</code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="displaying-output"><a class="header" href="#displaying-output">Displaying Output</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="testing-the-calculator"><a class="header" href="#testing-the-calculator">Testing the Calculator</a></h1>
+<p>The calculator could be in one of 5 states. So, for each state we have to stringify the data that's available and determine within which lines to display them.</p>
+<pre><code class="language-elm">type alias Output =
+    { line1 : String
+    , line2 : String
+    }
+
+
+toOutput : Calculator -&gt; Output
+toOutput (Calculator state) =
+    case state of
+        Start -&gt;
+            Output "" "0"
+
+        Left n -&gt;
+            let
+                line1 =
+                    Rational.toDecimalString &lt;| toRational n
+
+                line2 =
+                    toPaddedDecimalString n
+            in
+            Output line1 line2
+
+        Partial tokens op -&gt;
+            let
+                line1 =
+                    toExpr tokens ++ line2
+
+                line2 =
+                    Operator.toString op
+            in
+            Output line1 line2
+
+        Right tokens op n -&gt;
+            let
+                line1 =
+                    toExpr tokens ++ Operator.toString op ++ right
+
+                right =
+                    Rational.toDecimalString &lt;| toRational n
+
+                line2 =
+                    toPaddedDecimalString n
+            in
+            Output line1 line2
+
+        Answer tokens answer -&gt;
+            let
+                line1 =
+                    toExpr tokens ++ "=" ++ line2
+
+                line2 =
+                    case answer of
+                        Ok r -&gt;
+                            Rational.toDecimalString r
+
+                        Err _ -&gt;
+                            "TODO: Display an appropriate error message."
+            in
+            Output line1 line2
+
+
+toPaddedDecimalString : Decimal -&gt; String
+toPaddedDecimalString n =
+    case n of
+        Whole w -&gt;
+            String.fromInt w
+
+        Fractional w f p -&gt;
+            String.concat
+                [ String.fromInt w
+                , "."
+                , if f == 0 &amp;&amp; p == 1 then
+                    ""
+
+                  else
+                    String.padLeft
+                        (String.length (String.fromInt p) - 1)
+                        '0'
+                        (String.fromInt f)
+                ]
+
+
+toExpr : List Token -&gt; String
+toExpr =
+    String.concat &lt;&lt; List.map Token.toString &lt;&lt; List.reverse
+
+
+toRational : Decimal -&gt; Rational
+toRational n =
+    case n of
+        Whole w -&gt;
+            Rational.fromInt w
+
+        Fractional w f p -&gt;
+            Maybe.map2 Rational.add (Rational.new w 1) (Rational.new f p)
+                |&gt; Maybe.withDefault Rational.zero
+</code></pre>
+<h2 id="topaddeddecimalstring"><a class="header" href="#topaddeddecimalstring"><code>toPaddedDecimalString</code></a></h2>
+<p>When the user enters trailing zeros after the decimal point we want to display that in line 2 of the display.</p>
+<div class="table-wrapper"><table><thead><tr><th>Decimal</th><th>String</th></tr></thead><tbody>
+<tr><td><code>Fractional 0 0 1</code></td><td><code>"0."</code></td></tr>
+<tr><td><code>Fractional 0 0 1000</code></td><td><code>"0.000"</code></td></tr>
+<tr><td><code>Fractional 0 500 1000000</code></td><td><code>"0.000500"</code></td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="unit-tests-2"><a class="header" href="#unit-tests-2">Unit Tests</a></h1>
+<h2 id="press-1"><a class="header" href="#press-1"><code>press</code></a></h2>
+<pre><code class="language-elm">describe "when nothing has been entered" &lt;|
+    let
+        calculator =
+            Calculator.new
+    in
+    [ test "pressing AC" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press AC
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "", line2 = "0" }
+    , test "pressing a digit" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press (Digit One)
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "1", line2 = "1" }
+    , test "pressing an operator" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press (Operator Add)
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "", line2 = "0" }
+    , test "pressing dot" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press Dot
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "0", line2 = "0." }
+    , test "pressing =" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press Equal
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "", line2 = "0" }
+    ]
+
+describe "when a number has been entered" &lt;|
+    let
+        calculator =
+            Calculator.new
+                |&gt; Calculator.press (Digit One)
+                |&gt; Calculator.press (Digit Two)
+    in
+    [ test "pressing AC" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press AC
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "", line2 = "0" }
+    , test "pressing a digit" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press (Digit Three)
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "123", line2 = "123" }
+    , test "pressing an operator" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press (Operator Add)
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "12+", line2 = "+" }
+    , test "pressing dot" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press Dot
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "12", line2 = "12." }
+    , test "pressing =" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press Equal
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "12=12", line2 = "12" }
+    ]
+
+describe "when a number and operator has been entered" &lt;|
+    let
+        calculator =
+            Calculator.new
+                |&gt; Calculator.press (Digit One)
+                |&gt; Calculator.press (Digit Two)
+                |&gt; Calculator.press (Operator Add)
+    in
+    [ test "pressing AC" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press AC
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "", line2 = "0" }
+    , test "pressing a digit" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press (Digit Three)
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "12+3", line2 = "3" }
+    , test "pressing an operator" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press (Operator Sub)
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "12-", line2 = "-" }
+    , test "pressing dot" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press Dot
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "12+0", line2 = "0." }
+    , test "pressing =" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press Equal
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "12=12", line2 = "12" }
+    ]
+
+describe "when a complete expression has been entered" &lt;|
+    let
+        calculator =
+            Calculator.new
+                |&gt; Calculator.press (Digit One)
+                |&gt; Calculator.press (Digit Two)
+                |&gt; Calculator.press (Operator Add)
+                |&gt; Calculator.press (Digit Three)
+                |&gt; Calculator.press (Operator Sub)
+                |&gt; Calculator.press (Digit Four)
+    in
+    [ test "pressing AC" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press AC
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "", line2 = "0" }
+    , test "pressing a digit" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press (Digit Five)
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "12+3-45", line2 = "45" }
+    , test "pressing an operator" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press (Operator Add)
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "12+3-4+", line2 = "+" }
+    , test "pressing dot" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press Dot
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "12+3-4", line2 = "4." }
+    , test "pressing =" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press Equal
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "12+3-4=11", line2 = "11" }
+    ]
+
+describe "when an answer is given" &lt;|
+    let
+        calculator =
+            Calculator.new
+                |&gt; Calculator.press (Digit One)
+                |&gt; Calculator.press (Digit Two)
+                |&gt; Calculator.press (Operator Add)
+                |&gt; Calculator.press (Digit Three)
+                |&gt; Calculator.press (Operator Sub)
+                |&gt; Calculator.press (Digit Four)
+                |&gt; Calculator.press Equal
+    in
+    [ test "pressing AC" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press AC
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "", line2 = "0" }
+    , test "pressing a digit" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press (Digit Nine)
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "9", line2 = "9" }
+    , test "pressing an operator" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press (Operator Add)
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "11+", line2 = "+" }
+    , test "pressing dot" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press Dot
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "0", line2 = "0." }
+    , test "pressing =" &lt;|
+        \_ -&gt;
+            calculator
+                |&gt; Calculator.press Equal
+                |&gt; Calculator.toOutput
+                |&gt; Expect.equal { line1 = "12+3-4=11", line2 = "11" }
+    ]
+</code></pre>
+<h2 id="decimal-input"><a class="header" href="#decimal-input">Decimal Input</a></h2>
+<pre><code class="language-elm">test "leading zeros are preserved" &lt;|
+    \_ -&gt;
+        let
+            calculator =
+                Calculator.new
+                    |&gt; Calculator.press Dot
+                    |&gt; Calculator.press (Digit Zero)
+                    |&gt; Calculator.press (Digit Zero)
+                    |&gt; Calculator.press (Digit Zero)
+        in
+        calculator
+            |&gt; Calculator.toOutput
+            |&gt; Expect.equal { line1 = "0", line2 = "0.000" }
+
+test "trailing zeros are preserved" &lt;|
+    \_ -&gt;
+        let
+            calculator =
+                Calculator.new
+                    |&gt; Calculator.press Dot
+                    |&gt; Calculator.press (Digit Zero)
+                    |&gt; Calculator.press (Digit Zero)
+                    |&gt; Calculator.press (Digit Zero)
+                    |&gt; Calculator.press (Digit Five)
+                    |&gt; Calculator.press (Digit Zero)
+                    |&gt; Calculator.press (Digit Zero)
+                    |&gt; Calculator.press (Digit Zero)
+        in
+        calculator
+            |&gt; Calculator.toOutput
+            |&gt; Expect.equal { line1 = "0.0005", line2 = "0.0005000" }
+</code></pre>
+<h2 id="operator-precedence-1"><a class="header" href="#operator-precedence-1">Operator Precedence</a></h2>
+<pre><code class="language-elm">test "multiplication is done before addition" &lt;|
+    \_ -&gt;
+        let
+            calculator =
+                Calculator.new
+                    |&gt; Calculator.press (Digit One)
+                    |&gt; Calculator.press (Operator Add)
+                    |&gt; Calculator.press (Digit Two)
+                    |&gt; Calculator.press (Operator Mul)
+                    |&gt; Calculator.press (Digit Three)
+                    |&gt; Calculator.press Equal
+        in
+        calculator
+            |&gt; Calculator.toOutput
+            |&gt; Expect.equal { line1 = "1+2×3=7", line2 = "7" }
+</code></pre>
+<h2 id="negative-division"><a class="header" href="#negative-division">Negative Division</a></h2>
+<pre><code class="language-elm">test "negative divided by positive" &lt;|
+    \_ -&gt;
+        let
+            calculator =
+                Calculator.new
+                    |&gt; Calculator.press (Digit One)
+                    |&gt; Calculator.press (Operator Sub)
+                    |&gt; Calculator.press (Digit Two)
+                    |&gt; Calculator.press Equal
+                    |&gt; Calculator.press (Operator Div)
+                    |&gt; Calculator.press (Digit Three)
+                    |&gt; Calculator.press Equal
+        in
+        calculator
+            |&gt; Calculator.toOutput
+            |&gt; Expect.equal { line1 = "-1÷3=-0.(3)", line2 = "-0.(3)" }
+</code></pre>
+<h2 id="resources-4"><a class="header" href="#resources-4">Resources</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/tests/Test/Data/Calculator.elm">tests/Test/Data/Calculator.elm</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="ui--application-logic"><a class="header" href="#ui--application-logic">UI + Application Logic</a></h1>
+<p>The UI is encapsulated within the <code>View.Page</code> module. The application logic is encapsulated within the <code>Data.Calculator</code> module. They come together in <code>Main</code> to form the complete application.</p>
+<pre><code class="language-elm">module Main exposing (main)
+
+import Browser
+import Data.Calculator as Calculator exposing (Calculator)
+import Data.Key exposing (Key)
+import Html as H
+import View.Page as Page
+
+
+main : Program () Model Msg
+main =
+    Browser.sandbox
+        { init = init
+        , view = view
+        , update = update
+        }
+
+
+
+-- MODEL
+
+
+type alias Model =
+    { calculator : Calculator
+    }
+
+
+init : Model
+init =
+    { calculator = Calculator.new
+    }
+
+
+
+-- UPDATE
+
+
+type Msg
+    = Clicked Key
+
+
+update : Msg -&gt; Model -&gt; Model
+update msg model =
+    case msg of
+        Clicked key -&gt;
+            { model | calculator = Calculator.press key model.calculator }
+
+
+
+-- VIEW
+
+
+view : Model -&gt; H.Html Msg
+view { calculator } =
+    let
+        { line1, line2 } =
+            Calculator.toOutput calculator
+    in
+    Page.view
+        { calculator =
+            { line1 = line1
+            , line2 = line2
+            , onClick = Clicked
+            }
+        , attribution =
+            { name = "Dwayne Crooks"
+            , title = "Dwayne's GitHub profile"
+            , url = "https://github.com/dwayne"
+            }
+        }
+</code></pre>
+<h2 id="resources-5"><a class="header" href="#resources-5">Resources</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Main.elm">src/Main.elm</a></li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h1>
+<p>Thank you for taking your time to read the tutorial. I hope it was worthwhile for you.</p>
+<h2 id="questions"><a class="header" href="#questions">Questions</a></h2>
+<p>Do you have any questions? Is there something you need me to clarify? If so, please ask them by emailing me at <code>author at elmwithdwayne dot dev</code>.</p>
+<h2 id="feedback"><a class="header" href="#feedback">Feedback</a></h2>
+<p>If you have any feedback, positive or negative, you'd like to share then please share your honest opinions by emailing me at <code>author at elmwithdwayne dot dev</code>.</p>
+<h2 id="website"><a class="header" href="#website">Website</a></h2>
+<p>I curate everything I'm doing with Elm at my website, <a href="https://elmwithdwayne.dev/">Elm with Dwayne</a>.</p>
+<h2 id="blog"><a class="header" href="#blog">Blog</a></h2>
+<p>I write a lot about Elm on my <a href="https://dev.to/dwayne">blog</a> where over 3000 developers subscribe to read my articles.</p>
+<h2 id="newsletter"><a class="header" href="#newsletter">Newsletter</a></h2>
+<p>If Elm is something you want to get better at then I invite you to <a href="https://buttondown.com/elmwithdwayne">join the 100+ other developers who also want to improve their Elm programming skills</a>.</p>
 
                     </main>
 
@@ -1409,7 +3943,9 @@ view { calculator, attribution } =
 
         <script>
         window.addEventListener('load', function() {
-            window.setTimeout(window.print, 100);
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
         });
         </script>
 

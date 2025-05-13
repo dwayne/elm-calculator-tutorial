@@ -30,6 +30,8 @@
 
         <!-- Custom theme stylesheets -->
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root to javascript -->
         <script>
@@ -223,9 +225,9 @@
 <h3 id="typography"><a class="header" href="#typography">Typography</a></h3>
 <p>I prefer to refer to my font stacks by name, just as I do with colors. A <a href="./key.html#colors">two-tier system</a> can be established here as well.</p>
 <h3 id="the-empty-state"><a class="header" href="#the-empty-state">The Empty State</a></h3>
-<p>When the display lines are empty they collapse on themselves. In order to avoid that from happening I use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:empty">the <code>:empty</code> CSS pseudo-class</a> to select the lines when they have no children and add content, a <a href="https://en.wikipedia.org/wiki/Non-breaking_space">non-breaking space</a>, to them. This ensure that they don't collapse and the height of the lines remain intact.</p>
+<p>When the display lines are empty they collapse on themselves. In order to avoid that from happening I use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:empty">the <code>:empty</code> CSS pseudo-class</a> to select the lines when they have no children and add content, a <a href="https://en.wikipedia.org/wiki/Non-breaking_space">non-breaking space</a>, to them. This ensures that they don't collapse and the height of the lines remain intact.</p>
 <h3 id="long-text"><a class="header" href="#long-text">Long Text</a></h3>
-<p>The following two CSS rules ensure that long text within the lines is handled correctly.</p>
+<p>The following two CSS rules ensure that long text, within the lines, is handled correctly.</p>
 <pre><code class="language-scss">.display {
   overflow-wrap: break-word;
 }

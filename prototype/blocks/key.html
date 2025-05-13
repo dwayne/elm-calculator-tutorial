@@ -30,6 +30,8 @@
 
         <!-- Custom theme stylesheets -->
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root to javascript -->
         <script>
@@ -178,16 +180,11 @@
 <h3 id="secondary"><a class="header" href="#secondary">Secondary</a></h3>
 <pre><code class="language-html">&lt;button class="key key--secondary" type="button"&gt;=&lt;/button&gt;
 </code></pre>
-<p>Since keys only have a style modifier I chose to keep the naming simple. No modifier signals the default and the <code>key--primary</code> and <code>key--secondary</code> block modifiers signal the primary and secondary styles respectively. An alternative naming system for the style modifier could have been one of the following sets of names:</p>
+<p>Since keys only have a style modifier I chose to keep the naming simple. No modifier signals the default and the <code>key--primary</code> and <code>key--secondary</code> block modifiers signal the primary and secondary styles respectively. An alternative naming system for the style modifier could have been:</p>
 <ul>
-<li><code>key--style-default</code>, <code>key--style-primary</code>, <code>key--style-secondary</code>
+<li>The <a href="https://en.bem.info/methodology/naming-convention/#two-dashes-style">two dashes style</a> with modifier name and value
 <ul>
-<li>I don't like this convention because it gets ambiguous when the property or the value also has a hyphen.</li>
-</ul>
-</li>
-<li><code>key--style--default</code>, <code>key--style--primary</code>, <code>key--style--secondary</code>
-<ul>
-<li>I prefer this convention since it gets rid of the ambiguity. However, for this situation, it's overkill.</li>
+<li><code>key--style--default</code>, <code>key--style--primary</code>, <code>key--style--secondary</code></li>
 </ul>
 </li>
 </ul>

@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Stacks - How I Built freeCodeCamp&#x27;s Calculator with Elm</title>
+        <title>Unit Tests - How I Built freeCodeCamp&#x27;s Calculator with Elm</title>
 
 
         <!-- Custom HTML head -->
@@ -30,6 +30,8 @@
 
         <!-- Custom theme stylesheets -->
 
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
         <!-- Provide site root to javascript -->
         <script>
@@ -152,17 +154,194 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="stacks"><a class="header" href="#stacks">Stacks</a></h1>
+                        <h1 id="unit-tests"><a class="header" href="#unit-tests">Unit Tests</a></h1>
+<h2 id="new"><a class="header" href="#new"><code>new</code></a></h2>
+<pre><code class="language-elm">test "both numerator and denominator are positive" &lt;|
+    \_ -&gt;
+        Rational.new 2 4
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "1/2")
+
+test "only numerator is positive" &lt;|
+    \_ -&gt;
+        Rational.new 2 -4
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "-1/2")
+
+test "only denominator is positive" &lt;|
+    \_ -&gt;
+        Rational.new -2 4
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "-1/2")
+
+test "both numerator and denominator are negative" &lt;|
+    \_ -&gt;
+        Rational.new -2 -4
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "1/2")
+</code></pre>
+<h2 id="arithmetic"><a class="header" href="#arithmetic">Arithmetic</a></h2>
+<pre><code class="language-elm">test "1/2 + 1/8" &lt;|
+    \_ -&gt;
+        Maybe.map2 Rational.add (Rational.new 1 2) (Rational.new 1 8)
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "5/8")
+
+test "1/2 - 1/8" &lt;|
+    \_ -&gt;
+        Maybe.map2 Rational.sub (Rational.new 1 2) (Rational.new 1 8)
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "3/8")
+
+test "1/2 * 1/8" &lt;|
+    \_ -&gt;
+        Maybe.map2 Rational.mul (Rational.new 1 2) (Rational.new 1 8)
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "1/16")
+
+test "1/2 / 1/8" &lt;|
+    \_ -&gt;
+        Maybe.map2 Rational.div (Rational.new 1 2) (Rational.new 1 8)
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "4")
+
+test "1/4 / 0" &lt;|
+    \_ -&gt;
+        Maybe.map2 Rational.div (Rational.new 1 4) (Rational.new 0 1)
+            |&gt; Maybe.map Rational.toString
+            |&gt; Expect.equal (Just "0")
+</code></pre>
+<h2 id="decimal-conversion"><a class="header" href="#decimal-conversion">Decimal Conversion</a></h2>
+<h3 id="terminating-decimals"><a class="header" href="#terminating-decimals">Terminating Decimals</a></h3>
+<pre><code class="language-elm">test "1/2" &lt;|
+    \_ -&gt;
+        Rational.new 1 2
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.5")
+
+test "-1/2" &lt;|
+    \_ -&gt;
+        Rational.new -1 2
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "-0.5")
+
+test "5/2" &lt;|
+    \_ -&gt;
+        Rational.new 5 2
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "2.5")
+
+test "1/4" &lt;|
+    \_ -&gt;
+        Rational.new 1 4
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.25")
+
+test "1/5" &lt;|
+    \_ -&gt;
+        Rational.new 1 5
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.2")
+
+test "1/8" &lt;|
+    \_ -&gt;
+        Rational.new 1 8
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.125")
+</code></pre>
+<h3 id="repeating-decimals"><a class="header" href="#repeating-decimals">Repeating Decimals</a></h3>
+<pre><code class="language-elm">test "1/3" &lt;|
+    \_ -&gt;
+        Rational.new 1 3
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(3)")
+
+test "2/3" &lt;|
+    \_ -&gt;
+        Rational.new 2 3
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(6)")
+
+test "1/6" &lt;|
+    \_ -&gt;
+        Rational.new 1 6
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.1(6)")
+
+test "5/6" &lt;|
+    \_ -&gt;
+        Rational.new 5 6
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.8(3)")
+
+test "1/7" &lt;|
+    \_ -&gt;
+        Rational.new 1 7
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(142857)")
+
+test "2/7" &lt;|
+    \_ -&gt;
+        Rational.new 2 7
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(285714)")
+
+test "3/7" &lt;|
+    \_ -&gt;
+        Rational.new 3 7
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(428571)")
+
+test "1/9" &lt;|
+    \_ -&gt;
+        Rational.new 1 9
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(1)")
+
+test "2/9" &lt;|
+    \_ -&gt;
+        Rational.new 2 9
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(2)")
+
+test "8/9" &lt;|
+    \_ -&gt;
+        Rational.new 8 9
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(8)")
+
+test "7/12" &lt;|
+    \_ -&gt;
+        Rational.new 7 12
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.58(3)")
+
+test "1/23" &lt;|
+    \_ -&gt;
+        Rational.new 1 23
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(0434782608695652173913)")
+
+test "1/97" &lt;|
+    \_ -&gt;
+        Rational.new 1 97
+            |&gt; Maybe.map Rational.toDecimalString
+            |&gt; Expect.equal (Just "0.(010309278350515463917525773195876288659793814432989690721649484536082474226804123711340206185567)")
+</code></pre>
+<h2 id="resources"><a class="header" href="#resources">Resources</a></h2>
+<ul>
+<li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/tests/Test/Lib/Rational.elm">tests/Test/Lib/Rational.elm</a></li>
+</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../application-logic/evaluating-infix-expressions/tokens.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../application-logic/rational-numbers/conversion.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../application-logic/evaluating-infix-expressions/shunting-yard.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../application-logic/evaluating-infix-expressions/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -172,11 +351,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../application-logic/evaluating-infix-expressions/tokens.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../application-logic/rational-numbers/conversion.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../application-logic/evaluating-infix-expressions/shunting-yard.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../application-logic/evaluating-infix-expressions/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
