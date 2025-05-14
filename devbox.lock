@@ -48,6 +48,54 @@
           "store_path": "/nix/store/ykhxif0kn15bdzprzyc0zafs0c9arcn3-mdbook-0.4.47"
         }
       }
+    },
+    "rsync@latest": {
+      "last_modified": "2025-05-06T08:06:31Z",
+      "resolved": "github:NixOS/nixpkgs/1cb1c02a6b1b7cf67e3d7731cbbf327a53da9679#rsync",
+      "source": "devbox-search",
+      "version": "3.4.1",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/1x5n8jzwci2inrqwg5ys2aa5n56snnmd-rsync-3.4.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/1x5n8jzwci2inrqwg5ys2aa5n56snnmd-rsync-3.4.1"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/587i7976syzxx9b65y37zxykvlf03cfn-rsync-3.4.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/587i7976syzxx9b65y37zxykvlf03cfn-rsync-3.4.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/c1888l50mmdm6pdmyw3v62fnj7li39iq-rsync-3.4.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/c1888l50mmdm6pdmyw3v62fnj7li39iq-rsync-3.4.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/anvskj2v9h9m0fp3l5fm2n60v7glqcbp-rsync-3.4.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/anvskj2v9h9m0fp3l5fm2n60v7glqcbp-rsync-3.4.1"
+        }
+      }
     }
   }
 }
