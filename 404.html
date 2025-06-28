@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1" />
+
+    <title>Redirecting to: How I Built freeCodeCamp's Calculator with Elm</title>
+  </head>
+  <body>
+    <h1>Redirecting to: How I Built freeCodeCamp's Calculator with Elm</h1>
+
+    <p>
+      You're seeing this because you have an old link to the tutorial. I suggest that you
+      update your bookmarks to the redirected URL!
+    </p>
+
+    <p>
+      If you're not redirected automatically, follow the link <a id="redirect-link" href="https://calculator.tutorial.elmwithdwayne.dev/">How I Built freeCodeCamp's Calculator with Elm</a>.
+    </p>
+
+    <p>
+      Thank you! I'll see you in 5 seconds.
+    </p>
+
+    <script>
+      const oldPath = window.location.pathname;
+      const redirectUrl = oldPath.replace(/^\/elm-calculator-tutorial/, "https://calculator.tutorial.elmwithdwayne.dev");
+
+      const redirectLink = document.getElementById("redirect-link");
+      redirectLink.setAttribute("href", redirectUrl);
+      redirectLink.text = redirectUrl;
+
+      window.setTimeout(() => {
+        window.location.replace(redirectUrl);
+      }, 5000);
+    </script>
+  </body>
+</html>
