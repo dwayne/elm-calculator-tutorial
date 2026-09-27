@@ -16,7 +16,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
 
         name = "elm-calculator-tutorial";
-        branch = "gh-pages";
+        branch = "release/production";
         paths = [
           ./src
           ./theme
