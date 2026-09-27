@@ -1,9 +1,7 @@
 [book]
 title = "How I Built freeCodeCamp's Calculator with Elm"
 authors = ["Dwayne Crooks"]
-src = "src"
 language = "en"
-multilingual = false
 
 [output.html]
 mathjax-support = true
