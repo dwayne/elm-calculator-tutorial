@@ -1,5 +1,28 @@
 {
   "nodes": {
+    "deploy": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790474612,
+        "narHash": "sha256-+3HKZIq5LOoCx2/mhgzavC9QlH/qOGo77IpTJTqZJVw=",
+        "owner": "dwayne",
+        "repo": "deploy",
+        "rev": "ba9a28a7483ee8ab93f5f1c75defd49be433d523",
+        "type": "github"
+      },
+      "original": {
+        "owner": "dwayne",
+        "repo": "deploy",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -51,6 +74,7 @@
     },
     "root": {
       "inputs": {
+        "deploy": "deploy",
         "flake-utils": "flake-utils",
         "mdBook": "mdBook",
         "nixpkgs": "nixpkgs"
