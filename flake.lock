@@ -43,11 +43,11 @@
     },
     "mdBook": {
       "locked": {
-        "lastModified": 1790533316,
-        "narHash": "sha256-flq9Nj6Ap0M7Q3f3UXL0py0dx3o5s+rjYc5a3bQ38mM=",
+        "lastModified": 1790554574,
+        "narHash": "sha256-sB6XNDa0gsm6xKdjFywqfkwbm229mGciSXtZFnNrfs4=",
         "owner": "dwayne",
         "repo": "nix-mdBook",
-        "rev": "3c48cb34d24705f14f4b727dc61e4bc20e368084",
+        "rev": "e2217537ac13c316cb108c4677d6191dd08254ed",
         "type": "github"
       },
       "original": {

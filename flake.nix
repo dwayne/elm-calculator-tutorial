@@ -15,20 +15,15 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        name = "elm-calculator-tutorial";
-        branch = "release/production";
-        paths = [
-          ./src
-          ./theme
-          ./book.toml
-        ];
-
         project = mdBook.lib.mkProject pkgs {
-          inherit name branch;
-          src = pkgs.lib.fileset.toSource {
-            root = ./.;
-            fileset = pkgs.lib.fileset.unions paths;
-          };
+          name = "elm-calculator-tutorial";
+          branch = "release/production";
+          root = ./.;
+          paths = [
+            ./src
+            ./theme
+            ./book.toml
+          ];
           deploy = deploy.packages.${system}.default;
         };
       in
