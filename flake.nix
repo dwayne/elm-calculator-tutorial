@@ -16,35 +16,26 @@
         pkgs = nixpkgs.legacyPackages.${system};
 
         name = "elm-calculator-tutorial";
+        branch = "gh-pages";
+        paths = [
+          ./src
+          ./theme
+          ./book.toml
+        ];
 
-        book = mdBook.lib.mkBook pkgs {
-          inherit name;
+        project = mdBook.lib.mkProject pkgs {
+          inherit name branch;
           src = pkgs.lib.fileset.toSource {
             root = ./.;
-
-            fileset = pkgs.lib.fileset.unions [
-              ./src
-              ./theme
-              ./book.toml
-            ];
+            fileset = pkgs.lib.fileset.unions paths;
           };
-        };
-
-        deployBook = mdBook.lib.mkDeployBook pkgs {
-          inherit book;
-          branch = "refactor-2026-release";
           deploy = deploy.packages.${system}.default;
         };
       in
       {
-        devShells.default = mdBook.lib.mkShell pkgs { inherit name; };
-        packages = { inherit book; };
-
-        apps.deploy = {
-          type = "app";
-          program = "${deployBook}";
-          meta.description = "Deploy the book";
-        };
+        devShells.default = project.devShell;
+        packages.default = project.book;
+        apps.deploy = project.deployBookApp;
       }
     );
 }
