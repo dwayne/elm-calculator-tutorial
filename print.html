@@ -14,42 +14,54 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="theme-color" content="#ffffff">
 
-        <link rel="icon" href="favicon.svg">
-        <link rel="shortcut icon" href="favicon.png">
-        <link rel="stylesheet" href="css/variables.css">
-        <link rel="stylesheet" href="css/general.css">
-        <link rel="stylesheet" href="css/chrome.css">
-        <link rel="stylesheet" href="css/print.css" media="print">
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-e96d0476.css">
+        <link rel="stylesheet" href="css/chrome-d279d366.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
-        <link rel="stylesheet" href="fonts/fonts.css">
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="highlight-css" href="highlight.css">
-        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
-        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
 
         <!-- Custom theme stylesheets -->
 
         <!-- MathJax -->
         <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
-        <!-- Provide site root to javascript -->
+        <!-- Provide site root and default themes to javascript -->
         <script>
-            var path_to_root = "";
-            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-b3d0592c.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc.js"></script>
+        <script src="toc-0c7b91c9.js"></script>
     </head>
     <body>
-    <div id="body-container">
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
             try {
-                var theme = localStorage.getItem('mdbook-theme');
-                var sidebar = localStorage.getItem('mdbook-sidebar');
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
 
                 if (theme.startsWith('"') && theme.endsWith('"')) {
                     localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
@@ -63,7 +75,8 @@
 
         <!-- Set the theme before any content is loaded, prevents flash -->
         <script>
-            var theme;
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
             try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
             if (theme === null || theme === undefined) { theme = default_theme; }
             const html = document.documentElement;
@@ -72,55 +85,59 @@
             html.classList.add("js");
         </script>
 
-        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
 
         <!-- Hide / unhide sidebar before it is displayed -->
         <script>
-            var sidebar = null;
-            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
             if (document.body.clientWidth >= 1080) {
                 try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
+                sidebar_toggle.checked = false;
             }
-            sidebar_toggle.checked = sidebar === 'visible';
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
         </script>
 
-        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
                 <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
             </noscript>
-            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
             </div>
         </nav>
 
-        <div id="page-wrapper" class="page-wrapper">
+        <div id="mdbook-page-wrapper" class="page-wrapper">
 
             <div class="page">
-                <div id="menu-bar-hover-placeholder"></div>
-                <div id="menu-bar" class="menu-bar sticky">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
                     <div class="left-buttons">
-                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
-                            <i class="fa fa-bars"></i>
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
                         </label>
-                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
-                            <i class="fa fa-paint-brush"></i>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
                         </button>
-                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
-                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
-                            <i class="fa fa-search"></i>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
                         </button>
                     </div>
 
@@ -128,58 +145,63 @@
 
                     <div class="right-buttons">
                         <a href="print.html" title="Print this book" aria-label="Print this book">
-                            <i id="print-button" class="fa fa-print"></i>
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
                         </a>
 
                     </div>
                 </div>
 
-                <div id="search-wrapper" class="hidden">
-                    <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
                     </form>
-                    <div id="searchresults-outer" class="searchresults-outer hidden">
-                        <div id="searchresults-header" class="searchresults-header"></div>
-                        <ul id="searchresults">
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
                         </ul>
                     </div>
                 </div>
 
                 <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
                 <script>
-                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
-                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
-                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
                         link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
                     });
                 </script>
 
-                <div id="content" class="content">
+                <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
-<p>In this tutorial, I'll share with you how I built <a href="https://www.freecodecamp.com/">freeCodeCamp</a>'s <a href="https://www.freecodecamp.org/learn/front-end-development-libraries/front-end-development-libraries-projects/build-a-javascript-calculator">Build a JavaScript Calculator</a> frontend project with <a href="https://elm-lang.org/">Elm</a>.</p>
-<p>Here's the <a href="https://dwayne.github.io/elm-calculator/">live demo</a> of the Elm web application for you to explore how it works. And, here's the reference to its <a href="https://github.com/dwayne/elm-calculator/tree/1.0.0">source code</a>.</p>
-<p>My primary goal is to share my experience, perspective and processes so that you are exposed to an alternative approach to web application development with Elm. I am not aware of any resources that explain how to develop web applications with Elm that are similar to mine. That's why I thought it might be valuable to share this with the Elm community. I am not trying to teach you Elm, nor am I trying to teach you web application development. All I'm trying to do is to have you take a look over my shoulder as I explain to you how I built the application so that you can be exposed to ideas that could be helpful to you in your own Elm projects.</p>
+<p>In this tutorial, I’ll share with you how I built <a href="https://www.freecodecamp.com/">freeCodeCamp</a>’s <a href="https://www.freecodecamp.org/learn/front-end-development-libraries/front-end-development-libraries-projects/build-a-javascript-calculator">Build a JavaScript Calculator</a> frontend project with <a href="https://elm-lang.org/">Elm</a>.</p>
+<p>Here’s the <a href="https://dwayne.github.io/elm-calculator/">live demo</a> of the Elm web application for you to explore how it works. And, here’s the reference to its <a href="https://github.com/dwayne/elm-calculator/tree/1.0.0">source code</a>.</p>
+<p>My primary goal is to share my experience, perspective and processes so that you are exposed to an alternative approach to web application development with Elm. I am not aware of any resources that explain how to develop web applications with Elm that are similar to mine. That’s why I thought it might be valuable to share this with the Elm community. I am not trying to teach you Elm, nor am I trying to teach you web application development. All I’m trying to do is to have you take a look over my shoulder as I explain to you how I built the application so that you can be exposed to ideas that could be helpful to you in your own Elm projects.</p>
 <h2 id="audience"><a class="header" href="#audience">Audience</a></h2>
 <p>Any web developer interested in using Elm to build maintainable, testable, and reliable web applications.</p>
 <h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
 <ul>
 <li>A basic knowledge of <a href="https://web.dev/learn/html">HTML</a>, <a href="https://web.dev/learn/css">CSS</a>, and <a href="https://web.dev/learn/javascript">JavaScript</a>.</li>
-<li>A basic knowledge of web application development. For e.g. if you've had exposure to <a href="https://react.dev/">React</a>, <a href="https://vuejs.org/">Vue.js</a>, <a href="https://angular.dev/">Angular</a>, <a href="https://emberjs.com/">Ember.js</a> or something else, it would be helpful.</li>
+<li>A basic knowledge of web application development. For e.g. if you’ve had exposure to <a href="https://react.dev/">React</a>, <a href="https://vuejs.org/">Vue.js</a>, <a href="https://angular.dev/">Angular</a>, <a href="https://emberjs.com/">Ember.js</a> or something else, it would be helpful.</li>
 <li>And, a basic knowledge of Elm as provided by the <a href="https://guide.elm-lang.org/">official Elm guide</a>.</li>
 </ul>
 <h2 id="exposure"><a class="header" href="#exposure">Exposure</a></h2>
-<p>As I've stated before, I'm not intentionally trying to teach you anything in particular. That's why there are no learning outcomes. However, I am delibrately trying to expose you to ideas. As many ideas as it takes to develop the application in an honest and realistic way. So, after completing this tutorial I hope you will have been exposed to:</p>
+<p>As I’ve stated before, I’m not intentionally trying to teach you anything in particular. That’s why there are no learning outcomes. However, I am delibrately trying to expose you to ideas. As many ideas as it takes to develop the application in an honest and realistic way. So, after completing this tutorial I hope you will have been exposed to:</p>
 <ul>
 <li>A process for building any Elm web application starting from a given design.</li>
-<li>A bottom-up approach for building reliable UIs with HTML/CSS that's easy to maintain and extend.
+<li>A bottom-up approach for building reliable UIs with HTML/CSS that’s easy to maintain and extend.
 <ul>
 <li>This approach which I independently discovered and adopted, I recently learned, is similar in spirit to <a href="https://www.componentdriven.org/">Component Driven Development</a> and <a href="https://bradfrost.com/blog/post/atomic-web-design/">Atomic Design</a>.</li>
 </ul>
 </li>
 <li>A way to prototype with HTML/CSS.
 <ul>
-<li>I also recently learned that what I have is a poor man's version of <a href="https://storybook.js.org/">Storybook</a>. And, the general idea is related to <a href="https://bradfrost.com/">Brad Frost</a>'s <a href="https://bradfrost.com/blog/post/a-frontend-workshop-environment/">frontend workshop environment</a> idea.</li>
+<li>I also recently learned that what I have is a poor man’s version of <a href="https://storybook.js.org/">Storybook</a>. And, the general idea is related to <a href="https://bradfrost.com/">Brad Frost</a>’s <a href="https://bradfrost.com/blog/post/a-frontend-workshop-environment/">frontend workshop environment</a> idea.</li>
 </ul>
 </li>
 <li>A way to structure your HTML/CSS with <a href="https://getbem.com/">BEM</a>.</li>
@@ -187,21 +209,21 @@
 <li>A way to separate your UI and application logic.</li>
 <li>Unit testing.</li>
 </ul>
-<p>Other interesting things you'd be exposed to because I'm working on a calculator, include:</p>
+<p>Other interesting things you’d be exposed to because I’m working on a calculator, include:</p>
 <ul>
 <li>Building a module for <a href="https://en.wikipedia.org/wiki/Rational_number">rational number</a> arithmetic.</li>
 <li>Displaying rational numbers using decimal notation for both terminating and <a href="https://en.wikipedia.org/wiki/Repeating_decimal">repeating decimals</a>.</li>
 <li>Building a module for a <a href="https://en.wikipedia.org/wiki/Stack_(abstract_data_type)">Stack</a> data structure.</li>
-<li>Evaluating infix expressions using <a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra's shunting yard algorithm</a>.</li>
+<li>Evaluating infix expressions using <a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra’s shunting yard algorithm</a>.</li>
 <li>Tokenizing user input using a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">finite-state machine</a>.</li>
 </ul>
 <h2 id="the-10000-foot-view"><a class="header" href="#the-10000-foot-view">The 10,000 Foot View</a></h2>
 <ul>
-<li><a href="index.html#design">Design</a></li>
-<li><a href="index.html#prototype">Prototype</a></li>
-<li><a href="index.html#htmlcss-to-elm">HTML/CSS to Elm</a></li>
-<li><a href="index.html#application-logic">Application Logic</a></li>
-<li><a href="index.html#web-application--ui--application-logic">Web Application = UI + Application Logic</a></li>
+<li><a href="#design">Design</a></li>
+<li><a href="#prototype">Prototype</a></li>
+<li><a href="#htmlcss-to-elm">HTML/CSS to Elm</a></li>
+<li><a href="#application-logic">Application Logic</a></li>
+<li><a href="#web-application--ui--application-logic">Web Application = UI + Application Logic</a></li>
 </ul>
 <h3 id="design"><a class="header" href="#design">Design</a></h3>
 <p>My process starts with knowing what I want to build and how I want it to look. Design is important but it has a separate process that is outside the scope of this tutorial. The design for the calculator was <del>inspired by</del> lifted from this <a href="https://codepen.io/freeCodeCamp/full/wgGVVX">CodePen example</a>. Thanks <a href="https://www.freecodecamp.org/no-stack-dub-sack">Peter Weinberg</a>.</p>
@@ -215,45 +237,48 @@
 <p>In practice, by keeping these concepts in mind, it helps me to have a clear separation between the user interface (UI) and the application logic. The UI consists of HTML, CSS, and some JavaScript for controlling dynamic behaviour. The application logic consists entriely of JavaScript.</p>
 <p>The main goal I try to achieve in this phase is to solve most if not all the UI related problems that the design surfaces. This phase is the phase to figure out HTML semantics, CSS selector names, accessibility, layout, etc.</p>
 <h3 id="htmlcss-to-elm"><a class="header" href="#htmlcss-to-elm">HTML/CSS to Elm</a></h3>
-<p>At this point in the process most if not all of my UI related problems have been solved and it's time to translate the HTML portion into <a href="https://package.elm-lang.org/packages/elm/html/latest/"><code>elm/html</code></a>. This is typically straightforward to do but there is a little bit of view function API design that tends to occur. However, this is definitely the easiest part of the entire process.</p>
+<p>At this point in the process most if not all of my UI related problems have been solved and it’s time to translate the HTML portion into <a href="https://package.elm-lang.org/packages/elm/html/latest/"><code>elm/html</code></a>. This is typically straightforward to do but there is a little bit of view function API design that tends to occur. However, this is definitely the easiest part of the entire process.</p>
 <h3 id="application-logic"><a class="header" href="#application-logic">Application Logic</a></h3>
 <p>The brains of the application is managed by JavaScript and hence, in our case as Elm developers, by Elm. In this part of the process I build a logical model for the application domain. Elm really shines during this part of the process because functional programming using modules, opaque types, union types, pattern matching, immutable data types, and pure functions supports a delightful approach to <a href="https://thoughtbot.com/blog/data-modeling-resources-in-elm">data modeling</a>.</p>
-<p>I don't practice <a href="https://cleancoders.com/episode/clean-code-episode-6-p1">test-driven development</a> but I do test and unit testing the tricky parts of my application logic helps me to find and fix bugs.</p>
+<p>I don’t practice <a href="https://cleancoders.com/episode/clean-code-episode-6-p1">test-driven development</a> but I do test and unit testing the tricky parts of my application logic helps me to find and fix bugs.</p>
 <h3 id="web-application--ui--application-logic"><a class="header" href="#web-application--ui--application-logic">Web Application = UI + Application Logic</a></h3>
 <p>Finally, I connect the UI with the application logic. The UI provides the means by which input gets passed to the API that models the application domain.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="prototyping"><a class="header" href="#prototyping">Prototyping</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="prototyping"><a class="header" href="#prototyping">Prototyping</a></h1>
 <p>This is the phase where I go from design to prototype.</p>
 <h2 id="from-design-to-prototype"><a class="header" href="#from-design-to-prototype">From Design to Prototype</a></h2>
 <p>I take the given design and I reimagine it as an <a href="https://en.wikipedia.org/wiki/Exploded-view_drawing">exploded-view drawing</a> that I then use to deconstruct it into its components. I build a <a href="https://en.wikipedia.org/wiki/Dependency_graph">dependency graph</a> of all the components such that there is a directed edge from component <code>A</code> to component <code>B</code> whenever <code>A</code> depends on <code>B</code>. A <a href="https://en.wikipedia.org/wiki/Topological_sorting">topological sort</a> of this dependency graph helps me figure out in what order to start working on the components. At this point, I have a choice to take either a bottom-up or top-down approach, and I usually choose the bottom-up approach. For each component, I determine:</p>
 <ol>
-<li>How I'm going to give it meaning and structure with HTML.</li>
-<li>How I'm going to refer to its elements using CSS classes.</li>
-<li>How I'm going to present it, as specified in the design, with CSS rules.</li>
+<li>How I’m going to give it meaning and structure with HTML.</li>
+<li>How I’m going to refer to its elements using CSS classes.</li>
+<li>How I’m going to present it, as specified in the design, with CSS rules.</li>
 </ol>
 <h2 id="specifics"><a class="header" href="#specifics">Specifics</a></h2>
 <p>I use:</p>
 <ul>
-<li><a href="https://getbem.com/">BEM</a>'s <a href="https://getbem.com/naming/">naming convention</a> for my CSS classes.</li>
+<li><a href="https://getbem.com/">BEM</a>’s <a href="https://getbem.com/naming/">naming convention</a> for my CSS classes.</li>
 <li><a href="https://sass-lang.com/dart-sass/">Dart Sass</a> to generate my CSS and I take full advantage of its support for modules via the <a href="https://sass-lang.com/documentation/at-rules/use/"><code>@use</code></a> rule.</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="blocks"><a class="header" href="#blocks">Blocks</a></h1>
-<p>Based on the approach I described in "<a href="prototype/blocks/../index.html#from-design-to-prototype">From Design to Prototype</a>", the components I came up with and their bottom-up ordering are as follows:</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="blocks"><a class="header" href="#blocks">Blocks</a></h1>
+<p>Based on the approach I described in “<a href="#from-design-to-prototype">From Design to Prototype</a>”, the components I came up with and their bottom-up ordering are as follows:</p>
 <ol>
 <li><strong>Key</strong> - <code>AC</code>, <code>=</code>, <code>.</code>, <code>+</code>, <code>-</code>, <code>×</code>, <code>÷</code>, and the digits <code>0</code> to <code>9</code>.</li>
 <li><strong>Pad</strong> - The keypad that houses the keys.</li>
-<li><strong>Display</strong> - A two line display. One line to show the user's input and another line to show the result of evaluating that input.</li>
+<li><strong>Display</strong> - A two line display. One line to show the user’s input and another line to show the result of evaluating that input.</li>
 <li><strong>Calculator</strong> - Holds the display and pad.</li>
 <li><strong>Attribution</strong> - A note about the developer of the application.</li>
 <li><strong>Page</strong> - A container to layout the calculator and attribution.</li>
 </ol>
 <p>These components became the blocks of my UI, in accordance with BEM. I worked on each block, one at a time, in bottom-up order until all the blocks were implemented.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="key"><a class="header" href="#key">key</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="key"><a class="header" href="#key">key</a></h1>
 <p>A <strong>key</strong>, for e.g. <code>AC</code>, <code>=</code>, <code>.</code>, <code>+</code>, <code>-</code>, <code>×</code>, <code>÷</code>, and the digits <code>0</code> to <code>9</code>.</p>
 <ul>
-<li><a href="prototype/blocks/key.html#html">HTML</a></li>
-<li><a href="prototype/blocks/key.html#sass">Sass</a></li>
-<li><a href="prototype/blocks/key.html#demo">Demo</a></li>
-<li><a href="prototype/blocks/key.html#source-code">Source Code</a></li>
+<li><a href="#html">HTML</a></li>
+<li><a href="#sass">Sass</a></li>
+<li><a href="#demo">Demo</a></li>
+<li><a href="#source-code">Source Code</a></li>
 </ul>
 <h2 id="html"><a class="header" href="#html">HTML</a></h2>
 <h3 id="default"><a class="header" href="#default">Default</a></h3>
@@ -263,7 +288,7 @@
 <ul>
 <li><a href="https://benmyers.dev/blog/clickable-divs/">How (Not) to Build a Button</a></li>
 </ul>
-<p>By default, a <code>&lt;button&gt;</code> element has its <code>type</code> attribute set to <code>submit</code>. Since the <code>&lt;button&gt;</code> element backing a key won't be for submitting form data to a server it's recommend to set its <code>type</code> attribute to <code>button</code>.</p>
+<p>By default, a <code>&lt;button&gt;</code> element has its <code>type</code> attribute set to <code>submit</code>. Since the <code>&lt;button&gt;</code> element backing a key won’t be for submitting form data to a server it’s recommend to set its <code>type</code> attribute to <code>button</code>.</p>
 <ul>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button#notes">The <code>&lt;button&gt;</code> element</a></li>
 </ul>
@@ -314,8 +339,8 @@
 }
 </code></pre>
 <h3 id="colors"><a class="header" href="#colors">Colors</a></h3>
-<p>I prefer to refer to my colors by name. I like the approach outlined by <a href="https://sachagreif.com/">Sacha Grief</a> in <a href="https://web.archive.org/web/20161012085308/http://sachagreif.com:80/sass-color-variables/">SASS &amp; Color Variables</a> but I didn't follow the two-tier system here since I didn't need it. I only used descriptive names. However, if I decide I want to make the application themeable then adding functional names would be quite useful.</p>
-<h3 id="whats-with-the-button-comment"><a class="header" href="#whats-with-the-button-comment">What's with the <code>/*button*/</code> Comment?</a></h3>
+<p>I prefer to refer to my colors by name. I like the approach outlined by <a href="https://sachagreif.com/">Sacha Grief</a> in <a href="https://web.archive.org/web/20161012085308/http://sachagreif.com:80/sass-color-variables/">SASS &amp; Color Variables</a> but I didn’t follow the two-tier system here since I didn’t need it. I only used descriptive names. However, if I decide I want to make the application themeable then adding functional names would be quite useful.</p>
+<h3 id="whats-with-the-button-comment"><a class="header" href="#whats-with-the-button-comment">What’s with the <code>/*button*/</code> Comment?</a></h3>
 <p>I picked it up from <a href="https://csswizardry.com/">Harry Roberts</a>. In <a href="https://cssguidelin.es/">CSS Guidelines</a>, he shares the idea of using <a href="https://cssguidelin.es/#quasi-qualified-selectors">quasi-qualified selectors</a> to provide information about where a class might be expected or intended to be used. By using quasi-qualified selectors we can still provide that information without actually qualifying the selector and increasing its specificity.</p>
 <h3 id="key-shape"><a class="header" href="#key-shape">Key Shape</a></h3>
 <p>The key should take up the full width and height of its parent. This allows the parent to control the shape of the key. We need this flexibility because of how the <code>AC</code> and <code>=</code> keys are intended to be displayed.</p>
@@ -327,13 +352,14 @@
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_key.scss">sass/blocks/_key.scss</a></li>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss">sass/_colors.scss</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="pad"><a class="header" href="#pad">pad</a></h1>
-<p>The <strong>pad</strong> or keypad consists of the set of <a href="prototype/blocks/./key.html">keys</a> arranged in a grid.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="pad"><a class="header" href="#pad">pad</a></h1>
+<p>The <strong>pad</strong> or keypad consists of the set of <a href="#key">keys</a> arranged in a grid.</p>
 <ul>
-<li><a href="prototype/blocks/pad.html#html">HTML</a></li>
-<li><a href="prototype/blocks/pad.html#sass">Sass</a></li>
-<li><a href="prototype/blocks/pad.html#demo">Demo</a></li>
-<li><a href="prototype/blocks/pad.html#source-code">Source Code</a></li>
+<li><a href="#html-1">HTML</a></li>
+<li><a href="#sass-1">Sass</a></li>
+<li><a href="#demo-1">Demo</a></li>
+<li><a href="#source-code-1">Source Code</a></li>
 </ul>
 <h2 id="html-1"><a class="header" href="#html-1">HTML</a></h2>
 <pre><code class="language-html">&lt;div class="pad"&gt;
@@ -486,13 +512,14 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_pad.scss">sass/blocks/_pad.scss</a></li>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss">sass/_colors.scss</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="display"><a class="header" href="#display">display</a></h1>
-<p>A two line <strong>display</strong> where the top line shows the user's input and the bottom line shows the result of evaluating that input.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="display"><a class="header" href="#display">display</a></h1>
+<p>A two line <strong>display</strong> where the top line shows the user’s input and the bottom line shows the result of evaluating that input.</p>
 <ul>
-<li><a href="prototype/blocks/display.html#html">HTML</a></li>
-<li><a href="prototype/blocks/display.html#sass">Sass</a></li>
-<li><a href="prototype/blocks/display.html#demo">Demo</a></li>
-<li><a href="prototype/blocks/display.html#source-code">Source Code</a></li>
+<li><a href="#html-2">HTML</a></li>
+<li><a href="#sass-2">Sass</a></li>
+<li><a href="#demo-2">Demo</a></li>
+<li><a href="#source-code-2">Source Code</a></li>
 </ul>
 <h2 id="html-2"><a class="header" href="#html-2">HTML</a></h2>
 <h3 id="empty"><a class="header" href="#empty">Empty</a></h3>
@@ -501,7 +528,7 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
   &lt;div class="display__line2"&gt;&lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
-<p>It's interesting that even though the structure is simple and it seems like nothing could be improved, there is room for improvement. In particular, I recently learned about <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/output">the <code>&lt;output&gt;</code> element</a>. It is a container element into which you can inject the results of a calculation or the outcome of a user action. Thus, both display lines could be changed from <code>&lt;div&gt;</code> to <code>&lt;output&gt;</code> to improve their semantics and accessibility.</p>
+<p>It’s interesting that even though the structure is simple and it seems like nothing could be improved, there is room for improvement. In particular, I recently learned about <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/output">the <code>&lt;output&gt;</code> element</a>. It is a container element into which you can inject the results of a calculation or the outcome of a user action. Thus, both display lines could be changed from <code>&lt;div&gt;</code> to <code>&lt;output&gt;</code> to improve their semantics and accessibility.</p>
 <h3 id="non-empty-short"><a class="header" href="#non-empty-short">Non-empty: Short</a></h3>
 <pre><code class="language-html">&lt;div class="display"&gt;
   &lt;div class="display__line1"&gt;22÷7=3.(142857)&lt;/div&gt;
@@ -555,9 +582,9 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
 }
 </code></pre>
 <h3 id="typography"><a class="header" href="#typography">Typography</a></h3>
-<p>I prefer to refer to my font stacks by name, just as I do with colors. A <a href="prototype/blocks/./key.html#colors">two-tier system</a> can be established here as well.</p>
+<p>I prefer to refer to my font stacks by name, just as I do with colors. A <a href="#colors">two-tier system</a> can be established here as well.</p>
 <h3 id="the-empty-state"><a class="header" href="#the-empty-state">The Empty State</a></h3>
-<p>When the display lines are empty they collapse on themselves. In order to avoid that from happening I use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:empty">the <code>:empty</code> CSS pseudo-class</a> to select the lines when they have no children and add content, a <a href="https://en.wikipedia.org/wiki/Non-breaking_space">non-breaking space</a>, to them. This ensures that they don't collapse and the height of the lines remain intact.</p>
+<p>When the display lines are empty they collapse on themselves. In order to avoid that from happening I use <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:empty">the <code>:empty</code> CSS pseudo-class</a> to select the lines when they have no children and add content, a <a href="https://en.wikipedia.org/wiki/Non-breaking_space">non-breaking space</a>, to them. This ensures that they don’t collapse and the height of the lines remain intact.</p>
 <h3 id="long-text"><a class="header" href="#long-text">Long Text</a></h3>
 <p>The following two CSS rules ensure that long text, within the lines, is handled correctly.</p>
 <pre><code class="language-scss">.display {
@@ -627,13 +654,14 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss">sass/_colors.scss</a></li>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_typography.scss">sass/_typography.scss</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="calculator"><a class="header" href="#calculator">calculator</a></h1>
-<p>The <strong>calculator</strong> consists of the <a href="prototype/blocks/./display.html">display</a> and <a href="prototype/blocks/./pad.html">pad</a> arranged in a column.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="calculator"><a class="header" href="#calculator">calculator</a></h1>
+<p>The <strong>calculator</strong> consists of the <a href="#display">display</a> and <a href="#pad">pad</a> arranged in a column.</p>
 <ul>
-<li><a href="prototype/blocks/calculator.html#html">HTML</a></li>
-<li><a href="prototype/blocks/calculator.html#sass">Sass</a></li>
-<li><a href="prototype/blocks/calculator.html#demo">Demo</a></li>
-<li><a href="prototype/blocks/calculator.html#source-code">Source Code</a></li>
+<li><a href="#html-3">HTML</a></li>
+<li><a href="#sass-3">Sass</a></li>
+<li><a href="#demo-3">Demo</a></li>
+<li><a href="#source-code-3">Source Code</a></li>
 </ul>
 <h2 id="html-3"><a class="header" href="#html-3">HTML</a></h2>
 <pre><code class="language-html">&lt;div class="calculator"&gt;
@@ -666,10 +694,10 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
 <h3 id="who-controls-the-width"><a class="header" href="#who-controls-the-width">Who Controls the Width?</a></h3>
 <p>The width of the display is constrained to be equal to the width of the pad, <code>pad.$pad-width</code>, by setting the width of the <code>.calculator__display</code> element and not by setting the width of the <code>.display</code> block directly. This is because the <code>.display</code> block is designed to take on the width of its container. As such, it is up to the container to set the width.</p>
 <h3 id="the-calculator__pad-element"><a class="header" href="#the-calculator__pad-element">The <code>.calculator__pad</code> Element</a></h3>
-<p>I don't explicitly style the <code>.calculator__pad</code> element. However, it does serve two purposes:</p>
+<p>I don’t explicitly style the <code>.calculator__pad</code> element. However, it does serve two purposes:</p>
 <ol>
 <li>The <code>.calculator</code> block uses <code>display: inline-flex</code> which means the <code>.calculator__pad</code> element becomes a flex item. This is a good thing because it protects the <code>.pad</code> block from becoming a flex item itself which could mess with its dimensions.</li>
-<li>Naming the wrapping <code>div</code>, i.e. <code>.calculator__pad</code>, allows me to refer to it by name. So it's good for communication.</li>
+<li>Naming the wrapping <code>div</code>, i.e. <code>.calculator__pad</code>, allows me to refer to it by name. So it’s good for communication.</li>
 </ol>
 <h2 id="demo-3"><a class="header" href="#demo-3">Demo</a></h2>
 <iframe src="./demo/calculator.html" style="width: 100%; height: 1540px; border: 2px solid #333;"></iframe>
@@ -680,13 +708,14 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_pad.scss">sass/blocks/_pad.scss</a></li>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss">sass/_colors.scss</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="attribution"><a class="header" href="#attribution">attribution</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="attribution"><a class="header" href="#attribution">attribution</a></h1>
 <p>The <strong>attribution</strong> contains information about the developer of the web application.</p>
 <ul>
-<li><a href="prototype/blocks/attribution.html#html">HTML</a></li>
-<li><a href="prototype/blocks/attribution.html#sass">Sass</a></li>
-<li><a href="prototype/blocks/attribution.html#demo">Demo</a></li>
-<li><a href="prototype/blocks/attribution.html#source-code">Source Code</a></li>
+<li><a href="#html-4">HTML</a></li>
+<li><a href="#sass-4">Sass</a></li>
+<li><a href="#demo-4">Demo</a></li>
+<li><a href="#source-code-4">Source Code</a></li>
 </ul>
 <h2 id="html-4"><a class="header" href="#html-4">HTML</a></h2>
 <pre><code class="language-html">&lt;p class="attribution"&gt;Developed by &lt;a class="attribution__link" href="https://github.com/dwayne" target="_blank" title="Dwayne's GitHub profile"&gt;Dwayne Crooks&lt;/a&gt;&lt;/p&gt;
@@ -719,13 +748,14 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_colors.scss">sass/_colors.scss</a></li>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_typography.scss">sass/_typography.scss</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="page"><a class="header" href="#page">page</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="page"><a class="header" href="#page">page</a></h1>
 <p>The <strong>page</strong> composes all the components to form the user interface for the entire web application.</p>
 <ul>
-<li><a href="prototype/blocks/page.html#html">HTML</a></li>
-<li><a href="prototype/blocks/page.html#sass">Sass</a></li>
-<li><a href="prototype/blocks/page.html#demo">Demo</a></li>
-<li><a href="prototype/blocks/page.html#source-code">Source Code</a></li>
+<li><a href="#html-5">HTML</a></li>
+<li><a href="#sass-5">Sass</a></li>
+<li><a href="#demo-5">Demo</a></li>
+<li><a href="#source-code-5">Source Code</a></li>
 </ul>
 <h2 id="html-5"><a class="header" href="#html-5">HTML</a></h2>
 <pre><code class="language-html">&lt;div class="page"&gt;
@@ -741,7 +771,7 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
   &lt;/div&gt;
 &lt;/div&gt;
 </code></pre>
-<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/main"><code>&lt;main&gt;</code></a> element represents the dominant content of the <code>&lt;body&gt;</code> of a document. That's why I made the calculator a child of that element.</p>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/main"><code>&lt;main&gt;</code></a> element represents the dominant content of the <code>&lt;body&gt;</code> of a document. That’s why I made the calculator a child of that element.</p>
 <h2 id="sass-5"><a class="header" href="#sass-5">Sass</a></h2>
 <pre><code class="language-scss">@use "../layouts";
 
@@ -781,7 +811,7 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
   }
 }
 </code></pre>
-<p>Here's the CSS that's generated:</p>
+<p>Here’s the CSS that’s generated:</p>
 <pre><code class="language-css">.page {
   display: flex;
   height: 100vh;
@@ -808,7 +838,8 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/blocks/_page.scss">sass/blocks/_page.scss</a></li>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/sass/_layouts.scss">sass/_layouts.scss</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="translating"><a class="header" href="#translating">Translating</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="translating"><a class="header" href="#translating">Translating</a></h1>
 <p>This is the phase where I go from prototype to Elm views.</p>
 <h2 id="from-prototype-to-elm-views"><a class="header" href="#from-prototype-to-elm-views">From Prototype to Elm Views</a></h2>
 <p>At this point in the process I am usually highly confident in the reliability of my user interface. I built and manually tested the user interface independent of any JavaScript framework, independent of any application logic, and closely following web development best practices and standards as far as I understand it.</p>
@@ -821,22 +852,31 @@ $pad-height: 5 * $pad-slot-height + 6 * $pad-slot-spacing-around;
 <li><code>view : ViewOptions -&gt; Html msg</code></li>
 <li><code>view : ViewOptions msg -&gt; Html msg</code></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="views"><a class="header" href="#views">Views</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="views"><a class="header" href="#views">Views</a></h1>
 <p>The blocks map to modules as follows:</p>
-<div class="table-wrapper"><table><thead><tr><th>Block</th><th>Module</th></tr></thead><tbody>
-<tr><td><a href="html-css-to-elm/views/../../prototype/blocks/key.html">key</a></td><td><a href="html-css-to-elm/views/./key.html"><code>View.Key</code></a></td></tr>
-<tr><td><a href="html-css-to-elm/views/../../prototype/blocks/pad.html">pad</a></td><td><a href="html-css-to-elm/views/./pad.html"><code>View.Pad</code></a></td></tr>
-<tr><td><a href="html-css-to-elm/views/../../prototype/blocks/display.html">display</a></td><td><a href="html-css-to-elm/views/./display.html"><code>View.Display</code></a></td></tr>
-<tr><td><a href="html-css-to-elm/views/../../prototype/blocks/calculator.html">calculator</a></td><td><a href="html-css-to-elm/views/./calculator.html"><code>View.Calculator</code></a></td></tr>
-<tr><td><a href="html-css-to-elm/views/../../prototype/blocks/attribution.html">attribution</a></td><td><a href="html-css-to-elm/views/./attribution.html"><code>View.Attribution</code></a></td></tr>
-<tr><td><a href="html-css-to-elm/views/../../prototype/blocks/page.html">page</a></td><td><a href="html-css-to-elm/views/./page.html"><code>View.Page</code></a></td></tr>
-</tbody></table>
-</div><div style="break-before: page; page-break-before: always;"></div><h1 id="viewkey"><a class="header" href="#viewkey">View.Key</a></h1>
-<p>The implementation was based on <a href="html-css-to-elm/views/../../prototype/blocks/key.html">the <code>.key</code> block</a>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Block</th><th>Module</th></tr>
+</thead>
+<tbody>
+<tr><td><a href="#key">key</a></td><td><a href="#viewkey"><code>View.Key</code></a></td></tr>
+<tr><td><a href="#pad">pad</a></td><td><a href="#viewpad"><code>View.Pad</code></a></td></tr>
+<tr><td><a href="#display">display</a></td><td><a href="#viewdisplay"><code>View.Display</code></a></td></tr>
+<tr><td><a href="#calculator">calculator</a></td><td><a href="#viewcalculator"><code>View.Calculator</code></a></td></tr>
+<tr><td><a href="#attribution">attribution</a></td><td><a href="#viewattribution"><code>View.Attribution</code></a></td></tr>
+<tr><td><a href="#page">page</a></td><td><a href="#viewpage"><code>View.Page</code></a></td></tr>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="viewkey"><a class="header" href="#viewkey">View.Key</a></h1>
+<p>The implementation was based on <a href="#key">the <code>.key</code> block</a>.</p>
 <ul>
-<li><a href="html-css-to-elm/views/key.html#view-options">View Options</a></li>
-<li><a href="html-css-to-elm/views/key.html#view-function">View Function</a></li>
-<li><a href="html-css-to-elm/views/key.html#source-code">Source Code</a></li>
+<li><a href="#view-options">View Options</a></li>
+<li><a href="#view-function">View Function</a></li>
+<li><a href="#source-code-6">Source Code</a></li>
 </ul>
 <h2 id="view-options"><a class="header" href="#view-options">View Options</a></h2>
 <pre><code class="language-elm">type alias ViewOptions msg =
@@ -1013,19 +1053,20 @@ view { style, key, onClick } =
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Digit.elm">src/Data/Digit.elm</a></li>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Operator.elm">src/Data/Operator.elm</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="viewpad"><a class="header" href="#viewpad">View.Pad</a></h1>
-<p>The implementation was based on <a href="html-css-to-elm/views/../../prototype/blocks/pad.html">the <code>.pad</code> block</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="viewpad"><a class="header" href="#viewpad">View.Pad</a></h1>
+<p>The implementation was based on <a href="#pad">the <code>.pad</code> block</a>.</p>
 <ul>
-<li><a href="html-css-to-elm/views/pad.html#view-options">View Options</a></li>
-<li><a href="html-css-to-elm/views/pad.html#view-function">View Function</a></li>
-<li><a href="html-css-to-elm/views/pad.html#source-code">Source Code</a></li>
+<li><a href="#view-options-1">View Options</a></li>
+<li><a href="#view-function-1">View Function</a></li>
+<li><a href="#source-code-7">Source Code</a></li>
 </ul>
 <h2 id="view-options-1"><a class="header" href="#view-options-1">View Options</a></h2>
 <pre><code class="language-elm">view : (Key -&gt; msg) -&gt; H.Html msg
 view onClick =
     -- ...
 </code></pre>
-<p>Since I only needed one option, i.e. <code>onClick</code>, I didn't create a <code>ViewOptions</code> type alias.</p>
+<p>Since I only needed one option, i.e. <code>onClick</code>, I didn’t create a <code>ViewOptions</code> type alias.</p>
 <h2 id="view-function-1"><a class="header" href="#view-function-1">View Function</a></h2>
 <pre><code class="language-elm">view : (Key -&gt; msg) -&gt; H.Html msg
 view onClick =
@@ -1204,7 +1245,7 @@ viewPadSlot { position, span, style, key, onClick } =
 viewPadSlot { position, span, key } =
     -- ...
 </code></pre>
-<p>This would have simplified the call to <code>Key.view</code>, it's just <code>Key.view key</code> now, but would have made the <code>viewPadSlot</code> calls more verbose:</p>
+<p>This would have simplified the call to <code>Key.view</code>, it’s just <code>Key.view key</code> now, but would have made the <code>viewPadSlot</code> calls more verbose:</p>
 <pre><code class="language-elm">viewPadSlot
     { position = ( 0, 0 )
     , span = Just Colspan
@@ -1224,12 +1265,13 @@ viewPadSlot { position, span, key } =
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Digit.elm">src/Data/Digit.elm</a></li>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Operator.elm">src/Data/Operator.elm</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="viewdisplay"><a class="header" href="#viewdisplay">View.Display</a></h1>
-<p>The implementation was based on <a href="html-css-to-elm/views/../../prototype/blocks/display.html">the <code>.display</code> block</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="viewdisplay"><a class="header" href="#viewdisplay">View.Display</a></h1>
+<p>The implementation was based on <a href="#display">the <code>.display</code> block</a>.</p>
 <ul>
-<li><a href="html-css-to-elm/views/display.html#view-options">View Options</a></li>
-<li><a href="html-css-to-elm/views/display.html#view-function">View Function</a></li>
-<li><a href="html-css-to-elm/views/display.html#source-code">Source Code</a></li>
+<li><a href="#view-options-2">View Options</a></li>
+<li><a href="#view-function-2">View Function</a></li>
+<li><a href="#source-code-8">Source Code</a></li>
 </ul>
 <h2 id="view-options-2"><a class="header" href="#view-options-2">View Options</a></h2>
 <pre><code class="language-elm">type alias ViewOptions =
@@ -1249,12 +1291,13 @@ view { line1, line2 } =
 <ul>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Display.elm">src/View/Display.elm</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="viewcalculator"><a class="header" href="#viewcalculator">View.Calculator</a></h1>
-<p>The implementation was based on <a href="html-css-to-elm/views/../../prototype/blocks/calculator.html">the <code>.calculator</code> block</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="viewcalculator"><a class="header" href="#viewcalculator">View.Calculator</a></h1>
+<p>The implementation was based on <a href="#calculator">the <code>.calculator</code> block</a>.</p>
 <ul>
-<li><a href="html-css-to-elm/views/calculator.html#view-options">View Options</a></li>
-<li><a href="html-css-to-elm/views/calculator.html#view-function">View Function</a></li>
-<li><a href="html-css-to-elm/views/calculator.html#source-code">Source Code</a></li>
+<li><a href="#view-options-3">View Options</a></li>
+<li><a href="#view-function-3">View Function</a></li>
+<li><a href="#source-code-9">Source Code</a></li>
 </ul>
 <h2 id="view-options-3"><a class="header" href="#view-options-3">View Options</a></h2>
 <pre><code class="language-elm">type alias ViewOptions msg =
@@ -1286,12 +1329,13 @@ view { line1, line2, onClick } =
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Pad.elm">src/View/Pad.elm</a></li>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Data/Key.elm">src/Data/Key.elm</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="viewattribution"><a class="header" href="#viewattribution">View.Attribution</a></h1>
-<p>The implementation was based on <a href="html-css-to-elm/views/../../prototype/blocks/attribution.html">the <code>.attribution</code> block</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="viewattribution"><a class="header" href="#viewattribution">View.Attribution</a></h1>
+<p>The implementation was based on <a href="#attribution">the <code>.attribution</code> block</a>.</p>
 <ul>
-<li><a href="html-css-to-elm/views/attribution.html#view-options">View Options</a></li>
-<li><a href="html-css-to-elm/views/attribution.html#view-function">View Function</a></li>
-<li><a href="html-css-to-elm/views/attribution.html#source-code">Source Code</a></li>
+<li><a href="#view-options-4">View Options</a></li>
+<li><a href="#view-function-4">View Function</a></li>
+<li><a href="#source-code-10">Source Code</a></li>
 </ul>
 <h2 id="view-options-4"><a class="header" href="#view-options-4">View Options</a></h2>
 <pre><code class="language-elm">type alias ViewOptions =
@@ -1318,12 +1362,13 @@ view { name, title, url } =
 <ul>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Attribution.elm">src/View/Attribution.elm</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="viewpage"><a class="header" href="#viewpage">View.Page</a></h1>
-<p>The implementation was based on <a href="html-css-to-elm/views/../../prototype/blocks/page.html">the <code>.page</code> block</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="viewpage"><a class="header" href="#viewpage">View.Page</a></h1>
+<p>The implementation was based on <a href="#page">the <code>.page</code> block</a>.</p>
 <ul>
-<li><a href="html-css-to-elm/views/page.html#view-options">View Options</a></li>
-<li><a href="html-css-to-elm/views/page.html#view-function">View Function</a></li>
-<li><a href="html-css-to-elm/views/page.html#source-code">Source Code</a></li>
+<li><a href="#view-options-5">View Options</a></li>
+<li><a href="#view-function-5">View Function</a></li>
+<li><a href="#source-code-11">Source Code</a></li>
 </ul>
 <h2 id="view-options-5"><a class="header" href="#view-options-5">View Options</a></h2>
 <pre><code class="language-elm">type alias ViewOptions msg =
@@ -1349,8 +1394,9 @@ view { calculator, attribution } =
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Calculator.elm">src/View/Calculator.elm</a></li>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/View/Attribution.elm">src/View/Attribution.elm</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="reflections-on-the-ui"><a class="header" href="#reflections-on-the-ui">Reflections on the UI</a></h1>
-<p>The <a href="html-css-to-elm/../prototype/index.html">prototyping</a> and <a href="html-css-to-elm/./index.html">translating</a> phases of my process led me to an Elm view, i.e. <a href="html-css-to-elm/./views/page.html#view-function"><code>View.Page.view</code></a>, that abstracted the user interface of the entire web application. <code>View.Page.view</code> is composed of reusable view functions that I designed based on the <a href="html-css-to-elm/../prototype/blocks/index.html">blocks</a>, i.e. components, that arose from <a href="html-css-to-elm/../prototype/index.html#from-design-to-prototype">my decomposition of the design</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="reflections-on-the-ui"><a class="header" href="#reflections-on-the-ui">Reflections on the UI</a></h1>
+<p>The <a href="#prototyping">prototyping</a> and <a href="#translating">translating</a> phases of my process led me to an Elm view, i.e. <a href="#view-function-5"><code>View.Page.view</code></a>, that abstracted the user interface of the entire web application. <code>View.Page.view</code> is composed of reusable view functions that I designed based on the <a href="#blocks">blocks</a>, i.e. components, that arose from <a href="#from-design-to-prototype">my decomposition of the design</a>.</p>
 <pre><code class="language-elm">View.Page.view
     { calculator =
         { line1 = line1
@@ -1365,15 +1411,16 @@ view { calculator, attribution } =
     }
 </code></pre>
 <p>All I need in order to display the web application are the two display lines and a click handler. No application logic required. 🙌</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="domain-modeling"><a class="header" href="#domain-modeling">Domain Modeling</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="domain-modeling"><a class="header" href="#domain-modeling">Domain Modeling</a></h1>
 <p>This is the phase where I build a logical model of the application domain and expose an API that can be used by the UI I built in the previous phases.</p>
 <p>Consider a physical digital calculator. It has a casing and some electronics on a circuit board. I think of the UI as the casing and the application logic as the electronics.</p>
-<p>I have no prescriptive way of building the logical model. This is a creative process that I approach in incremental steps that allow me to slowly eat away at the problem until I have a solution. Usually the first solution I come up with isn't well refined and it takes me a few more sessions to refactor it into a final form that pleases me.</p>
+<p>I have no prescriptive way of building the logical model. This is a creative process that I approach in incremental steps that allow me to slowly eat away at the problem until I have a solution. Usually the first solution I come up with isn’t well refined and it takes me a few more sessions to refactor it into a final form that pleases me.</p>
 <h2 id="preliminary-analysis"><a class="header" href="#preliminary-analysis">Preliminary Analysis</a></h2>
 <p>Here are some rough notes I used to think about the problem.</p>
 <ul>
-<li>The UI is complete but it's inert</li>
-<li><code>AC</code> means "All Clear"</li>
+<li>The UI is complete but it’s inert</li>
+<li><code>AC</code> means “All Clear”</li>
 <li>The operations are addition (<code>+</code>), subtraction (<code>-</code>), multiplication (<code>×</code>), and division (<code>÷</code>)</li>
 <li>A user can only enter decimal numbers using the digits <code>0</code> through <code>9</code> and the decimal point (<code>.</code>)</li>
 <li>The non-terminating non-repeating decimal numbers are the irrational numbers
@@ -1383,16 +1430,16 @@ view { calculator, attribution } =
 </li>
 <li>Can the user enter irrational numbers?
 <ul>
-<li>No, it's not possible with the inputs available</li>
+<li>No, it’s not possible with the inputs available</li>
 </ul>
 </li>
 <li>Can the user enter an expression that evaluates to an irrational number?
 <ul>
-<li>No, it's not possible with the operations available</li>
+<li>No, it’s not possible with the operations available</li>
 </ul>
 </li>
-<li>It follows that we'd only need support for rational numbers</li>
-<li><code>=</code> means to calculate what's been input
+<li>It follows that we’d only need support for rational numbers</li>
+<li><code>=</code> means to calculate what’s been input
 <ul>
 <li>The input appears on line 1 of the display</li>
 </ul>
@@ -1401,10 +1448,10 @@ view { calculator, attribution } =
 <ul>
 <li>Either <code>1 + 2 * 3 = 1 + 6 = 7</code> or <code>1 + 2 * 3 = 3 * 3 = 9</code></li>
 <li>We want the answer to be <code>7</code> which means we want to respect the usual operator precedence when evaluating expressions</li>
-<li><a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra's shunting yard algorithm</a> can be used to help us evaluate the infix expressions while respecting operator precedence
+<li><a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra’s shunting yard algorithm</a> can be used to help us evaluate the infix expressions while respecting operator precedence
 <ul>
 <li>I was aware of this algorithm from my Computer Science classes</li>
-<li>Alternatively, you could have researched the following question "How does a calculator evaluate infix expressions?", and you would have found answers pointing you in a similar direction. For e.g. when I asked Google I found this <a href="https://www.geeksforgeeks.org/expression-evaluation/">Expression Evaluation</a> article</li>
+<li>Alternatively, you could have researched the following question “How does a calculator evaluate infix expressions?”, and you would have found answers pointing you in a similar direction. For e.g. when I asked Google I found this <a href="https://www.geeksforgeeks.org/expression-evaluation/">Expression Evaluation</a> article</li>
 </ul>
 </li>
 </ul>
@@ -1415,13 +1462,13 @@ view { calculator, attribution } =
 <li>So for e.g. we can display <code>1 / 3</code> as <code>0.(3)</code></li>
 </ul>
 </li>
-<li>From <a href="application-logic/../html-css-to-elm/views/key.html"><code>View.Key</code></a>, I already identified a need for <a href="application-logic/../html-css-to-elm/views/key.html#datakey"><code>Data.Key</code></a>, <a href="application-logic/../html-css-to-elm/views/key.html#datadigit"><code>Data.Digit</code></a>, and <a href="application-logic/../html-css-to-elm/views/key.html#dataoperator"><code>Data.Operator</code></a></li>
+<li>From <a href="#viewkey"><code>View.Key</code></a>, I already identified a need for <a href="#datakey"><code>Data.Key</code></a>, <a href="#datadigit"><code>Data.Digit</code></a>, and <a href="#dataoperator"><code>Data.Operator</code></a></li>
 <li>The user interacts with the UI by pressing keys on the keypad. These key presses are used to build up an infix expression. When the user is ready to evaluate the infix expression they press the <code>=</code> key</li>
 </ul>
 <h2 id="api-sketch"><a class="header" href="#api-sketch">API Sketch</a></h2>
 <p>Based on the preliminary analysis I then thought through what the API could be over several sessions. At this point I was trying to figure out, at a high-level, how all the pieces would fit together to become a cohesive solution to the problem. Some questions I tried to answer included:</p>
 <ul>
-<li>What's the overall shape of the solution?</li>
+<li>What’s the overall shape of the solution?</li>
 <li>What modules do I need?</li>
 <li>What data structures do I need?</li>
 <li>What are the interesting parts that will need more thought?</li>
@@ -1451,8 +1498,8 @@ toOutput : Calculator -&gt; Output
 </code></pre>
 <p>The idea I had in mind is that <code>Data.Calculator</code> would serve as the logical representation of the calculator. It has an internal data structure that it uses to keep track of the infix expression that the users builds one key press at a time.</p>
 <p><code>new</code> creates a calculator in its initial state.</p>
-<p><code>press</code> takes a key pressed by the user and updates the calculator's internal data structures.</p>
-<p><code>toOutput</code> transforms the internal data structures into a format that can be used to display the infix expression that's being built (i.e. line 1) and the user's current input (i.e. line 2).</p>
+<p><code>press</code> takes a key pressed by the user and updates the calculator’s internal data structures.</p>
+<p><code>toOutput</code> transforms the internal data structures into a format that can be used to display the infix expression that’s being built (i.e. line 1) and the user’s current input (i.e. line 2).</p>
 <p>The key thing would be figuring out what this internal data structure needs to be for the API to work.</p>
 <h3 id="dataevaluator"><a class="header" href="#dataevaluator"><code>Data.Evaluator</code></a></h3>
 <pre><code class="language-elm">module Data.Evaluator exposing (Answer, Error(..), eval)
@@ -1467,12 +1514,12 @@ type Error
 
 eval : List Token -&gt; Answer
 </code></pre>
-<p>Recall that I would need to be able to evaluate infix expressions and respect operator precedence. Dijkstra's shunting yard algorithm allows me to do that and <code>Data.Evaluator</code> exports the function <code>eval</code> that implements said algorithm.</p>
-<p><code>Error</code> would enumerate all the possible errors that could occur based on <code>eval</code>'s evaluation of the list of tokens.</p>
-<p>I'm expecting an infix expression like <code>1 + 2 * 3</code> to be represented as a list of tokens as follows:</p>
+<p>Recall that I would need to be able to evaluate infix expressions and respect operator precedence. Dijkstra’s shunting yard algorithm allows me to do that and <code>Data.Evaluator</code> exports the function <code>eval</code> that implements said algorithm.</p>
+<p><code>Error</code> would enumerate all the possible errors that could occur based on <code>eval</code>’s evaluation of the list of tokens.</p>
+<p>I’m expecting an infix expression like <code>1 + 2 * 3</code> to be represented as a list of tokens as follows:</p>
 <pre><code>[ Number (Rational.fromInt 1), Operator Add, Number (Rational.fromInt 2), Operator Mul, Number (Rational.fromInt 3) ]
 </code></pre>
-<p>Hence, part of <code>Data.Calculator</code>'s job would be to tokenize the user's input.</p>
+<p>Hence, part of <code>Data.Calculator</code>’s job would be to tokenize the user’s input.</p>
 <h3 id="datatoken"><a class="header" href="#datatoken"><code>Data.Token</code></a></h3>
 <pre><code class="language-elm">module Data.Token exposing (Token(..), toString)
 
@@ -1569,7 +1616,7 @@ isEmpty : Stack a -&gt; Bool
 push : a -&gt; Stack a -&gt; Stack a
 pop : Stack a -&gt; Maybe ( a, Stack a )
 </code></pre>
-<p>Stacks are used in Dijkstra's shunting yard algorithm. There are a few simple ways to implement them so I knew this wasn't going to be a problem.</p>
+<p>Stacks are used in Dijkstra’s shunting yard algorithm. There are a few simple ways to implement them so I knew this wasn’t going to be a problem.</p>
 <h2 id="questions-answered"><a class="header" href="#questions-answered">Questions Answered</a></h2>
 <p>After sketching out the API I had a better sense of the shape of the solution, I understood the modules and data structures I needed, and I knew where the tricky bits lay.</p>
 <h3 id="shape-of-the-solution"><a class="header" href="#shape-of-the-solution">Shape of the Solution</a></h3>
@@ -1634,21 +1681,21 @@ view { calculator } =
 <li><code>Lib.Stack</code></li>
 </ul>
 <h4 id="why-lib"><a class="header" href="#why-lib">Why <code>Lib</code>?</a></h4>
-<p>It's a personal preference of mine to place modules in <code>Lib</code> that I feel are general enough to one day deserve their own library or at least be reused in other projects. By placing them in <code>Lib</code> it's easier for me to identify these reusable modules when I'm scanning through my projects.</p>
+<p>It’s a personal preference of mine to place modules in <code>Lib</code> that I feel are general enough to one day deserve their own library or at least be reused in other projects. By placing them in <code>Lib</code> it’s easier for me to identify these reusable modules when I’m scanning through my projects.</p>
 <h3 id="the-tricky-bits"><a class="header" href="#the-tricky-bits">The Tricky Bits</a></h3>
 <p>These are the parts that are non-trivial to figure out and where I expected to spend most of my time in this phase of the project.</p>
 <ul>
 <li>Group 1
 <ul>
-<li>What's <code>type Calculator</code> going to be?</li>
-<li>How to tokenize the user's input as they press keys?</li>
+<li>What’s <code>type Calculator</code> going to be?</li>
+<li>How to tokenize the user’s input as they press keys?</li>
 <li>How to implement <code>Calculator.press</code>?</li>
 <li>How to implement <code>Calculator.toOutput</code>?</li>
 </ul>
 </li>
 <li>Group 2
 <ul>
-<li>How to implement Dijkstra's shunting yard algorithm, <code>Evaluator.eval</code>, in a pure functional language?</li>
+<li>How to implement Dijkstra’s shunting yard algorithm, <code>Evaluator.eval</code>, in a pure functional language?</li>
 </ul>
 </li>
 <li>Group 3
@@ -1658,16 +1705,16 @@ view { calculator } =
 </li>
 </ul>
 <p>The 3 groups can be worked on independently of each other.</p>
-<p><code>Calculator.press</code>, <code>Calculator.toOutput</code>, <code>Evaluator.eval</code>, and <code>Rational.toDecimalString</code> are great candidates for unit testing. I didn't practice test-driven development but I did cycle between tests and implementation in order to implement the functions.</p>
+<p><code>Calculator.press</code>, <code>Calculator.toOutput</code>, <code>Evaluator.eval</code>, and <code>Rational.toDecimalString</code> are great candidates for unit testing. I didn’t practice test-driven development but I did cycle between tests and implementation in order to implement the functions.</p>
 <h2 id="the-plan"><a class="header" href="#the-plan">The Plan</a></h2>
-<p>Moving forward we'd tackle and solve the problems of each group in the order: Group 3, Group 2, and Group 1.</p>
-<p>Let's get started on the <a href="application-logic/./rational-numbers/index.html">rational numbers</a>.</p>
+<p>Moving forward we’d tackle and solve the problems of each group in the order: Group 3, Group 2, and Group 1.</p>
+<p>Let’s get started on the <a href="#rational-numbers">rational numbers</a>.</p>
 <h2 id="an-aside-my-historically-accurate-first-attempt"><a class="header" href="#an-aside-my-historically-accurate-first-attempt">An Aside: My Historically Accurate First Attempt</a></h2>
 <p>This is how I literally first worked my way through the project when I was learning Elm:</p>
 <ul>
 <li>I made the calculator work for <code>AC</code>, <code>0-9</code>, <code>+</code>/<code>-</code>, and <code>=</code>
 <ul>
-<li><a href="https://github.com/dwayne/elm-calculator/commit/21b89460ee169de1f30efd66b327bb299852688f">Add and test the calculator's logic</a></li>
+<li><a href="https://github.com/dwayne/elm-calculator/commit/21b89460ee169de1f30efd66b327bb299852688f">Add and test the calculator’s logic</a></li>
 <li><a href="https://github.com/dwayne/elm-calculator/commit/c8bdd2ecffa0f3215dd183a9a050cd01fa443ab5">Make the calculator UI work for AC, digits, +/- and =</a></li>
 </ul>
 </li>
@@ -1676,7 +1723,7 @@ view { calculator } =
 <li><a href="https://github.com/dwayne/elm-calculator/commit/848c4e35d9cb0d5ea0140b283beff5b3e77cdd1e">Add multiplication</a></li>
 </ul>
 </li>
-<li>I implemented Dijkstra's shunting yard algorithm to handle operator precedence
+<li>I implemented Dijkstra’s shunting yard algorithm to handle operator precedence
 <ul>
 <li><a href="https://github.com/dwayne/elm-calculator/commit/0c1f708e1983b1afb75f023fd7ff190fea6587fd">Add an expression evaluator that respects operator precedence</a></li>
 </ul>
@@ -1695,7 +1742,8 @@ view { calculator } =
 </li>
 </ul>
 <p>Then, over the years, as my understanding for Elm grew I refactored my first solution into what it is today.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="rational-numbers"><a class="header" href="#rational-numbers">Rational Numbers</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="rational-numbers"><a class="header" href="#rational-numbers">Rational Numbers</a></h1>
 <p>A <a href="https://artofproblemsolving.com/wiki/index.php/Rational_number">rational number</a> is a <a href="https://artofproblemsolving.com/wiki/index.php/Real_number">real number</a> that can be expressed as the fraction \( \frac{p}{q} \) of two <a href="https://artofproblemsolving.com/wiki/index.php/Integer">integers</a> with a numerator \( p \) and a non-zero denominator \( q \).</p>
 <h2 id="public-api"><a class="header" href="#public-api">Public API</a></h2>
 <pre><code class="language-elm">module Lib.Rational exposing
@@ -1727,28 +1775,30 @@ div : Rational -&gt; Rational -&gt; Rational
 toString : Rational -&gt; String
 toDecimalString : Rational -&gt; String
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="representation"><a class="header" href="#representation">Representation</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="representation"><a class="header" href="#representation">Representation</a></h1>
 <p>A rational number can be represented as follows:</p>
 <pre><code class="language-elm">type Rational
     = Rational Int Int
 </code></pre>
 <p>So, for example, one-half can be represented by <code>Rational 1 2</code>.</p>
 <h2 id="zero-in-the-denominator"><a class="header" href="#zero-in-the-denominator">Zero in the Denominator</a></h2>
-<p>By definition, a rational number is not supposed to have a zero in its denominator. But, the above representation doesn't prevent this possibility since, for example, <code>Rational 3 0</code> is a valid value of type <code>Rational</code>. However, we can control the way values of type <code>Rational</code> get created by not exporting the type's constructor and instead exporting a custom function, in this case <code>new</code>, that constructs values which obey the definition of a rational number.</p>
-<p>We call the <code>Rational</code> type an <a href="https://elm-radio.com/episode/intro-to-opaque-types/">opaque type</a> since its constructors are private to the module. It's opaque because users of the module can't see and thus access the internal details of the type.</p>
+<p>By definition, a rational number is not supposed to have a zero in its denominator. But, the above representation doesn’t prevent this possibility since, for example, <code>Rational 3 0</code> is a valid value of type <code>Rational</code>. However, we can control the way values of type <code>Rational</code> get created by not exporting the type’s constructor and instead exporting a custom function, in this case <code>new</code>, that constructs values which obey the definition of a rational number.</p>
+<p>We call the <code>Rational</code> type an <a href="https://elm-radio.com/episode/intro-to-opaque-types/">opaque type</a> since its constructors are private to the module. It’s opaque because users of the module can’t see and thus access the internal details of the type.</p>
 <p>We call <code>new</code> a <a href="https://wiki.haskell.org/Smart_constructors">smart constructor</a> because it uses a bit of logic to decide how and when to construct a value of type <code>Rational</code>.</p>
 <h2 id="equivalent-rational-numbers"><a class="header" href="#equivalent-rational-numbers">Equivalent Rational Numbers</a></h2>
 <p>One-half can also be represented by <code>Rational 2 4</code>, <code>Rational 3 6</code>, <code>Rational 4 8</code>, and so on. I decided to use the representation that had all common factors removed from both the numerator and denominator.</p>
 <h2 id="negative-rational-numbers"><a class="header" href="#negative-rational-numbers">Negative Rational Numbers</a></h2>
 <p>Negative one-half can be represented by <code>Rational -1 2</code> or <code>Rational 1 -2</code>. I decided to represent negative rational numbers such that the numerator always contains the negative value.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="constructors"><a class="header" href="#constructors">Constructors</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="constructors"><a class="header" href="#constructors">Constructors</a></h1>
 <ul>
-<li><a href="application-logic/rational-numbers/constructors.html#new"><code>new</code></a></li>
-<li><a href="application-logic/rational-numbers/constructors.html#zero"><code>zero</code></a></li>
-<li><a href="application-logic/rational-numbers/constructors.html#fromint"><code>fromInt</code></a></li>
+<li><a href="#new"><code>new</code></a></li>
+<li><a href="#zero"><code>zero</code></a></li>
+<li><a href="#fromint"><code>fromInt</code></a></li>
 </ul>
 <h2 id="new"><a class="header" href="#new"><code>new</code></a></h2>
-<p>Based on the decisions I made in <a href="application-logic/rational-numbers/./representation.html">Representation</a> I came up with the following requirements for <code>new</code>.</p>
+<p>Based on the decisions I made in <a href="#representation">Representation</a> I came up with the following requirements for <code>new</code>.</p>
 <pre><code class="language-elm">new 1 2 == Just (Rational 1 2)
 
 new 3 0 == Nothing
@@ -1825,12 +1875,13 @@ zero =
 fromInt n =
     Rational n 1
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="arithmetic"><a class="header" href="#arithmetic">Arithmetic</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="arithmetic"><a class="header" href="#arithmetic">Arithmetic</a></h1>
 <ul>
-<li><a href="application-logic/rational-numbers/arithmetic.html#addition">Addition</a></li>
-<li><a href="application-logic/rational-numbers/arithmetic.html#subtraction">Subtraction</a></li>
-<li><a href="application-logic/rational-numbers/arithmetic.html#multiplication">Multiplication</a></li>
-<li><a href="application-logic/rational-numbers/arithmetic.html#division">Division</a></li>
+<li><a href="#addition">Addition</a></li>
+<li><a href="#subtraction">Subtraction</a></li>
+<li><a href="#multiplication">Multiplication</a></li>
+<li><a href="#division">Division</a></li>
 </ul>
 <h2 id="addition"><a class="header" href="#addition">Addition</a></h2>
 <p>\[ \frac{n_1}{d_1} + \frac{n_2}{d_2} = \frac{n_1d_2 + n_2d_1}{d_1d_2} \]</p>
@@ -1863,10 +1914,11 @@ div (Rational n1 d1) (Rational n2 d2) =
 <p>For division by zero, I chose to return the zero rational number rather than to signal an error.</p>
 <h3 id="exercise"><a class="header" href="#exercise">Exercise</a></h3>
 <p>Implement <code>div : Rational -&gt; Rational -&gt; Maybe Rational</code>, such that <code>div r zero == Nothing</code>, and solve the downstream consequences of this change.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="conversion"><a class="header" href="#conversion">Conversion</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="conversion"><a class="header" href="#conversion">Conversion</a></h1>
 <ul>
-<li><a href="application-logic/rational-numbers/conversion.html#tostring"><code>toString</code></a></li>
-<li><a href="application-logic/rational-numbers/conversion.html#todecimalstring"><code>toDecimalString</code></a></li>
+<li><a href="#tostring"><code>toString</code></a></li>
+<li><a href="#todecimalstring"><code>toDecimalString</code></a></li>
 </ul>
 <h2 id="tostring"><a class="header" href="#tostring"><code>toString</code></a></h2>
 <p>It converts a rational number to either an integral or fractional string. The requirements are:</p>
@@ -1892,7 +1944,7 @@ toString (Rational n d) =
     else
         String.fromInt n ++ "/" ++ String.fromInt d
 </code></pre>
-<p><code>n</code> and <code>d</code> have no common factors because of the ways in which rational numbers can constructed. So we know the rational number is in lowest terms. Also, if the rational number is negative then <code>n</code> is negative and <code>d</code> is positive so we don't need to worry about where to place the minus sign. If <code>d</code> is <code>1</code> then we return the string representation of the integer <code>n</code>. Otherwise, we return the string representation of the integer <code>n</code> over the string representation of the integer <code>d</code>.</p>
+<p><code>n</code> and <code>d</code> have no common factors because of the ways in which rational numbers can constructed. So we know the rational number is in lowest terms. Also, if the rational number is negative then <code>n</code> is negative and <code>d</code> is positive so we don’t need to worry about where to place the minus sign. If <code>d</code> is <code>1</code> then we return the string representation of the integer <code>n</code>. Otherwise, we return the string representation of the integer <code>n</code> over the string representation of the integer <code>d</code>.</p>
 <h2 id="todecimalstring"><a class="header" href="#todecimalstring"><code>toDecimalString</code></a></h2>
 <p>It converts a rational number to either an integral or decimal string. The requirements are:</p>
 <pre><code class="language-elm">toDecimalString zero == "0"
@@ -1912,7 +1964,7 @@ Maybe.map toDecimalString (new 1 3) == Just "0.(3)"
 Maybe.map toDecimalString (new 7 12) == Just "0.58(3)"
 Maybe.map toDecimalString (new 1 23) == Just "0.(0434782608695652173913)"
 </code></pre>
-<p>Here's the start of an implementation that satisfies the requirements:</p>
+<p>Here’s the start of an implementation that satisfies the requirements:</p>
 <pre><code class="language-elm">toDecimalString : Rational -&gt; String
 toDecimalString (Rational n d) =
     if d == 1 then
@@ -1938,14 +1990,14 @@ toDecimalString (Rational n d) =
         in
         sign ++ String.fromInt quotient ++ "." ++ decimalRep remainder d
 </code></pre>
-<p>The interesting part is handled by <code>decimalRep remainder d</code>, where <code>1 &lt;= remainder &lt; d</code>. Let's develop an understanding for the problem that <code>decimalRep</code> needs to solve.</p>
+<p>The interesting part is handled by <code>decimalRep remainder d</code>, where <code>1 &lt;= remainder &lt; d</code>. Let’s develop an understanding for the problem that <code>decimalRep</code> needs to solve.</p>
 <h3 id="decimal-notation"><a class="header" href="#decimal-notation">Decimal Notation</a></h3>
 <p>Decimal notation is a way of representing numbers using powers of <code>10</code>. For e.g.</p>
 <p>\[ 123.456 = 1 \times 10^2 + 2 \times 10^1 + 3 \times 10^0 + 4 \times 10^{-1} + 5 \times 10^{-2} + 6 \times 10^{-3} \]</p>
 <p>As a result, it is easier to convert a fraction to a decimal when its denominator is a power of <code>10</code>. For e.g.</p>
 <p>\[ \frac{98765}{1000} = 98.765 \]</p>
 <h3 id="multiplication-by-1"><a class="header" href="#multiplication-by-1">Multiplication by <code>1</code></a></h3>
-<p>Let <code>r</code> be any rational number. Then, <code>r * 1 = r</code>. In particular, notice that <code>10/10 = 1</code>. So, <code>r * 10/10 = r = 10r * 1/10</code>. If <code>r</code> has numerator <code>n</code> and denominator <code>d</code> then <code>r = 10n/d * 1/10</code>. How can this help us? We can use this to get powers of <code>10</code> in the denominator to make it easier to extract the decimal digits. Let's look at a few examples:</p>
+<p>Let <code>r</code> be any rational number. Then, <code>r * 1 = r</code>. In particular, notice that <code>10/10 = 1</code>. So, <code>r * 10/10 = r = 10r * 1/10</code>. If <code>r</code> has numerator <code>n</code> and denominator <code>d</code> then <code>r = 10n/d * 1/10</code>. How can this help us? We can use this to get powers of <code>10</code> in the denominator to make it easier to extract the decimal digits. Let’s look at a few examples:</p>
 <h4 id="example-1-12"><a class="header" href="#example-1-12">Example 1: <code>1/2</code></a></h4>
 <p>\[
 \begin{align}
@@ -2062,8 +2114,13 @@ toDecimalString (Rational n d) =
 \end{align}
 \]</p>
 <h3 id="towards-an-algorithm"><a class="header" href="#towards-an-algorithm">Towards an Algorithm</a></h3>
-<p>Let's take a closer look at how we determined the decimal representation for <code>3/7</code>.</p>
-<div class="table-wrapper"><table><thead><tr><th>n</th><th>d</th><th>10n</th><th>q</th><th>r</th><th>memo</th><th>terms</th></tr></thead><tbody>
+<p>Let’s take a closer look at how we determined the decimal representation for <code>3/7</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>n</th><th>d</th><th>10n</th><th>q</th><th>r</th><th>memo</th><th>terms</th></tr>
+</thead>
+<tbody>
 <tr><td>3</td><td>7</td><td>30</td><td>4</td><td>2</td><td><code>[ (3, (4, 2)) ]</code></td><td><code>[ (4, 2) ]</code></td></tr>
 <tr><td>2</td><td>7</td><td>20</td><td>2</td><td>6</td><td><code>[ (2, (2, 6)), (3, (4, 2)) ]</code></td><td><code>[ (2, 6), (4, 2) ]</code></td></tr>
 <tr><td>6</td><td>7</td><td>60</td><td>8</td><td>4</td><td><code>[ (6, (8, 4)), (2, (2, 6)), (3, (4, 2)) ]</code></td><td><code>[ (8, 4), (2, 6), (4, 2) ]</code></td></tr>
@@ -2071,11 +2128,12 @@ toDecimalString (Rational n d) =
 <tr><td>5</td><td>7</td><td>50</td><td>7</td><td>1</td><td><code>[ (5, (7, 1)), (4, (5, 5)), (6, (8, 4)), (2, (2, 6)), (3, (4, 2)) ]</code></td><td><code>[ (7, 1), (5, 5), (8, 4), (2, 6), (4, 2) ]</code></td></tr>
 <tr><td>1</td><td>7</td><td>10</td><td>1</td><td>3</td><td><code>[ (1, (1, 3)), (5, (7, 1)), (4, (5, 5)), (6, (8, 4)), (2, (2, 6)), (3, (4, 2)) ]</code></td><td><code>[ (1, 3), (7, 1), (5, 5), (8, 4), (2, 6), (4, 2) ]</code></td></tr>
 <tr><td>3</td><td>7</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>where <code>q = 10n div d</code> and <code>r = 10n mod d</code>. We keep going until either <code>(n, d)</code> repeats or <code>r = 0</code>.</p>
 <h3 id="decimalrep"><a class="header" href="#decimalrep"><code>decimalRep</code></a></h3>
-<p>Based on the above analysis, here's an implementation for <code>decimalRep</code> that satisfies the requirements:</p>
+<p>Based on the above analysis, here’s an implementation for <code>decimalRep</code> that satisfies the requirements:</p>
 <pre><code class="language-elm">decimalRep : Int -&gt; Int -&gt; String
 decimalRep n d =
     decimalRepHelper n d [] Dict.empty
@@ -2137,7 +2195,8 @@ displayRepeating marker terms output =
             displayRepeating marker rest (s ++ output)
 </code></pre>
 <p><code>decimalRepHelper</code>, <code>displayTerminating</code>, and <code>displayRepeating</code> are all implemented using tail-recursion so they can be <a href="https://functional-programming-in-elm.netlify.app/recursion/tail-call-elimination.html">optimized into loops</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="unit-tests"><a class="header" href="#unit-tests">Unit Tests</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="unit-tests"><a class="header" href="#unit-tests">Unit Tests</a></h1>
 <h2 id="new-1"><a class="header" href="#new-1"><code>new</code></a></h2>
 <pre><code class="language-elm">test "both numerator and denominator are positive" &lt;|
     \_ -&gt;
@@ -2315,9 +2374,11 @@ test "1/97" &lt;|
 <ul>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/tests/Test/Lib/Rational.elm">tests/Test/Lib/Rational.elm</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="evaluating-infix-expressions"><a class="header" href="#evaluating-infix-expressions">Evaluating Infix Expressions</a></h1>
-<p>When the user interacts with the calculator and presses certain buttons (<code>0-9</code>, <code>.</code>, <code>+</code>, <code>-</code>, <code>×</code>, <code>÷</code>), under the hood, they are actually building up a data structure that represents an infix expression. To evaluate that infix expression I use <a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra's Shunting Yard Algorithm</a> to convert it into a postfix expression which is much easier to evaluate. The postfix expression is never explicitly returned since I evaluate it on the fly. As such, my evaluation function makes use of two stacks. Therefore, let's start with an implementation of a stack data structure before moving on to the star of the show.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="stack"><a class="header" href="#stack">Stack</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="evaluating-infix-expressions"><a class="header" href="#evaluating-infix-expressions">Evaluating Infix Expressions</a></h1>
+<p>When the user interacts with the calculator and presses certain buttons (<code>0-9</code>, <code>.</code>, <code>+</code>, <code>-</code>, <code>×</code>, <code>÷</code>), under the hood, they are actually building up a data structure that represents an infix expression. To evaluate that infix expression I use <a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra’s Shunting Yard Algorithm</a> to convert it into a postfix expression which is much easier to evaluate. The postfix expression is never explicitly returned since I evaluate it on the fly. As such, my evaluation function makes use of two stacks. Therefore, let’s start with an implementation of a stack data structure before moving on to the star of the show.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="stack"><a class="header" href="#stack">Stack</a></h1>
 <p>A stack is a data structure that follows the Last In, First Out (LIFO) principle, meaning the last element added is the first one to be removed. It operates like a stack of plates, where you can only add or remove plates from the top.</p>
 <h2 id="public-api-1"><a class="header" href="#public-api-1">Public API</a></h2>
 <pre><code class="language-elm">module Lib.Stack exposing
@@ -2356,7 +2417,7 @@ new =
     Stack []
 </code></pre>
 <h2 id="query"><a class="header" href="#query">Query</a></h2>
-<p>A stack is empty if it's the empty list.</p>
+<p>A stack is empty if it’s the empty list.</p>
 <pre><code class="language-elm">isEmpty : Stack a -&gt; Bool
 isEmpty (Stack xs) =
     xs == []
@@ -2386,9 +2447,10 @@ pop (Stack xs) =
 <li><a href="https://www.geeksforgeeks.org/stack-data-structure/">GeeksforGeeks: Stack Data Structure</a></li>
 <li><a href="https://en.wikipedia.org/wiki/Stack_(abstract_data_type)">Wikipedia: Stack (abstract data type)</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="dijkstras-shunting-yard-algorithm"><a class="header" href="#dijkstras-shunting-yard-algorithm">Dijkstra's Shunting Yard Algorithm</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="dijkstras-shunting-yard-algorithm"><a class="header" href="#dijkstras-shunting-yard-algorithm">Dijkstra’s Shunting Yard Algorithm</a></h1>
 <h2 id="algorithm"><a class="header" href="#algorithm">Algorithm</a></h2>
-<p>The following pseudocode describes an algorithm, based on <a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra's shunting yard algorithm</a>, for evaluating infix expressions. It assumes that the infix expression has already been <a href="application-logic/evaluating-infix-expressions/dijkstras-shunting-yard-algorithm.html#tokenization">tokenized</a>.</p>
+<p>The following pseudocode describes an algorithm, based on <a href="https://en.wikipedia.org/wiki/Shunting_yard_algorithm">Dijkstra’s shunting yard algorithm</a>, for evaluating infix expressions. It assumes that the infix expression has already been <a href="#tokenization">tokenized</a>.</p>
 <pre><code class="language-txt">eval(tokens: List of Token) -&gt; Rational or Error
   -- Initialization
 
@@ -2485,14 +2547,20 @@ end
 </code></pre>
 <h2 id="precedence"><a class="header" href="#precedence">Precedence</a></h2>
 <p>The precendence of the supported operators are as follows:</p>
-<div class="table-wrapper"><table><thead><tr><th>Operator</th><th>Precedence</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Operator</th><th>Precedence</th></tr>
+</thead>
+<tbody>
 <tr><td><code>Add</code></td><td><code>1</code></td></tr>
 <tr><td><code>Sub</code></td><td><code>1</code></td></tr>
 <tr><td><code>Mul</code></td><td><code>2</code></td></tr>
 <tr><td><code>Div</code></td><td><code>2</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
-<p><code>Add</code> and <code>Sub</code> have the same level but lower precedence than <code>Mul</code> and <code>Div</code>. All the supported operators are left-associative so we don't have to deal with associativity. However, if we decide to add exponentiation, which is right-associative, then we'd have to start considering associativity.</p>
+<p><code>Add</code> and <code>Sub</code> have the same level but lower precedence than <code>Mul</code> and <code>Div</code>. All the supported operators are left-associative so we don’t have to deal with associativity. However, if we decide to add exponentiation, which is right-associative, then we’d have to start considering associativity.</p>
 <p>The corresponding <code>precedence</code> function can be implemented as follows:</p>
 <pre><code class="language-elm">precedence : Operator -&gt; Int
 precedence op =
@@ -2513,26 +2581,43 @@ precedence op =
 <p>These examples are here to help you understand the algorithm.</p>
 <h3 id="example-1"><a class="header" href="#example-1">Example 1</a></h3>
 <p>Input: <code>3</code></p>
-<div class="table-wrapper"><table><thead><tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th></tr>
+</thead>
+<tbody>
 <tr><td><code>3</code></td><td>Push <code>3</code> to operands</td><td><code>[ 3 ]</code></td><td><code>[]</code></td><td></td></tr>
 <tr><td>None</td><td>Pop from operands</td><td><code>[]</code></td><td><code>[]</code></td><td><code>3</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Output: <code>3</code></p>
 <h3 id="example-2"><a class="header" href="#example-2">Example 2</a></h3>
 <p>Input: <code>1 + 2</code></p>
-<div class="table-wrapper"><table><thead><tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th><th>Comment</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th><th>Comment</th></tr>
+</thead>
+<tbody>
 <tr><td><code>1</code></td><td>Push <code>1</code> to operands</td><td><code>[ 1 ]</code></td><td><code>[]</code></td><td></td><td></td></tr>
 <tr><td><code>+</code></td><td>Push <code>+</code> to operators</td><td><code>[ 1 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
 <tr><td><code>2</code></td><td>Push <code>2</code> to operands</td><td><code>[ 2, 1 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
 <tr><td>None</td><td>Process <code>+</code> operator</td><td><code>[ 3 ]</code></td><td><code>[]</code></td><td></td><td><code>1 + 2</code></td></tr>
 <tr><td>None</td><td>Pop from operands</td><td><code>[]</code></td><td><code>[]</code></td><td><code>3</code></td><td></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Output: <code>3</code></p>
 <h3 id="example-3"><a class="header" href="#example-3">Example 3</a></h3>
 <p>Input: <code>1 + 2 × 3</code></p>
-<div class="table-wrapper"><table><thead><tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th><th>Comment</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th><th>Comment</th></tr>
+</thead>
+<tbody>
 <tr><td><code>1</code></td><td>Push <code>1</code> to operands</td><td><code>[ 1 ]</code></td><td><code>[]</code></td><td></td><td></td></tr>
 <tr><td><code>+</code></td><td>Push <code>+</code> to operators</td><td><code>[ 1 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
 <tr><td><code>2</code></td><td>Push <code>2</code> to operands</td><td><code>[ 2, 1 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
@@ -2541,12 +2626,18 @@ precedence op =
 <tr><td>None</td><td>Process <code>×</code> operator</td><td><code>[ 6, 1 ]</code></td><td><code>[ + ]</code></td><td></td><td><code>2 × 3</code></td></tr>
 <tr><td>None</td><td>Process <code>+</code> operator</td><td><code>[ 7 ]</code></td><td><code>[]</code></td><td></td><td><code>1 + 6</code></td></tr>
 <tr><td>None</td><td>Pop from operands</td><td><code>[]</code></td><td><code>[]</code></td><td><code>7</code></td><td></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Output: <code>7</code></p>
 <h3 id="example-4"><a class="header" href="#example-4">Example 4</a></h3>
 <p>Input: <code>4 × 5 + 6</code></p>
-<div class="table-wrapper"><table><thead><tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th><th>Comment</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th><th>Comment</th></tr>
+</thead>
+<tbody>
 <tr><td><code>4</code></td><td>Push <code>4</code> to operands</td><td><code>[ 4 ]</code></td><td><code>[]</code></td><td></td><td></td></tr>
 <tr><td><code>×</code></td><td>Push <code>×</code> to operators</td><td><code>[ 4 ]</code></td><td><code>[ × ]</code></td><td></td><td></td></tr>
 <tr><td><code>5</code></td><td>Push <code>5</code> to operands</td><td><code>[ 5, 4 ]</code></td><td><code>[ × ]</code></td><td></td><td></td></tr>
@@ -2555,12 +2646,18 @@ precedence op =
 <tr><td><code>6</code></td><td>Push <code>6</code> to operands</td><td><code>[ 6, 20 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
 <tr><td>None</td><td>Process <code>+</code> operator</td><td><code>[ 26 ]</code></td><td><code>[]</code></td><td></td><td><code>20 + 6</code></td></tr>
 <tr><td>None</td><td>Pop from operands</td><td><code>[]</code></td><td><code>[]</code></td><td><code>26</code></td><td></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Output: <code>26</code></p>
 <h3 id="example-5"><a class="header" href="#example-5">Example 5</a></h3>
 <p>Input: <code>3 + 4 × 2 ÷ 4</code></p>
-<div class="table-wrapper"><table><thead><tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th><th>Comment</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Token</th><th>Action</th><th>Operands</th><th>Operators</th><th>Value</th><th>Comment</th></tr>
+</thead>
+<tbody>
 <tr><td><code>3</code></td><td>Push <code>3</code> to operands</td><td><code>[ 3 ]</code></td><td><code>[]</code></td><td></td><td></td></tr>
 <tr><td><code>+</code></td><td>Push <code>+</code> to operators</td><td><code>[ 3 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
 <tr><td><code>4</code></td><td>Push <code>4</code> to operands</td><td><code>[ 4, 3 ]</code></td><td><code>[ + ]</code></td><td></td><td></td></tr>
@@ -2572,7 +2669,8 @@ precedence op =
 <tr><td>None</td><td>Process <code>÷</code> operator</td><td><code>[ 2, 3 ]</code></td><td><code>[ + ]</code></td><td></td><td><code>8 ÷ 4</code></td></tr>
 <tr><td>None</td><td>Process <code>+</code> operator</td><td><code>[ 5 ]</code></td><td><code>[]</code></td><td></td><td><code>3 + 2</code></td></tr>
 <tr><td>None</td><td>Pop from operands</td><td><code>[]</code></td><td><code>[]</code></td><td><code>5</code></td><td></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>Output: <code>5</code></p>
 <h2 id="translating-the-algorithm-to-elm"><a class="header" href="#translating-the-algorithm-to-elm">Translating the Algorithm to Elm</a></h2>
@@ -2599,21 +2697,27 @@ eval tokens =
 </code></pre>
 <p>When evaluating a given infix expression we can either get a syntax error or a rational number.</p>
 <p>A syntax error, <code>SyntaxError</code>, is possible if <code>tokens</code> is illegally formed, for e.g.:</p>
-<div class="table-wrapper"><table><thead><tr><th><code>tokens</code></th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th><code>tokens</code></th></tr>
+</thead>
+<tbody>
 <tr><td><code>[]</code></td></tr>
 <tr><td><code>[ Operator Add ]</code></td></tr>
 <tr><td><code>[ Number (Rational.fromInt 1), Operator Add ]</code></td></tr>
 <tr><td><code>[ Number (Rational.fromInt 1), Number (Rational.fromInt 2) ]</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <h3 id="dealing-with-mutation"><a class="header" href="#dealing-with-mutation">Dealing with Mutation</a></h3>
-<p>The algorithm treats <code>operands</code> and <code>operators</code> as mutable stacks. Since Elm doesn't support mutable data structures we'd have to find another way to change the stacks as the program performs its steps. The typical way we simulate mutability is inputing and outputing a value of the same type. I stored all the global state together in one record type called <code>State</code>:</p>
+<p>The algorithm treats <code>operands</code> and <code>operators</code> as mutable stacks. Since Elm doesn’t support mutable data structures we’d have to find another way to change the stacks as the program performs its steps. The typical way we simulate mutability is inputing and outputing a value of the same type. I stored all the global state together in one record type called <code>State</code>:</p>
 <pre><code class="language-elm">type alias State =
     { operands : Stack Rational
     , operators : Stack Operator
     }
 </code></pre>
-<p>To make <code>State</code> easier to work with and "mutate", I implemented the following helper functions:</p>
+<p>To make <code>State</code> easier to work with and “mutate”, I implemented the following helper functions:</p>
 <pre><code class="language-elm">pushOperand : Rational -&gt; State -&gt; Result Error State
 pushOperand q state =
     Ok { state | operands = Stack.push q state.operands }
@@ -3042,7 +3146,8 @@ precedence op =
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Lib/Stack.elm">src/Lib/Stack.elm</a></li>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Lib/Rational.elm">src/Lib/Rational.elm</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="unit-tests-1"><a class="header" href="#unit-tests-1">Unit Tests</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="unit-tests-1"><a class="header" href="#unit-tests-1">Unit Tests</a></h1>
 <h2 id="simple-expressions"><a class="header" href="#simple-expressions">Simple Expressions</a></h2>
 <pre><code class="language-elm">test "1" &lt;|
     \_ -&gt;
@@ -3165,7 +3270,8 @@ operatorT =
 <ul>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/tests/Test/Data/Evaluator.elm">tests/Test/Data/Evaluator.elm</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="calculator-1"><a class="header" href="#calculator-1">Calculator</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="calculator-1"><a class="header" href="#calculator-1">Calculator</a></h1>
 <p>The logical representation of the calculator. It has an internal data structure that it uses to keep track of the infix expression that the user builds one key press at a time.</p>
 <h2 id="public-api-2"><a class="header" href="#public-api-2">Public API</a></h2>
 <pre><code class="language-elm">module Data.Calculator exposing
@@ -3198,8 +3304,9 @@ type alias Output =
 
 toOutput : Calculator -&gt; Output
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="tokenizing-input"><a class="header" href="#tokenizing-input">Tokenizing Input</a></h1>
-<p>The calculator tokenizes the user's input. This suggests the use of a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">finite-state machine</a> to help with the tokenization.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="tokenizing-input"><a class="header" href="#tokenizing-input">Tokenizing Input</a></h1>
+<p>The calculator tokenizes the user’s input. This suggests the use of a <a href="https://en.wikipedia.org/wiki/Finite-state_machine">finite-state machine</a> to help with the tokenization.</p>
 <p>Why?</p>
 <p>Well, <a href="https://en.wikipedia.org/wiki/Lexical_analysis">lexical analyzers</a> use regular expressions to tokenize a string of characters. Regular expressions are equivalent to finite-state machines. And, rather than a string of characters we have a list of key presses. So the idea is to have the calculator act like a lexical analyzer and use a finite-state machine to tokenize the list of key presses.</p>
 <h2 id="the-finite-state-machine"><a class="header" href="#the-finite-state-machine">The Finite-State Machine</a></h2>
@@ -3224,14 +3331,19 @@ type State
 <p><code>Partial</code> represents the situation when the user just finished entering a number and they pressed an operator key.</p>
 <p><code>Right</code> represents the situation when the user is entering the second number for the operator.</p>
 <p>Notice that the <code>Answer</code> state keeps track of the full tokenized input as well as the answer produced by the evaluator.</p>
-<h2 id="whats-decimal"><a class="header" href="#whats-decimal">What's <code>Decimal</code>?</a></h2>
-<p>It's a type to help me tokenize decimal numbers.</p>
+<h2 id="whats-decimal"><a class="header" href="#whats-decimal">What’s <code>Decimal</code>?</a></h2>
+<p>It’s a type to help me tokenize decimal numbers.</p>
 <pre><code class="language-elm">type Decimal
     = Whole Int
     | Fractional Int Int Int
 </code></pre>
-<p>Let's consider an example where the user is entering the decimal number <code>123.456</code>.</p>
-<div class="table-wrapper"><table><thead><tr><th>Key Pressed</th><th>Decimal</th><th>Comment</th></tr></thead><tbody>
+<p>Let’s consider an example where the user is entering the decimal number <code>123.456</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Key Pressed</th><th>Decimal</th><th>Comment</th></tr>
+</thead>
+<tbody>
 <tr><td><code>Digit One</code></td><td><code>Whole 1</code></td><td><code>Digit.toInt One = 1</code></td></tr>
 <tr><td><code>Digit Two</code></td><td><code>Whole 12</code></td><td><code>1 * 10 + Digit.toInt Two = 12</code></td></tr>
 <tr><td><code>Digit Three</code></td><td><code>Whole 123</code></td><td><code>12 * 10 + Digit.toInt Three = 123</code></td></tr>
@@ -3239,12 +3351,13 @@ type State
 <tr><td><code>Digit Four</code></td><td><code>Fractional 123 4 10</code></td><td><code>123 + 4/10 = 123.4</code></td></tr>
 <tr><td><code>Digit Five</code></td><td><code>Fractional 123 45 100</code></td><td><code>123 + 45/100 = 123.45</code></td></tr>
 <tr><td><code>Digit Six</code></td><td><code>Fractional 123 456 1000</code></td><td><code>123 + 456/1000 = 123.456</code></td></tr>
-</tbody></table>
+</tbody>
+</table>
 </div>
 <p>If <code>Whole 123</code> and <code>Fractional 123 0 1</code> represent the same number then why change the representation when a <code>Dot</code> is pressed?</p>
 <ol>
-<li>The pressing of the <code>Dot</code> signals that the user is about to enter the fractional part of the number so it makes sense to initialize everything we'd need to accept the fractional part.</li>
-<li><code>Whole 123</code> and <code>Fractional 123 0 1</code> are displayed differently in line 2 of the calculator's display. <code>Whole 123</code> is displayed as <code>123</code> but <code>Fractional 123 0 1</code> is displayed as <code>123.</code>, i.e. it ends with a decimal point.</li>
+<li>The pressing of the <code>Dot</code> signals that the user is about to enter the fractional part of the number so it makes sense to initialize everything we’d need to accept the fractional part.</li>
+<li><code>Whole 123</code> and <code>Fractional 123 0 1</code> are displayed differently in line 2 of the calculator’s display. <code>Whole 123</code> is displayed as <code>123</code> but <code>Fractional 123 0 1</code> is displayed as <code>123.</code>, i.e. it ends with a decimal point.</li>
 </ol>
 <h2 id="new-2"><a class="header" href="#new-2"><code>new</code></a></h2>
 <pre><code class="language-elm">new : Calculator
@@ -3434,8 +3547,9 @@ eval : List Token -&gt; E.Answer
 eval =
     E.eval &lt;&lt; List.reverse
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="displaying-output"><a class="header" href="#displaying-output">Displaying Output</a></h1>
-<p>The calculator could be in one of 5 states. So, for each state we have to stringify the data that's available and determine within which lines to display them.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="displaying-output"><a class="header" href="#displaying-output">Displaying Output</a></h1>
+<p>The calculator could be in one of 5 states. So, for each state we have to stringify the data that’s available and determine within which lines to display them.</p>
 <pre><code class="language-elm">type alias Output =
     { line1 : String
     , line2 : String
@@ -3535,12 +3649,20 @@ toRational n =
 </code></pre>
 <h2 id="topaddeddecimalstring"><a class="header" href="#topaddeddecimalstring"><code>toPaddedDecimalString</code></a></h2>
 <p>When the user enters trailing zeros after the decimal point we want to display that in line 2 of the display.</p>
-<div class="table-wrapper"><table><thead><tr><th>Decimal</th><th>String</th></tr></thead><tbody>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Decimal</th><th>String</th></tr>
+</thead>
+<tbody>
 <tr><td><code>Fractional 0 0 1</code></td><td><code>"0."</code></td></tr>
 <tr><td><code>Fractional 0 0 1000</code></td><td><code>"0.000"</code></td></tr>
 <tr><td><code>Fractional 0 500 1000000</code></td><td><code>"0.000500"</code></td></tr>
-</tbody></table>
-</div><div style="break-before: page; page-break-before: always;"></div><h1 id="unit-tests-2"><a class="header" href="#unit-tests-2">Unit Tests</a></h1>
+</tbody>
+</table>
+</div>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="unit-tests-2"><a class="header" href="#unit-tests-2">Unit Tests</a></h1>
 <h2 id="press-1"><a class="header" href="#press-1"><code>press</code></a></h2>
 <pre><code class="language-elm">describe "when nothing has been entered" &lt;|
     let
@@ -3817,7 +3939,8 @@ test "trailing zeros are preserved" &lt;|
 <ul>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/tests/Test/Data/Calculator.elm">tests/Test/Data/Calculator.elm</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="ui--application-logic"><a class="header" href="#ui--application-logic">UI + Application Logic</a></h1>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="ui--application-logic"><a class="header" href="#ui--application-logic">UI + Application Logic</a></h1>
 <p>The UI is encapsulated within the <code>View.Page</code> module. The application logic is encapsulated within the <code>Data.Calculator</code> module. They come together in <code>Main</code> to form the complete application.</p>
 <pre><code class="language-elm">module Main exposing (main)
 
@@ -3894,23 +4017,24 @@ view { calculator } =
 <ul>
 <li><a href="https://github.com/dwayne/elm-calculator/blob/1.0.0/src/Main.elm">src/Main.elm</a></li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h1>
-<p>I touched on a large variety of ideas in the tutorial and glossed over a lot of stuff. If you felt overwhelmed then that's completely understandable. The tutorial wasn't designed to spoon-feed you information. It was merely written to show you how I approach the task of building a non-trivial web application with Elm so that the end result is reliable, maintainable, and testable. Now that you've been exposed to these ideas I hope you take the time to reflect on your own approach to web application development and see how it changes the way you think about Elm and web application development in general.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h1>
+<p>I touched on a large variety of ideas in the tutorial and glossed over a lot of stuff. If you felt overwhelmed then that’s completely understandable. The tutorial wasn’t designed to spoon-feed you information. It was merely written to show you how I approach the task of building a non-trivial web application with Elm so that the end result is reliable, maintainable, and testable. Now that you’ve been exposed to these ideas I hope you take the time to reflect on your own approach to web application development and see how it changes the way you think about Elm and web application development in general.</p>
 <h2 id="key-takeways"><a class="header" href="#key-takeways">Key Takeways</a></h2>
 <ul>
 <li>The user interface (UI) and the application logic can be developed and tested independently of each other.</li>
 <li>The UI can be implemented to completion within a frontend workshop environment long before it needs to be translated to <code>elm/html</code>.</li>
-<li>Figuring out how to structure your HTML, write your CSS rules, and script your interactive JavaScript logic is still the hard part of web development but once you figure out how to do it the translation to Elm is typically a straightforward process. <code>elm/html</code> is the final technology within which your UI will be written but it doesn't mean you have to start there.</li>
-<li>Elm doesn't prevent you from thinking in terms of components. In fact, the Elm language has excellent features to support component driven UI development.</li>
+<li>Figuring out how to structure your HTML, write your CSS rules, and script your interactive JavaScript logic is still the hard part of web development but once you figure out how to do it the translation to Elm is typically a straightforward process. <code>elm/html</code> is the final technology within which your UI will be written but it doesn’t mean you have to start there.</li>
+<li>Elm doesn’t prevent you from thinking in terms of components. In fact, the Elm language has excellent features to support component driven UI development.</li>
 <li>Component driven UI development does NOT lead to nested TEA. They are entirely distinct concepts and one does NOT imply the other. What Evan talks about when he talks about components is separate from component driven UI development.</li>
 <li>Elm supports domain-driven development and turns it into a delightful experience. And, that last part is not opinionated at all. 😉</li>
 </ul>
 <p>Thank you for taking your time to read the tutorial. I hope it was worthwhile for you.</p>
 <h2 id="support"><a class="header" href="#support">Support</a></h2>
-<p>Do you have any questions? Is there something you need me to clarify? Is there a tutorial you'd like me to write? Do you have any feedback?</p>
+<p>Do you have any questions? Is there something you need me to clarify? Is there a tutorial you’d like me to write? Do you have any feedback?</p>
 <p>You can reach me at <code>author at elmwithdwayne dot dev</code>.</p>
 <h2 id="where-to-find-me"><a class="header" href="#where-to-find-me">Where to Find Me?</a></h2>
-<p>I curate everything I'm doing at <a href="https://elmwithdwayne.dev/">Elm with Dwayne</a>, I write a lot about Elm on my <a href="https://dev.to/dwayne">blog</a>, and I recently started a <a href="https://buttondown.com/elmwithdwayne">newsletter</a>.</p>
+<p>I curate everything I’m doing at <a href="https://elmwithdwayne.dev/">Elm with Dwayne</a>, I write a lot about Elm on my <a href="https://dev.to/dwayne">blog</a>, and I recently started a <a href="https://buttondown.com/elmwithdwayne">newsletter</a>.</p>
 
                     </main>
 
@@ -3929,22 +4053,11 @@ view { calculator } =
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
 
 
 
@@ -3953,13 +4066,13 @@ view { calculator } =
         </script>
 
 
-        <script src="elasticlunr.min.js"></script>
-        <script src="mark.min.js"></script>
-        <script src="searcher.js"></script>
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
 
-        <script src="clipboard.min.js"></script>
-        <script src="highlight.js"></script>
-        <script src="book.js"></script>
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-bc9a3977.js"></script>
+        <script src="book-609e4cb8.js"></script>
 
         <!-- Custom JS scripts -->
 
@@ -3970,6 +4083,7 @@ view { calculator } =
             });
         });
         </script>
+
 
     </div>
     </body>
