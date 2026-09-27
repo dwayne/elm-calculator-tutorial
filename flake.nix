@@ -13,20 +13,11 @@
   outputs = { self, nixpkgs, flake-utils, mdBook, deploy }:
     flake-utils.lib.eachDefaultSystem(system:
       let
-        name = "elm-calculator-tutorial";
         pkgs = nixpkgs.legacyPackages.${system};
 
-        mkBook = { name, src }:
-          pkgs.runCommand "${name}-book" { nativeBuildInputs = [ pkgs.mdbook ]; } ''
-            mdbook build --dest-dir "$out" ${src}
-          '';
+        name = "elm-calculator-tutorial";
 
-        mkDeployBook = { book, branch }:
-          pkgs.writeShellScript "deploy-${book.name}" ''
-            ${deploy.packages.${system}.default}/bin/deploy "$@" ${book} ${branch}
-          '';
-
-        book = mkBook {
+        book = mdBook.lib.mkBook pkgs {
           inherit name;
           src = pkgs.lib.fileset.toSource {
             root = ./.;
@@ -39,18 +30,20 @@
           };
         };
 
-        deployBook = mkDeployBook { inherit book; branch = "refactor-2026-release"; };
+        deployBook = mdBook.lib.mkDeployBook pkgs {
+          inherit book;
+          branch = "refactor-2026-release";
+          deploy = deploy.packages.${system}.default;
+        };
       in
       {
         devShells.default = mdBook.lib.mkShell pkgs { inherit name; };
         packages = { inherit book; };
 
-        apps = {
-          deployBook = {
-            type = "app";
-            program = "${deployBook}";
-            meta.description = "Deploy the book";
-          };
+        apps.deploy = {
+          type = "app";
+          program = "${deployBook}";
+          meta.description = "Deploy the book";
         };
       }
     );
