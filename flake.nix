@@ -31,6 +31,7 @@
         devShells.default = project.devShell;
         packages.default = project.book;
         apps.deploy = project.deployBookApp;
+        checks = { inherit (project) book deployBook; };
       }
     );
 }
