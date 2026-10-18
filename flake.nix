@@ -14,23 +14,25 @@
     flake-utils.lib.eachDefaultSystem(system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-
-        project = mdBook.lib.mkProject pkgs {
+        mdBookLib = mdBook.lib.init pkgs (deploy.packages.${system}.default);
+        project = mdBookLib.mkProject {
           name = "elm-calculator-tutorial";
-          branch = "release/production";
           root = ./.;
           paths = [
             ./src
             ./theme
             ./book.toml
           ];
-          deploy = deploy.packages.${system}.default;
+          branch = "release/production";
         };
       in
       {
-        devShells.default = project.devShell;
+        devShells.default = pkgs.mkShell {
+          name = "elm-calculator-tutorial";
+          inputsFrom = [ project.devShell ];
+        };
         packages.default = project.book;
-        apps.deploy = project.deployBookApp;
+        apps.deploy = project.app;
         checks = { inherit (project) book deployBook; };
       }
     );
