@@ -1,21 +1,31 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-    mdBook.url = "github:dwayne/nix-mdBook";
-    deploy = {
-      url = "github:dwayne/deploy";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
-    };
+    flake-deploy.url = "github:dwayne/deploy";
+    flake-mdBook.url = "github:dwayne/nix-mdBook";
   };
 
-  outputs = { self, nixpkgs, flake-utils, mdBook, deploy }:
-    flake-utils.lib.eachDefaultSystem(system:
+  outputs = { self, nixpkgs, flake-deploy, flake-mdBook }:
+    let
+      lib = nixpkgs.lib;
+      supportedSystems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
+      eachSupportedSystem = f:
+        lib.foldAttrs
+          lib.mergeAttrs
+          {}
+          (map
+            (s: lib.mapAttrs (_: v: { ${s} = v; }) (f s))
+            supportedSystems
+          );
+    in
+    eachSupportedSystem(system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        mdBookLib = mdBook.lib.init pkgs (deploy.packages.${system}.default);
-        project = mdBookLib.mkProject {
+
+        deploy = flake-deploy.lib.mkDeploy pkgs;
+        mdBook = flake-mdBook.lib.mkMdBook pkgs deploy;
+
+        project = mdBook.mkProject {
           name = "elm-calculator-tutorial";
           root = ./.;
           paths = [
