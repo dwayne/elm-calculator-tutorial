@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1" />
+
+    <title>Key</title>
+
+    <link rel="stylesheet" href="./index.css" />
+    <style>
+      :root {
+        --width: 80px;
+        --height: 65px;
+      }
+
+      .box {
+        width: var(--width);
+        height: var(--height);
+      }
+
+      .box--span-column {
+        width: calc(2 * var(--width) + 1px);
+      }
+
+      .box--span-row {
+        height: calc(2 * var(--height) + 1px);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Key</h1>
+
+    <h2>Default</h2>
+
+    <h3>Unconstrained</h3>
+
+    <p>
+      <button class="key" type="button">8</button>
+    </p>
+
+    <h3>Constrained</h3>
+
+    <p>
+      <div class="box">
+        <button class="key" type="button">8</button>
+      </div>
+    </p>
+
+    <h2>Primary</h2>
+
+    <p>
+      <div class="box">
+        <button class="key key--primary" type="button">AC</button>
+      </div>
+    </p>
+
+    <h2>Secondary</h2>
+
+    <p>
+      <div class="box">
+        <button class="key key--secondary" type="button">=</button>
+      </div>
+    </p>
+
+    <h2>Span: Columns</h2>
+
+    <p>
+      <div class="box box--span-column">
+        <button class="key key--primary" type="button">AC</button>
+      </div>
+    </p>
+
+    <h2>Span: Rows</h2>
+
+    <p>
+      <div class="box box--span-row">
+        <button class="key key--secondary" type="button">=</button>
+      </div>
+    </p>
+  </body>
+</html>
