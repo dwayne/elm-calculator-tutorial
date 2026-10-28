@@ -1,49 +1,29 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    flake-deploy.url = "github:dwayne/deploy";
-    flake-mdBook.url = "github:dwayne/nix-mdBook";
+    nix-utils-src = { url = "github:dwayne/nix-utils"; flake = false; };
+    flake-nix-mdBook = {
+      url = "github:dwayne/nix-mdBook";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-deploy.inputs.nix-utils-src.follows = "nix-utils-src";
+    };
   };
 
-  outputs = { self, nixpkgs, flake-deploy, flake-mdBook }:
+  outputs = { self, nixpkgs, nix-utils-src, flake-nix-mdBook }:
     let
       lib = nixpkgs.lib;
-      supportedSystems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
-      eachSupportedSystem = f:
-        lib.foldAttrs
-          lib.mergeAttrs
-          {}
-          (map
-            (s: lib.mapAttrs (_: v: { ${s} = v; }) (f s))
-            supportedSystems
-          );
+      nixUtils = import nix-utils-src lib;
     in
-    eachSupportedSystem(system:
+    nixUtils.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
-
-        deploy = flake-deploy.lib.mkDeploy pkgs;
-        mdBook = flake-mdBook.lib.mkMdBook pkgs deploy;
-
-        project = mdBook.mkProject {
-          name = "elm-calculator-tutorial";
-          root = ./.;
-          paths = [
-            ./src
-            ./theme
-            ./book.toml
-          ];
-          branch = "release/production";
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ flake-nix-mdBook.overlays.default ];
         };
       in
-      {
-        devShells.default = pkgs.mkShell {
-          name = "elm-calculator-tutorial";
-          inputsFrom = [ project.devShell ];
-        };
-        packages.default = project.book;
-        apps.deploy = project.app;
-        checks = { inherit (project) book deployBook; };
+      pkgs.nixMdBookPackages.defaultFlakeOutput {
+        name = "elm-calculator-tutorial";
+        root = ./.;
       }
     );
 }
