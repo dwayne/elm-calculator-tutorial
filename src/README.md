@@ -4,7 +4,7 @@ In this tutorial, I'll share with you how I built [freeCodeCamp](https://www.fre
 
 Here's the [live demo](https://dwayne.github.io/elm-calculator/) of the Elm web application for you to explore how it works. And, here's the reference to its [source code](https://github.com/dwayne/elm-calculator/tree/1.0.0).
 
-My primary goal is to share my experience, perspective and processes so that you are exposed to an alternative approach to web application development with Elm. I am not aware of any resources that explain how to develop web applications with Elm that are similar to mine. That's why I thought it might be valuable to share this with the Elm community. I am not trying to teach you Elm, nor am I trying to teach you web application development. All I'm trying to do is to have you take a look over my shoulder as I explain to you how I built the application so that you can be exposed to ideas that could be helpful to you in your own Elm projects.
+My primary goal is to share my experience, perspective and processes so that you are exposed to an alternative approach to web application development with Elm. I'm not aware of any resources that explain how to develop web applications with Elm that are similar to mine. That's why I thought it might be valuable to share this with the Elm community. I'm not trying to teach you Elm, nor am I trying to teach you web application development. All I'm trying to do is to have you take a look over my shoulder as I explain to you how I built the application so that you can be exposed to ideas that could be helpful to you in your own Elm projects.
 
 ## Audience
 
